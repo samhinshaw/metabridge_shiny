@@ -54,6 +54,10 @@ shinyServer(function(input, output) {
     head(name_map)
   })
   
+  # observeEvent(input$tryExamples, {
+  #   session$sendCustomMessage(type = 'testmessage',
+  #                             message = 'Thank you for clicking')
+  # })
   
   # Placeholder output for Plot Tab
   output$distPlot <- renderPlot({

@@ -10,6 +10,7 @@ shinyUI(fluidPage(
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css"),
     tags$link(rel = "stylesheet", type = "text/css", href = "user.css")
+    # tags$link(type = "text/javascript", href = "user.js")
   ),
   navbarPage(
     "MetaBridge",
@@ -45,10 +46,10 @@ shinyUI(fluidPage(
                       "Number of bins:",
                       min = 1,
                       max = 50,
-                      value = 30), 
-          submitButton(text = "Submit", 
-                       icon = NULL, 
-                       width = NULL)
+                      value = 30) 
+          # submitButton(text = "Submit", 
+                       # icon = NULL, 
+                       # width = NULL)
         ),
         
         # Show a plot of the generated distribution
