@@ -1,0 +1,23 @@
+.irs-bar-edge,
+.irs-line-right,
+.irs-line {
+  border-radius: 0;
+}
+
+.container-fluid {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.navbar,
+.tab-content {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+#tryExamples {
+  display: inline-block;
+  position: absolute;
+  right: 17px;
+  bottom: 20px;
+}
