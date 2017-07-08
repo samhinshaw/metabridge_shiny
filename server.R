@@ -6,8 +6,7 @@
 #
 
 shinyServer(function(input, output) {
-  # hideElement(id = "columnPickerPanel")
-  
+
   ################################################
   #                                              #
   #          Define reactive variables           #
@@ -57,17 +56,14 @@ shinyServer(function(input, output) {
     metaboliteObject()
   })
   
-  ## Now we can unhide the column picker panel
-  # observeEvent(
-  #   {metaboliteObject()}, {
-  #       toggleElement(id = "columnPickerPanel", condition = !is.null(metaboliteObject()))
-  #     }, ignoreNULL = FALSE, ignoreInit = TRUE)
-  
-  ## When data is populated, show columns for users to select
-  output$columnPicker <- renderUI({
+  ## When data is populated, show column picker panel for users to select
+  output$columnPickerPanel <- renderUI({
     if (!is.null(metaboliteObject())) {
       dataColumns <- names(metaboliteObject())
-      checkboxGroupInput("columnsPicked", "Choose Columns", dataColumns)
+      tags$form(
+        class = "well",
+        checkboxGroupInput("columnsPicked", "Choose Columns", dataColumns)
+      )
     }
   })
   

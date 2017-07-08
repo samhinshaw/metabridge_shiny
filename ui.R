@@ -29,11 +29,7 @@ shinyUI(fluidPage(
                                      class = "btn btn-link",
                                      label = "Try Examples")
                         ),
-                        tags$form(
-                          id = "columnPickerPanel",
-                          class = "well",
-                          uiOutput("columnPicker")
-                        )
+                        uiOutput('columnPickerPanel')
              ),
                tags$div(class = "col-sm-8",
                  textOutput('uploadSuccess'),
