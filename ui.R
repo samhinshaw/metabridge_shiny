@@ -15,26 +15,31 @@ shinyUI(fluidPage(
   navbarPage(
     "MetaBridge",
     tabPanel("Import", 
-             sidebarLayout(
-               sidebarPanel(
-                 fileInput(inputId = 'metaboliteUpload', label = 'Upload Metabolites',
-                           accept = c('text/csv', 
-                                    'text/comma-separated-values,text/plain', 
-                                    '.csv', 
-                                    'text/tab-separated-values')),
-                 checkboxInput(inputId = 'header', label = 'Header', value = TRUE),
-                 radioButtons(inputId = 'sep', label = 'Separator',
-                              choices = c(Comma = ',', Tab = '\t', Semicolon = ';'),
-                              selected = ','),
-                 actionLink(inputId = "tryExamples",
-                            class = "btn btn-link",
-                            label = "Try Examples")
-               ), 
-               mainPanel(
-                 tableOutput('contents'),
+               tags$div(class = "col-sm-4 manual-sidebar",
+                        tags$form(class = "well",
+                          fileInput(inputId = 'metaboliteUpload', label = 'Upload Metabolites',
+                                    accept = c('text/csv', 
+                                               'text/comma-separated-values,text/plain', 
+                                               '.csv', 
+                                               'text/tab-separated-values')),
+                          checkboxInput(inputId = 'header', label = 'Header', value = TRUE),
+                          radioButtons(inputId = 'sep', label = 'Separator',
+                                       choices = c(Comma = ',', Tab = '\t', Semicolon = ';'),
+                                       selected = ','),
+                          actionLink(inputId = "tryExamples",
+                                     class = "btn btn-link",
+                                     label = "Try Examples")
+                        ),
+                        tags$form(class = "well",
+                                  h4("Choose Columns")
+                        )
+             ),
+               tags$div(class = "col-sm-8",
+                 textOutput('uploadSuccess'),
+                 tableOutput('uploadedDataTable'),
                  verbatimTextOutput('diagnostics')
                )
-             )),
+             ),
     tabPanel("Plot", 
       # Application title
       # h2("Old Faithful Geyser Data"),

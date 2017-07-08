@@ -18,6 +18,14 @@
 #tryExamples {
   display: inline-block;
   position: absolute;
-  right: 17px;
-  bottom: 20px;
+  right: 0;
+  bottom: 0;
 }
+
+form.well {
+  position: relative;
+}
+
+/*.manual-sidebar {
+  display: inline-block;
+}*/
