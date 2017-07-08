@@ -2,6 +2,7 @@
 library(shiny)
 library(shinyjs)
 library(tidyverse)
+library(stringr)
 
 ## Load System Data
 load('data/sysdata.rda')

@@ -26,6 +26,15 @@ form.well {
   position: relative;
 }
 
+#uploadSuccess {
+  margin-bottom: 10px;
+}
+
 /*.manual-sidebar {
   display: inline-block;
+}*/
+
+/*#uploadedDataTable table td:nth-child(1),
+#uploadedDataTable table th:nth-child(1) {
+  background-color: rgb(23, 202, 233);
 }*/

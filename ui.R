@@ -10,7 +10,6 @@ shinyUI(fluidPage(
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css"),
     tags$link(rel = "stylesheet", type = "text/css", href = "user.css")
-    # tags$link(type = "text/javascript", href = "user.js")
   ),
   navbarPage(
     "MetaBridge",
@@ -30,8 +29,10 @@ shinyUI(fluidPage(
                                      class = "btn btn-link",
                                      label = "Try Examples")
                         ),
-                        tags$form(class = "well",
-                                  h4("Choose Columns")
+                        tags$form(
+                          id = "columnPickerPanel",
+                          class = "well",
+                          uiOutput("columnPicker")
                         )
              ),
                tags$div(class = "col-sm-8",
@@ -67,4 +68,5 @@ shinyUI(fluidPage(
              tableOutput('databases')),
     tabPanel("NetworkAnalyst")
   )
+  # tags$link(type = "text/javascript", href = "user.js")
 ))
