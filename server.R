@@ -15,11 +15,12 @@ shinyServer(function(input, output) {
   
   # Reactive Object for Metabolite Data
   metaboliteObject <- reactiveVal()
-  columnsOfInterest <- reactiveVal()
+  mappedMetabolites <- reactiveVal()
+  preSelectedIDType <- reactiveVal("HMDB")
   
   ################################################
   #                                              #
-  #            Import Tab Handlers               #
+  #            Upload Tab Handlers               #
   #                                              #
   ################################################
   
@@ -28,7 +29,7 @@ shinyServer(function(input, output) {
     metaboliteObject(name_map)
   })
   
-  ## Read CSV when (fileInput, checkboxInput, radioButtons) state changes
+  ## Read CSV when any of (fileInput, checkboxInput, radioButtons) states change
   observeEvent({
     input$metaboliteUpload
     # make sure this is reevaluated if the sep or header changes
@@ -44,8 +45,8 @@ shinyServer(function(input, output) {
     input$tryExamples # make sure the try examples button is a dependency
     if (is.null(metaboliteObject()))
       return(NULL)
-    paste0("Check below to see that your data has been uploaded properly.  ",
-           "If so, continue to the 'Plot' tab!")
+    paste0("Please check below to see that your data has been uploaded properly.  ",
+           "If so, pick a column and continue to the 'Map' tab!")
   })
   
   ## Once data is populated, render preview of data to user
@@ -62,7 +63,11 @@ shinyServer(function(input, output) {
       dataColumns <- names(metaboliteObject())
       tags$form(
         class = "well",
-        checkboxGroupInput("columnsPicked", "Choose Columns", dataColumns)
+        ## For now, just allow one column. Later we can allow multiple to be chosen. 
+        radioButtons("columnsPicked", "Choose Columns", dataColumns),
+        selectInput("idType", "ID Type", 
+                    choices = c("CAS", "HMDB", "KEGG", "PubChem"), 
+                    selected = preSelectedIDType(), selectize = FALSE)
       )
     }
   })
@@ -88,31 +93,32 @@ shinyServer(function(input, output) {
          .f = ~ removeCssClass(class = "success", selector = paste0("#uploadedDataTable table th:nth-child(", .x, ")")))
   }, ignoreNULL = FALSE, ignoreInit = TRUE)
   
-  ################################################
-  #                                              #
-  #               Plot Tab Handlers              #
-  #                                              #
-  ################################################
-  
-  # Placeholder output for Output Tab
-  output$databases <- renderTable({
-    head(name_map)
-  })
-  
-  # observeEvent(input$tryExamples, {
-  #   session$sendCustomMessage(type = 'testmessage',
-  #                             message = 'Thank you for clicking')
+  # If a column ID picked is (case insensitively) matched to an ID we already
+  # have, preselect it.
+  # observeEvent(input$columnsPicked, {
+  #   if (tolower(input$columnsPicked) %in% c("cas", "pubchem", "hmdb", "kegg")) {
+  #     preSelectedIDType(input$columnsPicked)
+  #   }
   # })
+  ################################################
+  #                                              #
+  #                Map Tab Handlers              #
+  #                                              #
+  ################################################
   
-  # Placeholder output for Plot Tab
-  output$distPlot <- renderPlot({
-
-    # generate bins based on input$bins from ui.R
-    x    <- faithful[, 2]
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-    # draw the histogram with the specified number of bins
-    hist(x, breaks = bins, col = 'darkgray', border = 'white')
-
+  ## Here's where the heavy lifting takes place!!
+  ## We now take the columns the user specified and map them to genes!
+  ## Even better, now that we have a UI, we can choose 
+  observeEvent(input$mapButton, {
+    mappingOutput <- mapGenerally(importDF = metaboliteObject(), col = input$columnsPicked, 
+                                  db = input$dbChosen, idType = input$idType)
+    mappedMetabolites(mappingOutput)
+  }, ignoreInit = TRUE)
+  
+  ## Once metabolites have been mapped, preview the results!
+  output$mappedMetaboliteTable <- renderTable({
+    if (is.null(mappedMetabolites()))
+      return(NULL)
+    head(mappedMetabolites(), n = 20)
   })
 })
