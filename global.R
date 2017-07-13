@@ -4,6 +4,7 @@ library(shinyjs)
 library(tidyverse)
 library(stringr)
 library(magrittr)
+library(DT)
 
 ## Load System Data
 load('data/sysdata.rda')

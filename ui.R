@@ -10,12 +10,11 @@ shinyUI(fluidPage(
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css"),
     tags$link(rel = "stylesheet", type = "text/css", href = "user.css")
-    # tags$link(type = "text/javascript", href = "user.js")
   ),
   navbarPage(
-    "MetaBridge",
+    "MetaBridge", id = "navbarLayout",
     collapsible = TRUE,
-    tabPanel("Upload", 
+    tabPanel("Upload", value = "uploadPanel",
              # h2("Upload Metabolites"),
              tags$div(class = "col-sm-4 manual-sidebar",
                       tags$form(class = "well",
@@ -36,10 +35,10 @@ shinyUI(fluidPage(
            ),
              tags$div(class = "col-sm-8",
                textOutput('uploadSuccess'),
-               tableOutput('uploadedDataTable')
+               dataTableOutput('uploadedDataTable')
              )
              ),
-    tabPanel("Map", 
+    tabPanel("Map", value = "mapPanel",
       # h2("Map Metabolites to Interacting Enzymes"),
       # Manual Sidebar
       tags$div(
@@ -51,17 +50,43 @@ shinyUI(fluidPage(
                        choices = c("MetaCyc", "KEGG"), 
                        selected = "MetaCyc"), 
           actionButton("mapButton", "Map")
-        )
+        ),
+        uiOutput('saveMappingPanel')
       ),
       tags$div(
         class = "col-sm-8",
-        tableOutput('mappedMetaboliteTable')
+        DT::dataTableOutput('mappedMetaboliteTable'), 
+        textOutput('horizontalScrollMessage')
       )
-    ), 
-    tabPanel("Output",
-             tableOutput('databases')),
-    tabPanel("NetworkAnalyst"), 
-    tabPanel("About", class = "navbar-right"), 
-    tabPanel("Help", class = "navbar-right")
+    ),
+    tabPanel("Visualize"),
+    # tabPanel("NetworkAnalyst"),
+    
+    # Simple alternative to 'float: right'
+    navbarMenu("More",
+      tabPanel(
+        "About", 
+        tags$div(
+          class = "jumbotron",
+          h1("About"),
+          "MetaBridge was designed by Samuel Hinshaw at the Centre for Microbial Diseases and Immunity Research at The University of British Columbia" 
+        )
+      ),
+      tabPanel(
+        "Help", 
+        tags$div(
+          class = "jumbotron",
+          h1("Help"),
+          "For assistance, you can reach me on twitter, @samhinshaw.",
+          # HTML('<a href="https://twitter.com/intent/tweet?screen_name=samhinshaw" class="twitter-mention-button" data-show-count="false">Tweet to @samhinshaw</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>'),
+          br(),br(),
+          tags$button(
+            class = "btn btn-info btn-lg",
+            "Tweet"
+          )
+        )
+      )
+    )
   )
+  # tags$script(src = "user.js")
 ))

@@ -22,12 +22,21 @@
   bottom: 0;
 }
 
-#mapButton {
+#continueToMap,
+#mapButton,
+#downloadMappingData {
   display: inline-block;
   position: absolute;
   right: 10px;
   bottom: 10px;
 }
+/*
+#continueToMap {
+  display: block;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}*/
 
 form.well {
   position: relative;
@@ -44,4 +53,9 @@ form.well {
 /*#uploadedDataTable table td:nth-child(1),
 #uploadedDataTable table th:nth-child(1) {
   background-color: rgb(23, 202, 233);
+}*/
+
+/*.aboutWrapper {
+  margin: 0 auto;
+  text-align: center;
 }*/

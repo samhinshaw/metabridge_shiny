@@ -5,7 +5,7 @@
 # http://shiny.rstudio.com
 #
 
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
 
   ################################################
   #                                              #
@@ -50,12 +50,21 @@ shinyServer(function(input, output) {
   })
   
   ## Once data is populated, render preview of data to user
-  output$uploadedDataTable <- renderTable({
+  output$uploadedDataTable <- renderDataTable({
     input$tryExamples # make sure the try examples button is a dependency
     if (is.null(metaboliteObject()))
       return(NULL)
     metaboliteObject()
-  })
+  }, options = list(
+    pageLength = 10,
+    lengthMenu = c(5, 10, 15, 20),
+    # autoWidth = TRUE,
+    scrollX = '100%' # AMAZING! Crucial argument to make sure DT doesn't overflow
+  ),
+  rownames= FALSE,
+  style = 'bootstrap',
+  class = 'table-bordered table-responsive'
+  )
   
   ## When data is populated, show column picker panel for users to select
   output$columnPickerPanel <- renderUI({
@@ -65,9 +74,10 @@ shinyServer(function(input, output) {
         class = "well",
         ## For now, just allow one column. Later we can allow multiple to be chosen. 
         radioButtons("columnsPicked", "Choose Columns", dataColumns),
-        selectInput("idType", "ID Type", 
+        selectInput("idType", "ID Type", width = "50%",
                     choices = c("CAS", "HMDB", "KEGG", "PubChem"), 
-                    selected = preSelectedIDType(), selectize = FALSE)
+                    selected = preSelectedIDType(), selectize = FALSE),
+        actionButton("continueToMap", "Proceed")
       )
     }
   })
@@ -83,14 +93,18 @@ shinyServer(function(input, output) {
     unselectedColPositions <- setdiff(possibleColPositions, selectedColPositions)
     # Add CSS classes to selected columns
     walk(.x = selectedColPositions, 
-         .f = ~ addCssClass(class = "success", selector = paste0("#uploadedDataTable table td:nth-child(", .x, ")")))
+         .f = ~ addCssClass(class = "info", 
+                            selector = paste0("#uploadedDataTable table td:nth-child(", .x, ")")))
     walk(.x = selectedColPositions, 
-         .f = ~ addCssClass(class = "success", selector = paste0("#uploadedDataTable table th:nth-child(", .x, ")")))
+         .f = ~ addCssClass(class = "info", 
+                            selector = paste0("#uploadedDataTable table th:nth-child(", .x, ")")))
     # Remove CSS classes from unselected columns
     walk(.x = unselectedColPositions, 
-         .f = ~ removeCssClass(class = "success", selector = paste0("#uploadedDataTable table td:nth-child(", .x, ")")))
+         .f = ~ removeCssClass(class = "info", 
+                               selector = paste0("#uploadedDataTable table td:nth-child(", .x, ")")))
     walk(.x = unselectedColPositions, 
-         .f = ~ removeCssClass(class = "success", selector = paste0("#uploadedDataTable table th:nth-child(", .x, ")")))
+         .f = ~ removeCssClass(class = "info", 
+                               selector = paste0("#uploadedDataTable table th:nth-child(", .x, ")")))
   }, ignoreNULL = FALSE, ignoreInit = TRUE)
   
   # If a column ID picked is (case insensitively) matched to an ID we already
@@ -100,6 +114,12 @@ shinyServer(function(input, output) {
   #     preSelectedIDType(input$columnsPicked)
   #   }
   # })
+  
+  ## Switch to Map panel when "Proceed" is clicked on Upload tab
+  observeEvent(input$continueToMap, {
+    updateNavbarPage(session, inputId = "navbarLayout", selected = "mapPanel")
+  }, ignoreInit = TRUE)
+  
   ################################################
   #                                              #
   #                Map Tab Handlers              #
@@ -116,9 +136,55 @@ shinyServer(function(input, output) {
   }, ignoreInit = TRUE)
   
   ## Once metabolites have been mapped, preview the results!
-  output$mappedMetaboliteTable <- renderTable({
+  output$mappedMetaboliteTable <- DT::renderDataTable({
     if (is.null(mappedMetabolites()))
       return(NULL)
-    head(mappedMetabolites(), n = 20)
+    mappedMetabolites()
+      # head(n = 20) # DT will take care of this for us. 
+  }, options = list(
+    pageLength = 5,
+    lengthMenu = c(5, 10, 15, 20),
+    # autoWidth = TRUE,
+    scrollX = '100%' # AMAZING! Crucial argument to make sure DT doesn't overflow
+    ),
+  rownames= FALSE,
+  style = 'bootstrap',
+  class = 'table-bordered table-responsive'
+  )
+  
+  ## If MetaCyc database was used, mention that DT is horizontally scrollable
+  
+  output$horizontalScrollMessage <- renderText({
+    input$mapButton
+    if (is.null(mappedMetabolites()))
+      return(NULL)
+    else if (isolate(input$dbChosen) == "MetaCyc") {
+      return("Note: This table is horizontally-scrollable.")
+    }
   })
+  
+  ## Once table exists, render save panel
+  output$saveMappingPanel <- renderUI({
+    if (!is.null(mappedMetabolites())) {
+      tags$form(
+        class = "well",
+        radioButtons("saveType", "Download Results",
+                     choices = c('Comma-Separated Values' = 'csv', 
+                                 'Tab-Separated Values' = 'tsv'), 
+                     selected = 'csv'),
+        downloadButton('downloadMappingData', 'Download')
+      )
+    }
+  })
+  
+  ## Export data
+  output$downloadMappingData <- downloadHandler(
+    filename = function() { paste0('mapped_metabolites_', input$dbChosen, ".", input$saveType) },
+    content  = function(file) {
+      write_delim(mappedMetabolites(), file, 
+                  delim = switch(input$saveType, 
+                                 "csv" = ",", 
+                                 "tsv" = "\t"))
+    }
+  )
 })
