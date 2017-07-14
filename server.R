@@ -16,7 +16,7 @@ shinyServer(function(input, output, session) {
   # Reactive Object for Metabolite Data
   metaboliteObject <- reactiveVal()
   mappedMetabolites <- reactiveVal()
-  preSelectedIDType <- reactiveVal("HMDB")
+  preSelectedIDType <- reactiveVal()
   
   ################################################
   #                                              #
@@ -52,12 +52,15 @@ shinyServer(function(input, output, session) {
   }, ignoreNULL = TRUE, ignoreInit = TRUE)
   
   ## Once data is populated, render help text to user
-  output$uploadSuccess <- renderText({
+  output$uploadSuccess <- renderUI({
     input$tryExamples # make sure the try examples button is a dependency
     if (is.null(metaboliteObject()))
       return(NULL)
-    paste0("Please check below to see that your data has been uploaded properly.  ",
-           "If so, pick a column and continue to the 'Map' tab!")
+    tags$p(
+      class = "conditional-help",
+      "Check below to see that your data has been uploaded properly.  ",
+      "If so, pick a column and proceed to the 'Map' tab!"
+    )
   })
   
   ## Once data is populated, render preview of data to user
@@ -84,13 +87,29 @@ shinyServer(function(input, output, session) {
       tags$form(
         class = "well",
         ## For now, just allow one column. Later we can allow multiple to be chosen. 
-        radioButtons("columnsPicked", "Choose Columns", dataColumns),
-        selectInput("idType", "ID Type", width = "50%",
-                    choices = c("CAS", "HMDB", "KEGG", "PubChem"), 
-                    selected = preSelectedIDType(), selectize = FALSE),
-        actionButton("continueToMap", "Proceed")
+        radioButtons("columnsPicked", "Choose Columns", dataColumns, 
+                     # If an HMDB column exists in the data, default to that
+                     selected = if_else(
+                       condition = is_in('hmdb', tolower(dataColumns)),
+                       true = 'HMDB',
+                       false = NULL
+                     )),
+        uiOutput('idSelector')
       )
     }
+  })
+  
+  # This has to be rendered separately from the column picker panel. Otherwise,
+  # the entire column picker panel has to be re-rendered when the preselected ID
+  # type gets updated, which resets the entire panel, which reverts to the
+  # preselected column, effectively making it impossible to switch columns!
+  output$idSelector <- renderUI({
+    tags$div(
+      selectInput("idType", "ID Type", width = "50%",
+                  choices = c("HMDB", "KEGG", "PubChem", 'CAS'), 
+                  selected = preSelectedIDType(), selectize = FALSE),
+      actionButton("continueToMap", "Proceed")
+    )
   })
   
   ## Get column positions of selected columns and add CSS class
@@ -104,27 +123,36 @@ shinyServer(function(input, output, session) {
     unselectedColPositions <- setdiff(possibleColPositions, selectedColPositions)
     # Add CSS classes to selected columns
     walk(.x = selectedColPositions, 
-         .f = ~ addCssClass(class = "info", 
-                            selector = paste0("#uploadedDataTable table td:nth-child(", .x, ")")))
+         .f = ~ addCssClass(
+           class = "info", 
+           selector = paste0("#uploadedDataTable table td:nth-child(", .x, ")")
+         ))
     walk(.x = selectedColPositions, 
-         .f = ~ addCssClass(class = "info", 
-                            selector = paste0("#uploadedDataTable table th:nth-child(", .x, ")")))
+         .f = ~ addCssClass(
+           
+           class = "info", 
+           selector = paste0("#uploadedDataTable table th:nth-child(", .x, ")")
+         ))
     # Remove CSS classes from unselected columns
     walk(.x = unselectedColPositions, 
-         .f = ~ removeCssClass(class = "info", 
-                               selector = paste0("#uploadedDataTable table td:nth-child(", .x, ")")))
+         .f = ~ removeCssClass(
+           class = "info", 
+           selector = paste0("#uploadedDataTable table td:nth-child(", .x, ")")
+         ))
     walk(.x = unselectedColPositions, 
-         .f = ~ removeCssClass(class = "info", 
-                               selector = paste0("#uploadedDataTable table th:nth-child(", .x, ")")))
+         .f = ~ removeCssClass(
+           class = "info", 
+           selector = paste0("#uploadedDataTable table th:nth-child(", .x, ")")
+         ))
   }, ignoreNULL = FALSE, ignoreInit = TRUE)
   
   # If a column ID picked is (case insensitively) matched to an ID we already
   # have, preselect it.
-  # observeEvent(input$columnsPicked, {
-  #   if (tolower(input$columnsPicked) %in% c("cas", "pubchem", "hmdb", "kegg")) {
-  #     preSelectedIDType(input$columnsPicked)
-  #   }
-  # })
+  observeEvent(input$columnsPicked, {
+    if (tolower(input$columnsPicked) %in% c("cas", "pubchem", "hmdb", "kegg")) {
+      preSelectedIDType(input$columnsPicked)
+    }
+  }, ignoreNULL = TRUE, ignoreInit = TRUE)
   
   ## Switch to Map panel when "Proceed" is clicked on Upload tab
   observeEvent(input$continueToMap, {

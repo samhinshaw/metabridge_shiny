@@ -15,12 +15,23 @@
   padding-right: 15px;
 }
 
-/*#tryExamples {
+/*If the input panel is wide enough, put the link in the bottom right*/
+.col-sm-3 form .btn-link,
+.col-sm-4 form .btn-link {
   display: inline-block;
   position: absolute;
   right: 0;
   bottom: 0;
-}*/
+}
+
+/*If the input panel is wide enough, put the button in the bottom right*/
+.col-sm-3 form .action-button,
+.col-sm-4 form .action-button {
+  display: inline-block;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
 
 /*#mapButton,*/
 /*#downloadMappingData,*/
@@ -39,11 +50,11 @@
   bottom: 10px;
 }*/
 
-form.well {
+.well {
   position: relative;
 }
 
-#uploadSuccess {
+.conditional-help {
   margin-bottom: 10px;
 }
 
