@@ -15,21 +15,22 @@
   padding-right: 15px;
 }
 
-#tryExamples {
+/*#tryExamples {
   display: inline-block;
   position: absolute;
   right: 0;
   bottom: 0;
-}
+}*/
 
-#continueToMap,
-#mapButton,
-#downloadMappingData {
+/*#mapButton,*/
+/*#downloadMappingData,*/
+/*#continueToMap {
   display: inline-block;
   position: absolute;
   right: 10px;
   bottom: 10px;
-}
+}*/
+
 /*
 #continueToMap {
   display: block;
