@@ -20,6 +20,17 @@ shinyServer(function(input, output, session) {
   
   ################################################
   #                                              #
+  #            Welcome Tab Handlers              #
+  #                                              #
+  ################################################
+  
+  # When clicking "Get Started", switch to Upload panel
+  observeEvent(input$getStarted, {
+    updateNavbarPage(session, inputId = "navbarLayout", selected = "uploadPanel")
+  }, ignoreInit = TRUE)
+  
+  ################################################
+  #                                              #
   #            Upload Tab Handlers               #
   #                                              #
   ################################################
@@ -149,7 +160,7 @@ shinyServer(function(input, output, session) {
     ),
   rownames= FALSE,
   style = 'bootstrap',
-  class = 'table-bordered table-responsive'
+  class = 'table-bordered table-responsive compact'
   )
   
   ## If MetaCyc database was used, mention that DT is horizontally scrollable
@@ -187,4 +198,5 @@ shinyServer(function(input, output, session) {
                                  "tsv" = "\t"))
     }
   )
+  
 })
