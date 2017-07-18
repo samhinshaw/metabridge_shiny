@@ -188,7 +188,8 @@ shinyServer(function(input, output, session) {
     ),
   rownames= FALSE,
   style = 'bootstrap',
-  class = 'table-bordered table-responsive compact'
+  class = 'table-bordered table-responsive compact', 
+  escape = FALSE
   )
   
   ## If MetaCyc database was used, mention that DT is horizontally scrollable
@@ -201,6 +202,11 @@ shinyServer(function(input, output, session) {
       return("Note: This table is horizontally-scrollable.")
     }
   })
+  
+  ## Watch for the "try again" button that will be rendered if an error occurs in mapping
+  observeEvent(input$remap, {
+    updateNavbarPage(session, inputId = "navbarLayout", selected = "uploadPanel")
+  }, ignoreInit = TRUE, ignoreNULL = TRUE)
   
   ## Once table exists, render save panel
   output$saveMappingPanel <- renderUI({
