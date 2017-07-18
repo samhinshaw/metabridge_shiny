@@ -71,3 +71,9 @@
   margin: 0 auto;
   text-align: center;
 }*/
+
+/*Make action link within alert normal color*/
+.alert a.action-button {
+  color: #ffffff;
+  text-decoration: underline;
+}
