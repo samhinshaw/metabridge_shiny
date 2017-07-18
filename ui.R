@@ -42,7 +42,11 @@ shinyUI(fluidPage(
                                              selected = ','),
                                 actionLink(inputId = "tryExamples",
                                            class = "btn btn-link",
-                                           label = "Try Examples")
+                                           label = "Try Examples", 
+                                           `data-toggle` = "tooltip",
+                                           `data-placement` = "right",
+                                           type = "button",
+                                           `data-original-title` = "Try an example dataset from MetaboAnalyst")
                       ),
                       uiOutput('columnPickerPanel')
              ),
