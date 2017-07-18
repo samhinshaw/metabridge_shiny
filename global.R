@@ -10,5 +10,5 @@ library(DT)
 load('data/sysdata.rda')
 load('data/name_map.RData')
 
-# source('mapAll.R')
-source('mapGenerally.R')
+source('mapGenerally.R', local = TRUE)
+source('alertFunctions.R', local = TRUE)
