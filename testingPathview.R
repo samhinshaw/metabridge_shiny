@@ -10,7 +10,21 @@ miniTestResults <- testResults %>%
 pathview(
   gene.data = miniTestResults$`Official Gene Symbol`, 
   cpd.data = miniTestResults$KEGG,
-  pathway.id = "00780",
+  pathway.id = "00260",
+  gene.idtype = "SYMBOL",
+  species = "hsa"
+)
+pathview(
+  gene.data = miniTestResults$`Official Gene Symbol`, 
+  cpd.data = miniTestResults$KEGG,
+  pathway.id = "00330",
+  gene.idtype = "SYMBOL",
+  species = "hsa"
+)
+pathview(
+  gene.data = miniTestResults$`Official Gene Symbol`, 
+  cpd.data = miniTestResults$KEGG,
+  pathway.id = "01100",
   gene.idtype = "SYMBOL",
   species = "hsa"
 )

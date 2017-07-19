@@ -253,6 +253,16 @@ shinyServer(function(input, output, session) {
   #                                              #
   ################################################
   
+  # source('nodeInfoDebug.R')
+  # parseKGML2 <- parseKGML
+  pathview(
+    gene.data = miniTestResults$`Official Gene Symbol`, 
+    cpd.data = miniTestResults$KEGG,
+    pathway.id = "00780",
+    gene.idtype = "SYMBOL",
+    species = "hsa"
+  )
+  
   output$debugWindow <- renderTable(
     # Select table via DT API for row selection. UNFORTUNATELY, as far as I know
     # this must be done via row number. Fortunately, since DT is in charge of
