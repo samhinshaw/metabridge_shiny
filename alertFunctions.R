@@ -1,26 +1,30 @@
-mappingAlert <- function(alertMsg, mappingError) {
+mappingAlert <- function(message, suggest, status) {
   insertUI(
     selector = "#mappedMetaboliteTable",
     where = "beforeBegin",
     ui = tags$div(
-      class = "alert alert-dismissible alert-danger",
+      id = 'mappingAlert',
+      class = if (status == 'error' | status == 'empty') {
+        "alert alert-dismissible alert-danger"
+      } else if (status == 'warn') {
+        "alert alert-dismissible alert-warning"
+      } else if (status == 'success') {
+        "alert alert-dismissible alert-success"
+      },
       tags$button(
         HTML("&times;"),
         type = "button",
         class = "close",
         `data-dismiss` = "alert"),
-      if (identical(mappingError, character(0))) {
-        tags$strong('Warning: ')
-      } else if (str_detect('error', tolower(paste0(mappingError)))) {
-        tags$strong('Error: ')
-      } else if (str_detect('warning', tolower(paste0(mappingError)))) {
-        tags$strong('Warning: ')
+      message,
+      if (!is.null(suggest)) {
+        actionLink(
+          inputId = 'remap',
+          label = suggest)
       },
-      alertMsg,
-      actionLink(
-        inputId = 'remap',
-        label = 'Try changing your mapping parameters.'
-      )
+      if (status == 'warn') {
+        "Please contact me on twitter with the details!"
+      }
     )
   )
 }

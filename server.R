@@ -169,9 +169,17 @@ shinyServer(function(input, output, session) {
   ## We now take the columns the user specified and map them to genes!
   ## Even better, now that we have a UI, we can choose 
   observeEvent(input$mapButton, {
+    # Clear any pre-existing alerts
+    removeUI(selector = "#mappingAlert")
+    # Conduct the mapping
     mappingOutput <- mapGenerally(importDF = metaboliteObject(), col = input$columnsPicked, 
                                   db = input$dbChosen, idType = input$idType)
-    mappedMetabolites(mappingOutput)
+    # Assign the mapped data to our reactive value
+    mappedMetabolites(mappingOutput$data)
+    # Create new alert bubble with status message
+    mappingAlert(status = mappingOutput$status, 
+                 message = mappingOutput$message, 
+                 suggest = mappingOutput$suggest)
   }, ignoreInit = TRUE)
   
   ## Once metabolites have been mapped, preview the results!
@@ -191,6 +199,12 @@ shinyServer(function(input, output, session) {
   class = 'table-bordered table-responsive compact', 
   escape = FALSE
   )
+  
+  # output$mappingTableTitle <- renderUI({
+  #   if (!is.null(mappedMetabolites())){
+  #     tags$h2("Your Input")
+  #   }
+  # })
   
   ## If MetaCyc database was used, mention that DT is horizontally scrollable
   

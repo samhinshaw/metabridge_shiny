@@ -17,96 +17,126 @@ mapMetaCyc <- function(importDF, col, idType) {
     # Extract the column of interest (col) and construct a new tibble with which 
     # we will mape our metabolites to enzymes and then genes. As character just in
     # case IDs such as PubChem IDs are interpreted as integers
-  mappingDF <- tryCatch({
-    mappingDF <- data_frame(UQ(col) := importDF %>% use_series(UQ(col)) %>% as.character())
-  }, warning = function(warningMessage) {
-    warningMessage
-  }, error = function(errorMessage) {
-    errorMessage
-  }, finally = {
-    mappingDF
-  })
   
-  # If exited with error, return previous step with relevant error message
-  if (!is.data.frame(mappingDF)) {
-    mappingAlert('We were unable to properly import your data.', paste0(mappingDF))
-    return(importDF)
-  }
-  if (nrow(mappingDF) == 0) {
-    mappingAlert('We were unable to properly import your data.', paste0(mappingDF))
-    return(importDF)
+  # Note: in tryCatch, finally is always evaluated! 
+  mappingDF <- tryCatch({
+    # The return value in this chunk is the actual value 
+    # that will be returned in case there is no condition 
+    # (e.g. warning or error). 
+    # You don't need to state the return value via `return()` as code 
+    # in the "try" part is not wrapped insided a function (unlike that
+    # for the condition handlers for warnings and error below)
+    this <- data_frame(UQ(col) := importDF %>% use_series(UQ(col)) %>% as.character())
+    # Check to see if join failed silently
+    if (nrow(this) == 0) {
+      list(status = 'empty', data = importDF, 
+           message = 'We were unable to properly import your data.',
+           suggest = 'Try changing your mapping parameters.')
+    } else {
+      list(status = 'success', data = this, 
+           message = 'Your metabolites have been successfully mapped!', 
+           suggest = NULL)
+    }
+  }, warning = function(warningMessage) {
+    list(status = 'warn', data = this, 
+         message = 'We were unable to properly import your data.',
+         suggest = 'Try changing your mapping parameters.')
+  }, error = function(errorMessage) {
+    list(status = 'error', data = importDF, 
+         message = 'We were unable to properly import your data.',
+         suggest = 'Try changing your mapping parameters.')
+  })
+  # NOTE:
+  # Everything in finally should be executed at the end,
+  # regardless of success or error.
+  
+  if (mappingDF$status == 'error' | mappingDF$status == 'empty') {
+    return(mappingDF)
   }
   
   # Now map these to the MetaCyc Object IDs
-  mappedDF <- tryCatch({
-    mappedDF <- inner_join(mappingDF, metaCycDBLinks, by = setNames(nm = c(col = idType))) %>% 
+  mappedToObjects <- tryCatch({
+    this <- inner_join(mappingDF$data, metaCycDBLinks, by = setNames(nm = c(col = idType))) %>% 
       select_(col, "Compound") %>% rename_("compound" = "Compound")
+    # Check to see if join failed silently
+    if (nrow(this) == 0) {
+      list(status = 'empty', data = mappingDF$data, 
+           message = paste0('We were unable to find any matches in the MetaCyc ',
+                            'database for the compound IDs you provided.'), 
+           suggest = 'Try using a different compound ID or mapping via KEGG.')
+    } else {
+      list(status = 'success', data = this, 
+           message = 'Your metabolites have been successfully mapped!', 
+           suggest = NULL)
+    }
   }, warning = function(warningMessage) {
-    warningMessage
+    list(status = 'warn', data = this, 
+         message = 'There was an unspecified error in mapping your compounds.',
+         suggest = NULL)
   }, error = function(errorMessage) {
-    errorMessage
-  }, finally = {
-    mappedDF
+    list(status = 'error', data = mappingDF$data, 
+         message = 'We were unable to map your metabolites to MetaCyc Compound IDs.', 
+         suggest = 'Try changing your mapping parameters.')
   })
   
-  # If exited with error, return previous step with relevant error message
-  if (!is.data.frame(mappedDF)) {
-    mappingAlert('We were unable to map your metabolites to MetaCyc Compound IDs.', paste0(mappedDF))
-    return(mappingDF)
+  # If tryCatch exited with status != 0, stop here
+  if (mappedToObjects$status == 'error' | mappedToObjects$status == 'empty') {
+    return(mappedToObjects)
   }
-  if (nrow(mappedDF) == 0) {
-    mappingAlert(paste0('We were unable to find any matches in the MetaCyc ',
-                        'database for the compound IDs you provided.'), paste0(mappedDF))
-    # cat(mappedDF)
-    return(mappingDF)
-  }
-  
+
   # Finally, join the reaction-gene table!
-  fullyMappedDF <- tryCatch({
-    fullyMappedDF <- inner_join(mappedDF, metaCycDB, by = "compound")
-  }, warning = function(w) {
-    'error'
-  }, error = function(e) {
-    'error'
-  }, finally = {
-    fullyMappedDF
-  })
-  
-  # If exited with error, return previous step with relevant error message
-  if (!is.data.frame(fullyMappedDF)) {
-    mappingAlert('We were unable to map your compounds to any reactions.', paste0(fullyMappedDF))
-    return(mappedDF)
-  }
-  if (nrow(fullyMappedDF) == 0) {
-    mappingAlert('We were unable to map your compounds to any reactions.', paste0(fullyMappedDF))
-    return(mappedDF)
-  }
-  
-    ## Finally, finally, map biocyc gene IDs to ensembl gene IDs
-  mappedDFEnsembl <- tryCatch({
-    mappedDFEnsembl <- inner_join(fullyMappedDF, metaCycGeneIDs, 
-                                  by = c("gene" = "Object ID"))
+  mappedToReactions <- tryCatch({
+    this <- inner_join(mappedToObjects$data, metaCycDB, by = "compound")
+    # Check to see if join failed silently
+    if (nrow(this) == 0) {
+      list(status = 'empty', data = mappedToObjects$data, 
+           message = 'We were unable to map your compounds to any reactions.', 
+           suggest = 'Try using a different compound ID or mapping via KEGG.')
+    } else {
+      list(status = 'success', data = this, 
+           message = 'Your metabolites have been successfully mapped!', 
+           suggest = NULL)
+    }
   }, warning = function(warningMessage) {
-    warningMessage
+    list(status = 'warn', data = this, 
+         message = 'Your compounds were mapped, but there may have been a problem.', 
+         suggest = NULL)
   }, error = function(errorMessage) {
-    errorMessage
-  }, finally = {
-    mappedDFEnsembl
+    list(status = 'error', data = mappedToObjects$data, 
+         message = 'We were unable to map your compounds to any reactions.', 
+         suggest = 'Try changing your mapping parameters.')
   })
   
-  # If exited with error, return previous step with relevant error message
-  if (!is.data.frame(mappedDFEnsembl)) {
-    mappingAlert('There was an error mapping your compounds to human gene IDs.', paste0(mappedDFEnsembl))
-    return(fullyMappedDF)
+  if (mappedToReactions$status == 'error' | mappedToReactions$status == 'empty') {
+    return(mappedToReactions)
   }
-  if (nrow(mappedDFEnsembl) == 0) {
-    mappingAlert(paste0('We were unable to find any matches for ',
-                        'human gene IDs given the enzymes mapped.'), paste0(mappedDFEnsembl))
-    return(fullyMappedDF)
-  }
-  
-  # print('Returning Final Step Mapped DF')
-  return(mappedDFEnsembl)
+
+    ## Finally, finally, map biocyc gene IDs to ensembl gene IDs
+  mappedToEnsembl <- tryCatch({
+    this <- inner_join(mappedToReactions$data, metaCycGeneIDs,
+                       by = c("gene" = "Object ID"))
+    # Check to see if join failed silently
+    if (nrow(this) == 0) {
+      list(status = 'empty', data = mappedToReactions$data, 
+           message = paste0('We were unable to find any matches for ',
+                            'human gene IDs given the enzymes mapped.'), 
+           suggest = 'Try using a different compound ID or mapping via KEGG.')
+    } else {
+      list(status = 'success', data = this, 
+           message = 'Your metabolites have been successfully mapped!', 
+           suggest = NULL)
+    }  
+  }, warning = function(warningMessage) {
+    list(status = 'warn', data = this, 
+         message = 'Your compounds were mapped, but there may have been a problem.', 
+         suggest = NULL)
+  }, error = function(errorMessage) {
+    list(status = 'error', data = mappedToReactions$data, 
+         error = 'There was an error mapping your compounds to human gene IDs.',
+         suggest = 'Try changing your mapping parameters.')
+  })
+
+  return(mappedToEnsembl)
 }
 
 mapKEGG <- function(importDF, col, idType) {
