@@ -57,7 +57,7 @@ mapMetaCyc <- function(importDF, col, idType) {
   # Now map these to the MetaCyc Object IDs
   mappedToObjects <- tryCatch({
     this <- inner_join(mappingDF$data, metaCycDBLinks, by = setNames(nm = c(col = idType))) %>% 
-      select_(col, "Compound") %>% rename_("compound" = "Compound")
+      dplyr::select_(col, "Compound") %>% rename_("compound" = "Compound")
     # Check to see if join failed silently
     if (nrow(this) == 0) {
       list(status = 'empty', data = mappingDF$data, 
@@ -86,7 +86,10 @@ mapMetaCyc <- function(importDF, col, idType) {
 
   # Finally, join the reaction-gene table!
   mappedToReactions <- tryCatch({
-    this <- inner_join(mappedToObjects$data, metaCycDB, by = "compound")
+    this <- inner_join(mappedToObjects$data, metaCycDB, by = "compound") %>% 
+      rename_("Reaction" = "reaction", "Compound" = "compound",
+              "MetaCyc Gene ID" = "gene",
+              "Official Gene Symbol" = "geneName")
     # Check to see if join failed silently
     if (nrow(this) == 0) {
       list(status = 'empty', data = mappedToObjects$data, 
@@ -114,7 +117,10 @@ mapMetaCyc <- function(importDF, col, idType) {
     ## Finally, finally, map biocyc gene IDs to ensembl gene IDs
   mappedToEnsembl <- tryCatch({
     this <- inner_join(mappedToReactions$data, metaCycGeneIDs,
-                       by = c("gene" = "Object ID"))
+                       by = c("MetaCyc Gene ID" = "Object ID")) %>% 
+      dplyr::select_(col, "Compound", "`MetaCyc Gene ID`", 
+                     "`Official Gene Symbol`", "Ensembl", "Reaction") %>% 
+      rename_("Ensembl Gene ID" = "Ensembl")
     # Check to see if join failed silently
     if (nrow(this) == 0) {
       list(status = 'empty', data = mappedToReactions$data, 
@@ -131,6 +137,7 @@ mapMetaCyc <- function(importDF, col, idType) {
          message = 'Your compounds were mapped, but there may have been a problem.', 
          suggest = NULL)
   }, error = function(errorMessage) {
+    print(errorMessage)
     list(status = 'error', data = mappedToReactions$data, 
          error = 'There was an error mapping your compounds to human gene IDs.',
          suggest = 'Try changing your mapping parameters.')

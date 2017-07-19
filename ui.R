@@ -45,21 +45,21 @@ shinyUI(fluidPage(
                                            label = "Try Examples", 
                                            `data-toggle` = "tooltip",
                                            `data-placement` = "right",
-                                           type = "button",
                                            `data-original-title` = "Try an example dataset from MetaboAnalyst")
                       ),
                       uiOutput('columnPickerPanel')
              ),
              tags$div(class = "col-sm-9",
+                      tags$h2('Uploaded Data', class = 'tab-header'),
                       uiOutput('uploadSuccess'),
                       dataTableOutput('uploadedDataTable')
              )
     ),
-    tabPanel("Map", value = "mapPanel",
+    tabPanel(title = "Map", value = "mapPanel",
              # h2("Map Metabolites to Interacting Enzymes"),
              # Manual Sidebar
              tags$div(
-               class = "col-sm-2 manual-sidebar",
+               class = "col-sm-3 manual-sidebar",
                tags$form(
                  class = "well",
                  ## For now just allow one database. Later we can allow multiple
@@ -71,12 +71,15 @@ shinyUI(fluidPage(
                uiOutput('saveMappingPanel')
              ),
              tags$div(
-               class = "col-sm-10",
+               class = "col-sm-9",
+               tags$h2('Mapping Output', class = "tab-header"),
                DT::dataTableOutput('mappedMetaboliteTable'), 
                textOutput('horizontalScrollMessage')
              )
     ),
-    tabPanel("Visualize"),
+    tabPanel(title = "Visualize", value = "vizPanel",
+             tableOutput('debugWindow')
+    ),
     # tabPanel("NetworkAnalyst"),
     # Simple alternative to 'float: right'
     navbarMenu("More",
@@ -85,10 +88,19 @@ shinyUI(fluidPage(
                  "About", 
                  tags$div(
                    class = "jumbotron",
-                   h1("About"),
-                   "MetaBridge was designed by Samuel Hinshaw at the Centre for 
-                   Microbial Diseases and Immunity Research at The University of British Columbia" 
-                 )
+                   tags$h1("About"),
+                   "MetaBridge was designed by Samuel Hinshaw at the Centre for Microbial Diseases and Immunity Research at The University of British Columbia",
+                   tags$h2("Sources"),
+                   tags$ul(
+                     tags$li("Luo, W. and Brouwer C., Pathview: an R/Bioconductor package for pathway-based data integration and visualization. Bioinformatics, 2013, 29(14): 1830-1831, doi: 10.1093/bioinformatics/btt285"),
+                     tags$li("Hadley Wickham (NA). tidyverse: Easily Install and Load the 'Tidyverse'. http://tidyverse.tidyverse.org, https://github.com/tidyverse/tidyverse."),
+                     tags$li("Winston Chang, Joe Cheng, JJ Allaire, Yihui Xie and Jonathan McPherson (NA). shiny: Web Application Framework for R. R package version 1.0.3.9001. http://shiny.rstudio.com"),
+                     tags$li("Yihui Xie (2016). DT: A Wrapper of the JavaScript Library 'DataTables'. R package version 0.2.12. http://rstudio.github.io/DT"),
+                     tags$li("Dean Attali (2017). shinyjs: Easily Improve the User Experience of Your Shiny Apps in Seconds. R package version 0.9.1. https://CRAN.R-project.org/package=shinyjs"),
+                     tags$li("Stefan Milton Bache and Hadley Wickham (2014). magrittr: A Forward-Pipe Operator for R. R package version 1.5. https://CRAN.R-project.org/package=magrittr"),
+                     tags$li("Hadley Wickham, Jim Hester and Romain Francois (2017). readr: Read Rectangular Text Data. R package version 1.1.1. https://CRAN.R-project.org/package=readr")
+                   )
+                   )
                  ),
                # "----",
                # "Section header",
@@ -106,6 +118,6 @@ shinyUI(fluidPage(
                    )
                    )
                    )
-                 )
-  # tags$script(src = "user.js")
+                 ),
+  tags$script(src = "user.js")
 ))

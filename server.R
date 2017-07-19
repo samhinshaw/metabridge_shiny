@@ -77,7 +77,8 @@ shinyServer(function(input, output, session) {
   ),
   rownames= FALSE,
   style = 'bootstrap',
-  class = 'table-bordered table-responsive'
+  class = 'table-bordered table-responsive',
+  selection = 'none'
   )
   
   ## When data is populated, show column picker panel for users to select
@@ -187,9 +188,8 @@ shinyServer(function(input, output, session) {
     if (is.null(mappedMetabolites()))
       return(NULL)
     mappedMetabolites()
-      # head(n = 20) # DT will take care of this for us. 
   }, options = list(
-    pageLength = 5,
+    pageLength = 10,
     lengthMenu = c(5, 10, 15, 20),
     # autoWidth = TRUE,
     scrollX = '100%' # AMAZING! Crucial argument to make sure DT doesn't overflow
@@ -197,7 +197,8 @@ shinyServer(function(input, output, session) {
   rownames= FALSE,
   style = 'bootstrap',
   class = 'table-bordered table-responsive compact', 
-  escape = FALSE
+  escape = FALSE,
+  selection = 'single'
   )
   
   # output$mappingTableTitle <- renderUI({
@@ -246,5 +247,17 @@ shinyServer(function(input, output, session) {
                                  "tsv" = "\t"))
     }
   )
+  ################################################
+  #                                              #
+  #                Viz Tab Handlers              #
+  #                                              #
+  ################################################
   
+  output$debugWindow <- renderTable(
+    # Select table via DT API for row selection. UNFORTUNATELY, as far as I know
+    # this must be done via row number. Fortunately, since DT is in charge of
+    # all of the sorting/interaction, as well as providing the row index, there
+    # should not be much disagreement
+    mappedMetabolites()[as.numeric(rownames(mappedMetabolites())) == input$mappedMetaboliteTable_rows_selected,]
+  )
 })
