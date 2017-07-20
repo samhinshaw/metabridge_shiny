@@ -206,3 +206,9 @@ mapGenerally <- function(importDF, col, db, idType) {
   }
   return(mappedMetabolites)
 }
+
+mapPathways <- function(compounds) {
+  metabPathways %>% 
+    filter_("KEGG %in% compounds") %>% 
+    extract2("pathways")
+}

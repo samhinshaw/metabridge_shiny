@@ -38,7 +38,7 @@ shinyServer(function(input, output, session) {
   ## Inject example df when "Try Examples" selected
   observeEvent(input$tryExamples, {
     metaboliteObject(name_map)
-  })
+  }, ignoreInit = TRUE, ignoreNULL = TRUE)
   
   ## Read CSV when any of (fileInput, checkboxInput, radioButtons) states change
   observeEvent({
@@ -64,7 +64,7 @@ shinyServer(function(input, output, session) {
   })
   
   ## Once data is populated, render preview of data to user
-  output$uploadedDataTable <- renderDataTable({
+  output$uploadedDataTable <- DT::renderDataTable({
     input$tryExamples # make sure the try examples button is a dependency
     if (is.null(metaboliteObject()))
       return(NULL)
@@ -75,11 +75,20 @@ shinyServer(function(input, output, session) {
     # autoWidth = TRUE,
     scrollX = '100%' # AMAZING! Crucial argument to make sure DT doesn't overflow
   ),
-  rownames= FALSE,
+  rownames = FALSE,
+  selection = 'none',
   style = 'bootstrap',
-  class = 'table-bordered table-responsive',
-  selection = 'none'
+  class = 'table-bordered table-responsive'
   )
+  
+  dataColumns <- eventReactive({
+    input$tryExamples
+    input$metaboliteUpload
+    input$sep
+    input$header
+  }, {
+    names(metaboliteObject())
+  })
   
   ## When data is populated, show column picker panel for users to select
   output$columnPickerPanel <- renderUI({
@@ -108,7 +117,7 @@ shinyServer(function(input, output, session) {
     tags$div(
       selectInput("idType", "ID Type", width = "50%",
                   choices = c("HMDB", "KEGG", "PubChem", 'CAS'), 
-                  selected = preSelectedIDType(), selectize = FALSE),
+                  selected = preSelectedIDType(),selectize = FALSE),
       actionButton("continueToMap", "Proceed")
     )
   })
@@ -118,42 +127,42 @@ shinyServer(function(input, output, session) {
     # Vector of column positions
     possibleColPositions <- seq_along(names(metaboliteObject()))
     # Match the columns picked to their integer positions in the DF
-    selectedColPositions <- input$columnsPicked %>% 
+    selectedColPositions <- input$columnsPicked %>%
       match(names(metaboliteObject()))
     # unselected columns
     unselectedColPositions <- setdiff(possibleColPositions, selectedColPositions)
     # Add CSS classes to selected columns
-    walk(.x = selectedColPositions, 
+    walk(.x = selectedColPositions,
          .f = ~ addCssClass(
-           class = "info", 
+           class = "info",
            selector = paste0("#uploadedDataTable table td:nth-child(", .x, ")")
          ))
-    walk(.x = selectedColPositions, 
+    walk(.x = selectedColPositions,
          .f = ~ addCssClass(
-           
-           class = "info", 
+
+           class = "info",
            selector = paste0("#uploadedDataTable table th:nth-child(", .x, ")")
          ))
     # Remove CSS classes from unselected columns
-    walk(.x = unselectedColPositions, 
+    walk(.x = unselectedColPositions,
          .f = ~ removeCssClass(
-           class = "info", 
+           class = "info",
            selector = paste0("#uploadedDataTable table td:nth-child(", .x, ")")
          ))
-    walk(.x = unselectedColPositions, 
+    walk(.x = unselectedColPositions,
          .f = ~ removeCssClass(
-           class = "info", 
+           class = "info",
            selector = paste0("#uploadedDataTable table th:nth-child(", .x, ")")
          ))
   }, ignoreNULL = FALSE, ignoreInit = TRUE)
-  
-  # If a column ID picked is (case insensitively) matched to an ID we already
-  # have, preselect it.
-  observeEvent(input$columnsPicked, {
-    if (tolower(input$columnsPicked) %in% c("cas", "pubchem", "hmdb", "kegg")) {
-      preSelectedIDType(input$columnsPicked)
-    }
-  }, ignoreNULL = TRUE, ignoreInit = TRUE)
+  # 
+  # # If a column ID picked is (case insensitively) matched to an ID we already
+  # # have, preselect it.
+  # observeEvent(input$columnsPicked, {
+  #   if (tolower(input$columnsPicked) %in% c("cas", "pubchem", "hmdb", "kegg")) {
+  #     preSelectedIDType(input$columnsPicked)
+  #   }
+  # }, ignoreNULL = TRUE, ignoreInit = TRUE)
   
   ## Switch to Map panel when "Proceed" is clicked on Upload tab
   observeEvent(input$continueToMap, {
@@ -253,21 +262,67 @@ shinyServer(function(input, output, session) {
   #                                              #
   ################################################
   
-  # source('nodeInfoDebug.R')
-  # parseKGML2 <- parseKGML
-  pathview(
-    gene.data = miniTestResults$`Official Gene Symbol`, 
-    cpd.data = miniTestResults$KEGG,
-    pathway.id = "00780",
-    gene.idtype = "SYMBOL",
-    species = "hsa"
-  )
+  selectedCompound <- reactiveVal()
+  pathwaysOfSelectedRows <- reactiveVal()
+  genesOfSelectedCompound <- reactiveVal()
   
-  output$debugWindow <- renderTable(
+  observeEvent(input$mappedMetaboliteTable_rows_selected, {
+    ## Find the pathways we're interested in
+    selectedMetab <- mappedMetabolites()[as.numeric(rownames(mappedMetabolites())) == 
+                                         input$mappedMetaboliteTable_rows_selected,] %>% 
+      extract2(input$columnsPicked)
+    
+    selectedCompound(selectedMetab)
+    
+    pathwaysOfInterest <- metabPathways %>%
+      filter_("KEGG %in% selectedMetab") %>% 
+      extract2("pathways")
+    
+    pathwaysOfInterest %<>% str_replace('map', '')
+    
+    pathwaysOfSelectedRows(pathwaysOfInterest)
+    
+    ## Find all the genes relevant to that pathway
+    genesOfInterest <- mappedMetabolites() %>% 
+      filter_(paste0(input$columnsPicked, " %in% ", selectedMetab)) %>% 
+      extract2("Official Gene Symbol")
+    
+    genesOfSelectedCompound(genesOfInterest)
+  })
+  
+  output$myImage <- renderImage({
+    # A temp file to save the output.
+    # This file will be removed later by renderImage
+    # outfile <- tempfile(fileext='.png')
+    
+    # Generate the PNG
+    pathview(
+      gene.data = genesOfSelectedCompound(),
+      cpd.data = selectedCompound(),
+      pathway.id = pathwaysOfSelectedRows(),
+      gene.idtype = "SYMBOL",
+      species = "hsa",
+      kegg.dir = file.path('pathways')
+    )
+    
+    filenames <- paste0('hsa', pathwaysOfSelectedRows(), ".pathview.png")
+    
+    # Return a list containing the filename
+    list(src = filenames,
+         contentType = 'image/png',
+         width = 400,
+         height = 300,
+         alt = "This is alternate text")
+  }, deleteFile = TRUE)
+  
+  output$debugWindow <- renderText(
+    
+    pathwaysOfSelectedRows()
     # Select table via DT API for row selection. UNFORTUNATELY, as far as I know
     # this must be done via row number. Fortunately, since DT is in charge of
     # all of the sorting/interaction, as well as providing the row index, there
     # should not be much disagreement
-    mappedMetabolites()[as.numeric(rownames(mappedMetabolites())) == input$mappedMetaboliteTable_rows_selected,]
+    # mappedMetabolites()[as.numeric(rownames(mappedMetabolites())) == 
+    #                       input$mappedMetaboliteTable_rows_selected,]
   )
 })

@@ -2,29 +2,18 @@ library(tidyverse)
 library(pathview)
 # TEST
 theNameOfKEGG <- quo(KEGG)
-
+library(KEGGgraph)
+library(pathview)
 testResults <- mapMetaCyc(importDF = name_map, col = 'KEGG', idType = 'KEGG')$data
 miniTestResults <- testResults %>% 
   filter(UQ(theNameOfKEGG) == "C00300")
 
 pathview(
-  gene.data = miniTestResults$`Official Gene Symbol`, 
+  gene.data = miniTestResults$`Official Gene Symbol`,
   cpd.data = miniTestResults$KEGG,
-  pathway.id = "00260",
+  pathway.id = c("00260", "00330"),
   gene.idtype = "SYMBOL",
-  species = "hsa"
+  species = "hsa",
+  kegg.dir = file.path('pathways')
 )
-pathview(
-  gene.data = miniTestResults$`Official Gene Symbol`, 
-  cpd.data = miniTestResults$KEGG,
-  pathway.id = "00330",
-  gene.idtype = "SYMBOL",
-  species = "hsa"
-)
-pathview(
-  gene.data = miniTestResults$`Official Gene Symbol`, 
-  cpd.data = miniTestResults$KEGG,
-  pathway.id = "01100",
-  gene.idtype = "SYMBOL",
-  species = "hsa"
-)
+

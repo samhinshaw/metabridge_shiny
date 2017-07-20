@@ -78,7 +78,7 @@ shinyUI(fluidPage(
              )
     ),
     tabPanel(title = "Visualize", value = "vizPanel",
-             tableOutput('debugWindow')
+             textOutput('debugWindow')
     ),
     # tabPanel("NetworkAnalyst"),
     # Simple alternative to 'float: right'
@@ -118,6 +118,6 @@ shinyUI(fluidPage(
                    )
                    )
                    )
-                 ),
-  tags$script(src = "user.js")
+                 )
+  # tags$script(src = "user.js")
 ))
