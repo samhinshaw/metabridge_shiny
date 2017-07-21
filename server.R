@@ -283,8 +283,10 @@ shinyServer(function(input, output, session) {
     pathwaysOfSelectedRows(pathwaysOfInterest)
     
     ## Find all the genes relevant to that pathway
+    selectedColumn <- input$columnsPicked
+    
     genesOfInterest <- mappedMetabolites() %>% 
-      filter_(paste0(input$columnsPicked, " %in% ", selectedMetab)) %>% 
+      filter_("selectedColumn %in% selectedMetab") %>% 
       extract2("Official Gene Symbol")
     
     genesOfSelectedCompound(genesOfInterest)
@@ -317,7 +319,7 @@ shinyServer(function(input, output, session) {
   
   output$debugWindow <- renderText(
     
-    pathwaysOfSelectedRows()
+    genesOfSelectedCompound()
     # Select table via DT API for row selection. UNFORTUNATELY, as far as I know
     # this must be done via row number. Fortunately, since DT is in charge of
     # all of the sorting/interaction, as well as providing the row index, there
