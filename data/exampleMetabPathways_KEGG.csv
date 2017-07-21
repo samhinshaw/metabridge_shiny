@@ -1,0 +1,303 @@
+KEGG,id,name
+C00164,map00072,Synthesis and degradation of ketone bodies
+C00164,map00280,"Valine, leucine and isoleucine degradation"
+C00164,map00310,Lysine degradation
+C00164,map00350,Tyrosine metabolism
+C00164,map00640,Propanoate metabolism
+C00164,map00643,Styrene degradation
+C00164,map00650,Butanoate metabolism
+C00164,map01100,Metabolic pathways
+C00164,map01120,Microbial metabolism in diverse environments
+C00164,map02020,Two-component system
+C00099,map00240,Pyrimidine metabolism
+C00099,map00410,beta-Alanine metabolism
+C00099,map00640,Propanoate metabolism
+C00099,map00770,Pantothenate and CoA biosynthesis
+C00099,map01100,Metabolic pathways
+C00099,map01110,Biosynthesis of secondary metabolites
+C00099,map04080,Neuroactive ligand-receptor interaction
+C00099,map04974,Protein digestion and absorption
+C00300,map00260,"Glycine, serine and threonine metabolism"
+C00300,map00330,Arginine and proline metabolism
+C00300,map01100,Metabolic pathways
+C01026,map00260,"Glycine, serine and threonine metabolism"
+C01026,map01100,Metabolic pathways
+C00122,map00020,Citrate cycle (TCA cycle)
+C00122,map00190,Oxidative phosphorylation
+C00122,map00220,Arginine biosynthesis
+C00122,map00250,"Alanine, aspartate and glutamate metabolism"
+C00122,map00350,Tyrosine metabolism
+C00122,map00360,Phenylalanine metabolism
+C00122,map00620,Pyruvate metabolism
+C00122,map00643,Styrene degradation
+C00122,map00650,Butanoate metabolism
+C00122,map00720,Carbon fixation pathways in prokaryotes
+C00122,map00760,Nicotinate and nicotinamide metabolism
+C00122,map01060,Biosynthesis of plant secondary metabolites
+C00122,map01061,Biosynthesis of phenylpropanoids
+C00122,map01062,Biosynthesis of terpenoids and steroids
+C00122,map01063,Biosynthesis of alkaloids derived from shikimate pathway
+C00122,map01064,"Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid"
+C00122,map01065,Biosynthesis of alkaloids derived from histidine and purine
+C00122,map01066,Biosynthesis of alkaloids derived from terpenoid and polyketide
+C00122,map01070,Biosynthesis of plant hormones
+C00122,map01100,Metabolic pathways
+C00122,map01110,Biosynthesis of secondary metabolites
+C00122,map01120,Microbial metabolism in diverse environments
+C00122,map01130,Biosynthesis of antibiotics
+C00122,map01200,Carbon metabolism
+C00122,map01220,Degradation of aromatic compounds
+C00122,map02020,Two-component system
+C00122,map04922,Glucagon signaling pathway
+C00122,map05200,Pathways in cancer
+C00122,map05211,Renal cell carcinoma
+C00122,map05230,Central carbon metabolism in cancer
+C00037,map00120,Primary bile acid biosynthesis
+C00037,map00230,Purine metabolism
+C00037,map00260,"Glycine, serine and threonine metabolism"
+C00037,map00310,Lysine degradation
+C00037,map00440,Phosphonate and phosphinate metabolism
+C00037,map00460,Cyanoamino acid metabolism
+C00037,map00480,Glutathione metabolism
+C00037,map00630,Glyoxylate and dicarboxylate metabolism
+C00037,map00680,Methane metabolism
+C00037,map00730,Thiamine metabolism
+C00037,map00860,Porphyrin and chlorophyll metabolism
+C00037,map00970,Aminoacyl-tRNA biosynthesis
+C00037,map01060,Biosynthesis of plant secondary metabolites
+C00037,map01100,Metabolic pathways
+C00037,map01110,Biosynthesis of secondary metabolites
+C00037,map01120,Microbial metabolism in diverse environments
+C00037,map01130,Biosynthesis of antibiotics
+C00037,map01200,Carbon metabolism
+C00037,map01230,Biosynthesis of amino acids
+C00037,map01502,Vancomycin resistance
+C00037,map02010,ABC transporters
+C00037,map02026,Biofilm formation - Escherichia coli
+C00037,map04080,Neuroactive ligand-receptor interaction
+C00037,map04721,Synaptic vesicle cycle
+C00037,map04974,Protein digestion and absorption
+C00037,map04978,Mineral absorption
+C00037,map05230,Central carbon metabolism in cancer
+C00097,map00260,"Glycine, serine and threonine metabolism"
+C00097,map00270,Cysteine and methionine metabolism
+C00097,map00311,Penicillin and cephalosporin biosynthesis
+C00097,map00332,Carbapenem biosynthesis
+C00097,map00430,Taurine and hypotaurine metabolism
+C00097,map00460,Cyanoamino acid metabolism
+C00097,map00480,Glutathione metabolism
+C00097,map00730,Thiamine metabolism
+C00097,map00770,Pantothenate and CoA biosynthesis
+C00097,map00920,Sulfur metabolism
+C00097,map00970,Aminoacyl-tRNA biosynthesis
+C00097,map01060,Biosynthesis of plant secondary metabolites
+C00097,map01100,Metabolic pathways
+C00097,map01110,Biosynthesis of secondary metabolites
+C00097,map01120,Microbial metabolism in diverse environments
+C00097,map01130,Biosynthesis of antibiotics
+C00097,map01200,Carbon metabolism
+C00097,map01230,Biosynthesis of amino acids
+C00097,map04122,Sulfur relay system
+C00097,map04216,Ferroptosis
+C00097,map04974,Protein digestion and absorption
+C00097,map05230,Central carbon metabolism in cancer
+C00407,map00280,"Valine, leucine and isoleucine degradation"
+C00407,map00290,"Valine, leucine and isoleucine biosynthesis"
+C00407,map00460,Cyanoamino acid metabolism
+C00407,map00960,"Tropane, piperidine and pyridine alkaloid biosynthesis"
+C00407,map00966,Glucosinolate biosynthesis
+C00407,map00970,Aminoacyl-tRNA biosynthesis
+C00407,map01060,Biosynthesis of plant secondary metabolites
+C00407,map01064,"Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid"
+C00407,map01100,Metabolic pathways
+C00407,map01110,Biosynthesis of secondary metabolites
+C00407,map01130,Biosynthesis of antibiotics
+C00407,map01210,2-Oxocarboxylic acid metabolism
+C00407,map01230,Biosynthesis of amino acids
+C00407,map02010,ABC transporters
+C00407,map04974,Protein digestion and absorption
+C00407,map04978,Mineral absorption
+C00407,map05230,Central carbon metabolism in cancer
+C00079,map00360,Phenylalanine metabolism
+C00079,map00400,"Phenylalanine, tyrosine and tryptophan biosynthesis"
+C00079,map00460,Cyanoamino acid metabolism
+C00079,map00940,Phenylpropanoid biosynthesis
+C00079,map00960,"Tropane, piperidine and pyridine alkaloid biosynthesis"
+C00079,map00966,Glucosinolate biosynthesis
+C00079,map00970,Aminoacyl-tRNA biosynthesis
+C00079,map01060,Biosynthesis of plant secondary metabolites
+C00079,map01061,Biosynthesis of phenylpropanoids
+C00079,map01063,Biosynthesis of alkaloids derived from shikimate pathway
+C00079,map01064,"Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid"
+C00079,map01070,Biosynthesis of plant hormones
+C00079,map01100,Metabolic pathways
+C00079,map01110,Biosynthesis of secondary metabolites
+C00079,map01130,Biosynthesis of antibiotics
+C00079,map01210,2-Oxocarboxylic acid metabolism
+C00079,map01230,Biosynthesis of amino acids
+C00079,map02010,ABC transporters
+C00079,map04974,Protein digestion and absorption
+C00079,map04978,Mineral absorption
+C00079,map05230,Central carbon metabolism in cancer
+C00065,map00260,"Glycine, serine and threonine metabolism"
+C00065,map00261,Monobactam biosynthesis
+C00065,map00270,Cysteine and methionine metabolism
+C00065,map00460,Cyanoamino acid metabolism
+C00065,map00600,Sphingolipid metabolism
+C00065,map00630,Glyoxylate and dicarboxylate metabolism
+C00065,map00680,Methane metabolism
+C00065,map00920,Sulfur metabolism
+C00065,map00970,Aminoacyl-tRNA biosynthesis
+C00065,map01060,Biosynthesis of plant secondary metabolites
+C00065,map01100,Metabolic pathways
+C00065,map01110,Biosynthesis of secondary metabolites
+C00065,map01120,Microbial metabolism in diverse environments
+C00065,map01130,Biosynthesis of antibiotics
+C00065,map01200,Carbon metabolism
+C00065,map01230,Biosynthesis of amino acids
+C00065,map01502,Vancomycin resistance
+C00065,map02010,ABC transporters
+C00065,map04071,Sphingolipid signaling pathway
+C00065,map04974,Protein digestion and absorption
+C00065,map04978,Mineral absorption
+C00065,map05230,Central carbon metabolism in cancer
+C00188,map00260,"Glycine, serine and threonine metabolism"
+C00188,map00261,Monobactam biosynthesis
+C00188,map00290,"Valine, leucine and isoleucine biosynthesis"
+C00188,map00860,Porphyrin and chlorophyll metabolism
+C00188,map00970,Aminoacyl-tRNA biosynthesis
+C00188,map01060,Biosynthesis of plant secondary metabolites
+C00188,map01100,Metabolic pathways
+C00188,map01110,Biosynthesis of secondary metabolites
+C00188,map01120,Microbial metabolism in diverse environments
+C00188,map01130,Biosynthesis of antibiotics
+C00188,map01230,Biosynthesis of amino acids
+C00188,map02010,ABC transporters
+C00188,map04974,Protein digestion and absorption
+C00188,map04978,Mineral absorption
+C00082,map00130,Ubiquinone and other terpenoid-quinone biosynthesis
+C00082,map00231,Puromycin biosynthesis
+C00082,map00261,Monobactam biosynthesis
+C00082,map00350,Tyrosine metabolism
+C00082,map00360,Phenylalanine metabolism
+C00082,map00400,"Phenylalanine, tyrosine and tryptophan biosynthesis"
+C00082,map00401,Novobiocin biosynthesis
+C00082,map00460,Cyanoamino acid metabolism
+C00082,map00680,Methane metabolism
+C00082,map00730,Thiamine metabolism
+C00082,map00940,Phenylpropanoid biosynthesis
+C00082,map00950,Isoquinoline alkaloid biosynthesis
+C00082,map00965,Betalain biosynthesis
+C00082,map00966,Glucosinolate biosynthesis
+C00082,map00970,Aminoacyl-tRNA biosynthesis
+C00082,map01055,Biosynthesis of vancomycin group antibiotics
+C00082,map01059,Biosynthesis of enediyne antibiotics
+C00082,map01060,Biosynthesis of plant secondary metabolites
+C00082,map01063,Biosynthesis of alkaloids derived from shikimate pathway
+C00082,map01100,Metabolic pathways
+C00082,map01110,Biosynthesis of secondary metabolites
+C00082,map01130,Biosynthesis of antibiotics
+C00082,map01210,2-Oxocarboxylic acid metabolism
+C00082,map01230,Biosynthesis of amino acids
+C00082,map04728,Dopaminergic synapse
+C00082,map04916,Melanogenesis
+C00082,map04917,Prolactin signaling pathway
+C00082,map04974,Protein digestion and absorption
+C00082,map05012,Parkinson's disease
+C00082,map05030,Cocaine addiction
+C00082,map05031,Amphetamine addiction
+C00082,map05034,Alcoholism
+C00082,map05230,Central carbon metabolism in cancer
+C00183,map00280,"Valine, leucine and isoleucine degradation"
+C00183,map00290,"Valine, leucine and isoleucine biosynthesis"
+C00183,map00311,Penicillin and cephalosporin biosynthesis
+C00183,map00460,Cyanoamino acid metabolism
+C00183,map00770,Pantothenate and CoA biosynthesis
+C00183,map00966,Glucosinolate biosynthesis
+C00183,map00970,Aminoacyl-tRNA biosynthesis
+C00183,map01060,Biosynthesis of plant secondary metabolites
+C00183,map01063,Biosynthesis of alkaloids derived from shikimate pathway
+C00183,map01100,Metabolic pathways
+C00183,map01110,Biosynthesis of secondary metabolites
+C00183,map01130,Biosynthesis of antibiotics
+C00183,map01210,2-Oxocarboxylic acid metabolism
+C00183,map01230,Biosynthesis of amino acids
+C00183,map02010,ABC transporters
+C00183,map04974,Protein digestion and absorption
+C00183,map04978,Mineral absorption
+C00183,map05230,Central carbon metabolism in cancer
+C00166,map00360,Phenylalanine metabolism
+C00166,map00400,"Phenylalanine, tyrosine and tryptophan biosynthesis"
+C00166,map00960,"Tropane, piperidine and pyridine alkaloid biosynthesis"
+C00166,map01060,Biosynthesis of plant secondary metabolites
+C00166,map01100,Metabolic pathways
+C00166,map01110,Biosynthesis of secondary metabolites
+C00166,map01130,Biosynthesis of antibiotics
+C00166,map01210,2-Oxocarboxylic acid metabolism
+C00166,map01230,Biosynthesis of amino acids
+C00163,map00640,Propanoate metabolism
+C00163,map00642,Ethylbenzene degradation
+C00163,map00760,Nicotinate and nicotinamide metabolism
+C00163,map01100,Metabolic pathways
+C00163,map01120,Microbial metabolism in diverse environments
+C00163,map01220,Degradation of aromatic compounds
+C00163,map04973,Carbohydrate digestion and absorption
+C00163,map04974,Protein digestion and absorption
+C00022,map00010,Glycolysis / Gluconeogenesis
+C00022,map00020,Citrate cycle (TCA cycle)
+C00022,map00030,Pentose phosphate pathway
+C00022,map00040,Pentose and glucuronate interconversions
+C00022,map00053,Ascorbate and aldarate metabolism
+C00022,map00250,"Alanine, aspartate and glutamate metabolism"
+C00022,map00260,"Glycine, serine and threonine metabolism"
+C00022,map00261,Monobactam biosynthesis
+C00022,map00270,Cysteine and methionine metabolism
+C00022,map00290,"Valine, leucine and isoleucine biosynthesis"
+C00022,map00330,Arginine and proline metabolism
+C00022,map00350,Tyrosine metabolism
+C00022,map00360,Phenylalanine metabolism
+C00022,map00362,Benzoate degradation
+C00022,map00430,Taurine and hypotaurine metabolism
+C00022,map00440,Phosphonate and phosphinate metabolism
+C00022,map00473,D-Alanine metabolism
+C00022,map00620,Pyruvate metabolism
+C00022,map00621,Dioxin degradation
+C00022,map00622,Xylene degradation
+C00022,map00630,Glyoxylate and dicarboxylate metabolism
+C00022,map00650,Butanoate metabolism
+C00022,map00660,C5-Branched dibasic acid metabolism
+C00022,map00680,Methane metabolism
+C00022,map00710,Carbon fixation in photosynthetic organisms
+C00022,map00720,Carbon fixation pathways in prokaryotes
+C00022,map00730,Thiamine metabolism
+C00022,map00760,Nicotinate and nicotinamide metabolism
+C00022,map00770,Pantothenate and CoA biosynthesis
+C00022,map00900,Terpenoid backbone biosynthesis
+C00022,map01060,Biosynthesis of plant secondary metabolites
+C00022,map01061,Biosynthesis of phenylpropanoids
+C00022,map01062,Biosynthesis of terpenoids and steroids
+C00022,map01063,Biosynthesis of alkaloids derived from shikimate pathway
+C00022,map01064,"Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid"
+C00022,map01065,Biosynthesis of alkaloids derived from histidine and purine
+C00022,map01066,Biosynthesis of alkaloids derived from terpenoid and polyketide
+C00022,map01070,Biosynthesis of plant hormones
+C00022,map01100,Metabolic pathways
+C00022,map01110,Biosynthesis of secondary metabolites
+C00022,map01120,Microbial metabolism in diverse environments
+C00022,map01130,Biosynthesis of antibiotics
+C00022,map01200,Carbon metabolism
+C00022,map01210,2-Oxocarboxylic acid metabolism
+C00022,map01220,Degradation of aromatic compounds
+C00022,map01230,Biosynthesis of amino acids
+C00022,map01502,Vancomycin resistance
+C00022,map02060,Phosphotransferase system (PTS)
+C00022,map04066,HIF-1 signaling pathway
+C00022,map04152,AMPK signaling pathway
+C00022,map04911,Insulin secretion
+C00022,map04922,Glucagon signaling pathway
+C00022,map04930,Type II diabetes mellitus
+C00022,map04931,Insulin resistance
+C00022,map05230,Central carbon metabolism in cancer
+C00213,map00260,"Glycine, serine and threonine metabolism"
+C00213,map00330,Arginine and proline metabolism
+C00213,map01100,Metabolic pathways

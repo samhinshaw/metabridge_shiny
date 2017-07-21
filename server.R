@@ -196,7 +196,11 @@ shinyServer(function(input, output, session) {
   output$mappedMetaboliteTable <- DT::renderDataTable({
     if (is.null(mappedMetabolites()))
       return(NULL)
-    mappedMetabolites()
+    mappedMetabolites() %>% group_by(KEGG, Compound) %>% summarize(
+      "Mapped Genes (MetaCyc Gene ID)" = n_distinct(`MetaCyc Gene ID`),
+      "Mapped Genes (Official Gene Symbol)" = n_distinct(`Official Gene Symbol`),
+      "Mapped Genes (Ensembl Gene ID)" = n_distinct(`Ensembl Gene ID`)
+    )
   }, options = list(
     pageLength = 10,
     lengthMenu = c(5, 10, 15, 20),
@@ -262,62 +266,109 @@ shinyServer(function(input, output, session) {
   #                                              #
   ################################################
   
+  # Set up reactive values for: 
+  # - The selected compound of the clicked row
+  # - The pathways that compound is involved in
+  # - The genes (for the enzymes) that compound interacts with
   selectedCompound <- reactiveVal()
-  pathwaysOfSelectedRows <- reactiveVal()
+  selectedCompoundName <- reactiveVal()
+  pathwaysOfSelectedCompound <- reactiveVal()
   genesOfSelectedCompound <- reactiveVal()
   
+  # Now, when the selected row changes...
   observeEvent(input$mappedMetaboliteTable_rows_selected, {
-    ## Find the pathways we're interested in
+    
+    ### Pull the selected row and extract its compound ID
     selectedMetab <- mappedMetabolites()[as.numeric(rownames(mappedMetabolites())) == 
                                          input$mappedMetaboliteTable_rows_selected,] %>% 
       extract2(input$columnsPicked)
     
+    ### Assign that to its reactive value
     selectedCompound(selectedMetab)
     
+    ### Pull the selected row and extract its compound Name
+    selectedMetabName <- mappedMetabolites()[as.numeric(rownames(mappedMetabolites())) == 
+                                           input$mappedMetaboliteTable_rows_selected,] %>% 
+      extract2('Compound')
+    
+    ### Assign that to its reactive value
+    selectedCompoundName(selectedMetabName)
+    
+    ### Quote necessary variables for dplyr
+    
+    # To be treated like a variable
+    namedSelectedCols <- as.name(input$columnsPicked)
+    # To be treated like a character string
+    quotedSelectedMetab <- rlang::enquo(selectedMetab)
+    
+    ### Pull out the pathways that our compound is present in from the
+    ### metabPathways object stored in `data/`
     pathwaysOfInterest <- metabPathways %>%
-      filter_("KEGG %in% selectedMetab") %>% 
-      extract2("pathways")
+      filter(rlang::UQ(namedSelectedCols) == rlang::UQ(quotedSelectedMetab))
     
-    pathwaysOfInterest %<>% str_replace('map', '')
+    ### Assign that to its reactive value
+    pathwaysOfSelectedCompound(pathwaysOfInterest)
     
-    pathwaysOfSelectedRows(pathwaysOfInterest)
-    
-    ## Find all the genes relevant to that pathway
-    selectedColumn <- input$columnsPicked
-    
+    ## Find all the genes that compound interacts with (from our initial mapping
+    ## table)
     genesOfInterest <- mappedMetabolites() %>% 
-      filter_("selectedColumn %in% selectedMetab") %>% 
-      extract2("Official Gene Symbol")
+      filter(rlang::UQ(namedSelectedCols) == rlang::UQ(quotedSelectedMetab)) %>% 
+      magrittr::extract2("Official Gene Symbol")
     
+    ### Assign that to its reactive value
     genesOfSelectedCompound(genesOfInterest)
   })
   
-  output$myImage <- renderImage({
-    # A temp file to save the output.
-    # This file will be removed later by renderImage
-    # outfile <- tempfile(fileext='.png')
+  output$pathwayPanel <- renderUI({
+    tags$h4(paste0('Pathways for Compound ', tools::toTitleCase(selectedCompoundName())))
+    selectInput(inputId = 'pathwaysPicked', label = 'Pathway', 
+                choices = pathwaysOfSelectedCompound()$namedPway,
+                selectize = FALSE)
+  })
+  
+  output$pathwayView <- renderImage({
+    if(is.null(input$pathwaysPicked)) {
+      return({
+        list(src = 'material_loading.gif',
+             contentType = 'image/png',
+             width = 297,
+             height = 297,
+             alt = "loading...")
+      })
+    }
+    # Setup named variables for standard eval
+    pathwayNameIDcol <- as.name('namedPway')
+    selectedPathway <- rlang::quo(input$pathwaysPicked)
+    
+    # Pull the pathway ID from the pathway name selected by the user
+    selectedPathwayID <- pathwaysOfSelectedCompound() %>% 
+      filter(rlang::UQ(pathwayNameIDcol) == input$pathwaysPicked) %>% 
+      extract2('id')
     
     # Generate the PNG
-    pathview(
-      gene.data = genesOfSelectedCompound(),
-      cpd.data = selectedCompound(),
-      pathway.id = pathwaysOfSelectedRows(),
-      gene.idtype = "SYMBOL",
-      species = "hsa",
-      kegg.dir = file.path('pathways')
-    )
+    suppressWarnings({
+      pathview(
+        gene.data = genesOfSelectedCompound(),
+        cpd.data = selectedCompound(),
+        pathway.id = selectedPathwayID,
+        gene.idtype = "SYMBOL",
+        species = "hsa",
+        kegg.dir = 'pathways'
+      )
+    })
     
-    filenames <- paste0('hsa', pathwaysOfSelectedRows(), ".pathview.png")
+    filename <- paste0('hsa', selectedPathwayID, ".pathview.png")
     
     # Return a list containing the filename
-    list(src = filenames,
+    list(src = filename,
          contentType = 'image/png',
-         width = 400,
-         height = 300,
-         alt = "This is alternate text")
+         # width = 700,
+         # height = 700,
+         alt = paste0("Pathway map of KEGG Pathway ", input$pathwaysPicked)) %>% 
+      return()
   }, deleteFile = TRUE)
   
-  output$debugWindow <- renderText(
+  output$debugWindow <- renderTable(
     
     genesOfSelectedCompound()
     # Select table via DT API for row selection. UNFORTUNATELY, as far as I know

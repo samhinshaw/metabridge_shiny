@@ -78,7 +78,19 @@ shinyUI(fluidPage(
              )
     ),
     tabPanel(title = "Visualize", value = "vizPanel",
-             textOutput('debugWindow')
+             # Manual Sidebar
+             tags$div(
+               class = "col-sm-3 manual-sidebar",
+               tags$form(
+                 class = "well",
+                 uiOutput('pathwayPanel')
+               )
+             ),
+             tags$div(
+               class = "col-sm-9",
+               tags$h2('Pathway View', class = "tab-header"),
+               imageOutput('pathwayView')
+             )
     ),
     # tabPanel("NetworkAnalyst"),
     # Simple alternative to 'float: right'
