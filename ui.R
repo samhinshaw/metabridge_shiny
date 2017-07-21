@@ -130,6 +130,6 @@ shinyUI(fluidPage(
                    )
                    )
                    )
-                 )
-  # tags$script(src = "user.js")
+                 ),
+  tags$script(src = "user.js")
 ))
