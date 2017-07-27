@@ -73,6 +73,7 @@ shinyUI(fluidPage(
              tags$div(
                class = "col-sm-9",
                tags$h2('Mapping Output', class = "tab-header"),
+               DT::dataTableOutput('mappingSummaryTable'),
                DT::dataTableOutput('mappedMetaboliteTable')
                # textOutput('horizontalScrollMessage')
              )

@@ -204,13 +204,13 @@ shinyServer(function(input, output, session) {
     # Assign the mapped data to our reactive value
     mappedMetabolites(mappingOutput$data)
     # Create new alert bubble with status message
-    mappingAlert(status = mappingOutput$status, 
+    mappingAlert(status  = mappingOutput$status, 
                  message = mappingOutput$message, 
                  suggest = mappingOutput$suggest)
   }, ignoreInit = TRUE)
   
-  # Draw table in isolated environment
-  mappedMetaboliteTable <- eventReactive(input$mapButton, {
+  # Show a summary table of the mapped metabolites (just # of genes)
+  mappingSummaryTable <- eventReactive(input$mapButton, {
     # Should never be null since we're not responding until map button is
     # clicked, but good to have just in case
     if (is.null(mappedMetabolites())) {
@@ -224,11 +224,61 @@ shinyServer(function(input, output, session) {
     }
   }, ignoreInit = TRUE)
   
-  ## Once metabolites have been mapped, preview the results!
+  ## Once metabolites have been mapped, render the results!
+  output$mappingSummaryTable <- DT::renderDataTable({
+    # Just really make sure we're not getting any errors thrown at the user
+    if (is.null(mappingSummaryTable())) {
+      return(NULL)
+    } else {
+      mappingSummaryTable()
+    }
+  }, options = list(
+    pageLength = 10,
+    lengthMenu = c(5, 10, 15, 20),
+    # autoWidth = TRUE,
+    scrollX = '100%' # AMAZING! Crucial argument to make sure DT doesn't overflow
+    ),
+  rownames= FALSE,
+  style = 'bootstrap',
+  class = 'table-bordered table-responsive compact', 
+  escape = FALSE,
+  selection = 'single'
+  )
+  
+  # Now, show the filtered (unsummarized) table, based on what the user clicked on.
+  mappedMetaboliteTable <- eventReactive(input$mappingSummaryTable_rows_selected, {
+    # Should never be null since we're not responding until map button is
+    # clicked, but good to have just in case
+    if (is.null(mappedMetabolites())) {
+      return(NULL)
+    } else if (is.null(input$mappingSummaryTable_rows_selected)){
+      return(NULL)
+    } else {
+      ### Pull the selected row and extract its compound ID
+      selectedMetab <- mappingSummaryTable()[as.numeric(rownames(mappingSummaryTable())) == 
+                                             input$mappingSummaryTable_rows_selected,] %>% 
+        extract2(input$columnsPicked)
+      
+      ### Quote necessary variables for dplyr
+      
+      # To be treated like a variable
+      namedSelectedCols <- as.name(input$columnsPicked)
+      # To be treated like a character string
+      quotedSelectedMetab <- rlang::enquo(selectedMetab)
+      
+      ### Pull out the metabolite-reaction that our compound is present in from the
+      filteredMappedMetaboliteTable <- mappedMetabolites() %>%
+        filter(rlang::UQ(namedSelectedCols) == rlang::UQ(quotedSelectedMetab))
+      
+      return(filteredMappedMetaboliteTable)
+    }
+  }, ignoreInit = TRUE)
+  
+  ## Once metabolites have been mapped, render the results!
   output$mappedMetaboliteTable <- DT::renderDataTable({
     # Just really make sure we're not getting any errors thrown at the user
     if (is.null(mappedMetaboliteTable())) {
-      return(NULL)
+      return(data_frame())
     } else {
       mappedMetaboliteTable()
     }
@@ -237,7 +287,7 @@ shinyServer(function(input, output, session) {
     lengthMenu = c(5, 10, 15, 20),
     # autoWidth = TRUE,
     scrollX = '100%' # AMAZING! Crucial argument to make sure DT doesn't overflow
-    ),
+  ),
   rownames= FALSE,
   style = 'bootstrap',
   class = 'table-bordered table-responsive compact', 
@@ -307,19 +357,19 @@ shinyServer(function(input, output, session) {
   genesOfSelectedCompound    <- reactiveVal()
   
   # Now, when the selected row changes...
-  observeEvent(input$mappedMetaboliteTable_rows_selected, {
+  observeEvent(input$mappingSummaryTable_rows_selected, {
     
     ### Pull the selected row and extract its compound ID
-    selectedMetab <- mappedMetabolites()[as.numeric(rownames(mappedMetabolites())) == 
-                                         input$mappedMetaboliteTable_rows_selected,] %>% 
+    selectedMetab <- mappingSummaryTable()[as.numeric(rownames(mappingSummaryTable())) == 
+                                         input$mappingSummaryTable_rows_selected,] %>% 
       extract2(input$columnsPicked)
     
     ### Assign that to its reactive value
     selectedCompound(selectedMetab)
     
     ### Pull the selected row and extract its compound Name
-    selectedMetabName <- mappedMetabolites()[as.numeric(rownames(mappedMetabolites())) == 
-                                           input$mappedMetaboliteTable_rows_selected,] %>% 
+    selectedMetabName <- mappingSummaryTable()[as.numeric(rownames(mappingSummaryTable())) == 
+                                           input$mappingSummaryTable_rows_selected,] %>% 
       extract2('Compound')
     
     ### Assign that to its reactive value
@@ -409,6 +459,6 @@ shinyServer(function(input, output, session) {
     # all of the sorting/interaction, as well as providing the row index, there
     # should not be much disagreement
     # mappedMetabolites()[as.numeric(rownames(mappedMetabolites())) == 
-    #                       input$mappedMetaboliteTable_rows_selected,]
+    #                       input$mappingSummaryTable_rows_selected,]
   )
 })

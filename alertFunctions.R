@@ -1,6 +1,6 @@
 mappingAlert <- function(message, suggest, status) {
   insertUI(
-    selector = "#mappedMetaboliteTable",
+    selector = "#mappingSummaryTable",
     where = "beforeBegin",
     ui = tags$div(
       id = 'mappingAlert',
