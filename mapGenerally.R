@@ -191,7 +191,7 @@ mapKEGG <- function(importDF, col, idType) {
 
 #######################################################
 #                                                     #
-#        Map Generally Against EitheE Database        #
+#        Map Generally Against Either Database        #
 #                                                     #
 #######################################################
 

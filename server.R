@@ -6,6 +6,15 @@
 #
 
 shinyServer(function(input, output, session) {
+  
+  ################################################
+  #                                              #
+  #            Options for DataTables            #
+  #                                              #
+  ################################################
+  
+  # options$serverSide = TRUE
+  # options$ajax = list(url = dataTableAjax(session, data))
 
   ################################################
   #                                              #
@@ -209,22 +218,7 @@ shinyServer(function(input, output, session) {
                  suggest = mappingOutput$suggest)
   }, ignoreInit = TRUE)
   
-  # Show a summary table of the mapped metabolites (just # of genes)
-  mappingSummaryTable <- eventReactive(input$mapButton, {
-    # Should never be null since we're not responding until map button is
-    # clicked, but good to have just in case
-    if (is.null(mappedMetabolites())) {
-      return(NULL)
-    } else {
-      mappedMetabolites() %>% group_by_(input$idType, 'Compound') %>% summarize(
-        "# of Genes (MetaCyc Gene ID)" = n_distinct(`MetaCyc Gene ID`),
-        "# of Genes (Official Gene Symbol)" = n_distinct(`Official Gene Symbol`),
-        "# of Genes (Ensembl Gene ID)" = n_distinct(`Ensembl Gene ID`)
-      )
-    }
-  }, ignoreInit = TRUE)
-  
-  ## Once metabolites have been mapped, render the results!
+  # Render initial table that will be updated with proxy. 
   output$mappingSummaryTable <- DT::renderDataTable({
     # Just really make sure we're not getting any errors thrown at the user
     if (is.null(mappingSummaryTable())) {
@@ -236,57 +230,87 @@ shinyServer(function(input, output, session) {
     pageLength = 10,
     lengthMenu = c(5, 10, 15, 20),
     # autoWidth = TRUE,
-    scrollX = '100%' # AMAZING! Crucial argument to make sure DT doesn't overflow
-    ),
+    scrollX = '100%', # AMAZING! Crucial argument to make sure DT doesn't overflow
+    # vertical scrolling options
+    scrollY = "200px",
+    scrollCollapse = TRUE,
+    paging = FALSE
+  ),
   rownames= FALSE,
   style = 'bootstrap',
   class = 'table-bordered table-responsive compact', 
   escape = FALSE,
-  selection = 'single'
+  selection = 'single',
+  server = TRUE
   )
   
-  # Now, show the filtered (unsummarized) table, based on what the user clicked on.
-  mappedMetaboliteTable <- eventReactive(input$mappingSummaryTable_rows_selected, {
+  # Show a summary table of the mapped metabolites (just # of genes)
+  mappingSummaryTable <- eventReactive(input$mapButton, {
     # Should never be null since we're not responding until map button is
     # clicked, but good to have just in case
     if (is.null(mappedMetabolites())) {
-      return(NULL)
-    } else if (is.null(input$mappingSummaryTable_rows_selected)){
-      return(NULL)
+      return(data_frame(
+        # Empty DF
+        "# of Genes (MetaCyc Gene ID)" = "",
+        "# of Genes (Official Gene Symbol)" = "",
+        "# of Genes (Ensembl Gene ID)" = ""
+      ))
     } else {
-      ### Pull the selected row and extract its compound ID
-      selectedMetab <- mappingSummaryTable()[as.numeric(rownames(mappingSummaryTable())) == 
-                                             input$mappingSummaryTable_rows_selected,] %>% 
-        extract2(input$columnsPicked)
-      
-      ### Quote necessary variables for dplyr
-      
-      # To be treated like a variable
-      namedSelectedCols <- as.name(input$columnsPicked)
-      # To be treated like a character string
-      quotedSelectedMetab <- rlang::enquo(selectedMetab)
-      
-      ### Pull out the metabolite-reaction that our compound is present in from the
-      filteredMappedMetaboliteTable <- mappedMetabolites() %>%
-        filter(rlang::UQ(namedSelectedCols) == rlang::UQ(quotedSelectedMetab))
-      
-      return(filteredMappedMetaboliteTable)
+      mappedMetabolites() %>% group_by_(input$idType, 'Compound') %>% summarize(
+        "# of Genes (MetaCyc Gene ID)" = n_distinct(`MetaCyc Gene ID`),
+        "# of Genes (Official Gene Symbol)" = n_distinct(`Official Gene Symbol`),
+        "# of Genes (Ensembl Gene ID)" = n_distinct(`Ensembl Gene ID`)
+      )
     }
   }, ignoreInit = TRUE)
   
-  ## Once metabolites have been mapped, render the results!
+  # Now, show the filtered (unsummarized) table, based on what the user clicked on.
+  mappedMetaboliteTable <- eventReactive(input$mappingSummaryTable_rows_selected, {
+    ### Pull the selected row and extract its compound ID
+    selectedMetab <- mappingSummaryTable()[as.numeric(rownames(mappingSummaryTable())) == 
+                                             input$mappingSummaryTable_rows_selected,] %>% 
+      extract2(input$columnsPicked)
+    
+    ### Quote necessary variables for dplyr
+    
+    # To be treated like a variable
+    namedSelectedCols <- as.name(input$columnsPicked)
+    # To be treated like a character string
+    quotedSelectedMetab <- rlang::enquo(selectedMetab)
+    
+    ### Pull out the metabolite-reaction that our compound is present in from the
+    filteredMappedMetaboliteTable <- mappedMetabolites() %>%
+      filter(rlang::UQ(namedSelectedCols) == rlang::UQ(quotedSelectedMetab))
+    
+    return(filteredMappedMetaboliteTable)
+  })
+  
+  ## First render of results to be updated with proxy.
   output$mappedMetaboliteTable <- DT::renderDataTable({
-    # Just really make sure we're not getting any errors thrown at the user
-    if (is.null(mappedMetaboliteTable())) {
-      return(data_frame())
-    } else {
-      mappedMetaboliteTable()
-    }
+    isolate({
+      if (input$dbChosen == "KEGG") {
+        keggDB %>% head(0) %>% return()
+      } else if (input$dbChosen == "MetaCyc") {
+        namedSelectedCols <- as.name(input$columnsPicked)
+        data_frame(
+          UQ(namedSelectedCols) := "",
+          "Compound" = "",
+          "MetaCyc Gene ID" = "",
+          "Official Gene Symbol" = "", 
+          "Ensembl Gene ID" = "",
+          Reaction = ""
+        ) %>% return()
+      }
+    })
   }, options = list(
     pageLength = 10,
     lengthMenu = c(5, 10, 15, 20),
     # autoWidth = TRUE,
-    scrollX = '100%' # AMAZING! Crucial argument to make sure DT doesn't overflow
+    scrollX = '100%', # AMAZING! Crucial argument to make sure DT doesn't overflow
+    # vertical scrolling options
+    scrollY = "200px",
+    scrollCollapse = TRUE,
+    paging = FALSE
   ),
   rownames= FALSE,
   style = 'bootstrap',
@@ -295,6 +319,11 @@ shinyServer(function(input, output, session) {
   selection = 'single'
   )
   
+  mappedMetabTableProxy <- dataTableProxy('mappedMetaboliteTable', session, deferUntilFlush = FALSE)
+  
+  observeEvent(input$mappingSummaryTable_rows_selected, {
+    replaceData(mappedMetabTableProxy, mappedMetaboliteTable(), rownames = FALSE)
+  })
   # output$mappingTableTitle <- renderUI({
   #   if (!is.null(mappedMetabolites())){
   #     tags$h2("Your Input")
