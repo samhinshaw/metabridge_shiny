@@ -145,56 +145,134 @@ mapMetaCyc <- function(importDF, col, idType) {
          message = 'Your compounds were mapped, but there may have been a problem.', 
          suggest = NULL)
   }, error = function(errorMessage) {
-    print(errorMessage)
     list(status = 'error', data = mappedToReactions$data, 
          internalMessage = errorMessage,
-         error = 'There was an error mapping your compounds to human gene IDs.',
+         message = 'There was an error mapping your compounds to human gene IDs.',
          suggest = 'Try changing your mapping parameters.')
   })
 
   return(mappedToEnsembl)
 }
 
-mapKEGG <- function(importDF, col, idType) {
   #######################
   #                     #
   #        KEGG         #
   #                     #
   #######################
+
+mapKEGG <- function(importDF, col, idType) {
   
-  importedVector <- extract2(importDF, col)
+  quotedIDtype <- rlang::enquo(idType)
+  namedIDtype <- as.name(idType)
+  
+  keggName <- as.name('KEGG')
+  keggQuote <- rlang::quo('KEGG')
   
   # If KEGG compound IDs were not supplied, we'll use the MetaCyc database to
   # map the given IDs to their KEGG compound IDs
   
+  mappingDF <- tryCatch({
+    # The return value in this chunk is the actual value 
+    # that will be returned in case there is no condition 
+    # (e.g. warning or error). 
+    # You don't need to state the return value via `return()` as code 
+    # in the "try" part is not wrapped insided a function (unlike that
+    # for the condition handlers for warnings and error below)
+    this <- data_frame(UQ(namedIDtype) := extract2(importDF, col))
+    # Check to see if join failed silently
+    if (nrow(this) == 0) {
+      list(status = 'empty', data = importDF, 
+           message = 'We were unable to properly import your data.',
+           suggest = 'Try changing your mapping parameters.')
+    } else {
+      list(status = 'success', data = this, 
+           message = 'Your metabolites have been successfully mapped!', 
+           suggest = NULL)
+    }
+  }, warning = function(warningMessage) {
+    list(status = 'warn', data = this, 
+         internalMessage = warningMessage,
+         message = 'We were unable to properly import your data.',
+         suggest = 'Try changing your mapping parameters.')
+  }, error = function(errorMessage) {
+    list(status = 'error', data = importDF, 
+         internalMessage = errorMessage,
+         message = 'We were unable to properly import your data.',
+         suggest = 'Try changing your mapping parameters.')
+  })
+  
   if (idType != "KEGG") {
-    keggIDs <- metaCycDBLinks %>%
-      ## This `filter_()` should use rlang
-      dplyr::filter_(paste0(col, " %in% importedVector")) %>% 
-      magrittr::extract2("KEGG") %>% unique()
-    keggIDsToMap <- keggIDs
+    keggIDs <- tryCatch({
+      
+      this <- metaCycDBLinks %>% 
+        dplyr::filter(UQ(namedIDtype) %in% extract2(mappingDF$data, UQ(quotedIDtype)))
+      
+      # Check to see if join failed silently
+      if (nrow(this) == 0) {
+        list(status = 'empty', data = importDF, 
+             message = paste0('We were unable to map the ', idType,
+                              ' IDs you provided to KEGG compound IDs.'), 
+             suggest = 'Try using a different compound ID or mapping via MetaCyc')
+      } else {
+        list(status = 'success', data = this, 
+             message = 'Your metabolites have been successfully mapped!', 
+             suggest = NULL)
+      }  
+    }, warning = function(warningMessage) {
+      list(status = 'warn', data = this, 
+           internalMessage = warningMessage,
+           message = 'Your compounds were mapped, but there may have been a problem.', 
+           suggest = NULL)
+    }, error = function(errorMessage) {
+      list(status = 'error', data = importDF, 
+           internalMessage = errorMessage,
+           message = paste0('We were unable to map the ', idType,
+                          ' IDs you provided to KEGG compound IDs.'),
+           suggest = 'Try using a different compound ID or mapping via MetaCyc')
+    })
   } else if (idType == "KEGG") {
-    keggIDsToMap <- importedVector
-  } else {
-    alert("Something went wrong when mapping against the KEGG database.
-          Probably an error with the idType parameter.")
-  }
+    this <- mappingDF$data
+    keggIDs <- list(status = 'success', data = this, 
+         message = 'Your metabolites have been successfully mapped!', 
+         suggest = NULL)
+  } 
+
+  ## Finally, finally, map biocyc gene IDs to ensembl gene IDs
+  keggGenesOfInterest <- tryCatch({
+    this <- left_join(keggIDs$data, keggDB, by = "KEGG") %>% 
+      rename_('bareEnzyme' = 'enzymes', 'Gene' = 'genes', 'bareKEGG' = 'KEGG') %>% 
+      mutate(KEGG = paste0('<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?cpd:',
+                           bareKEGG, '">', bareKEGG, '</a>')) %>% 
+      mutate(Enzyme = paste0('<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?ec:', 
+                             bareEnzyme, '">', bareEnzyme, '</a>')) %>% 
+      select_('Compound', 'KEGG', idType, 'Enzyme', 'Gene', 'bareKEGG', 'bareEnzyme')
+    # Check to see if join failed silently
+    if (nrow(this) == 0) {
+      list(status = 'empty', data = keggIDs$data, 
+           message = paste0('We were unable to find any matches for ',
+                            'the compounds you supplied. Here are the KEGG ',
+                            'compound IDs we queried.'), 
+           suggest = 'Try using a different compound ID or mapping via MetaCyc')
+    } else {
+      list(status = 'success', data = this, 
+           message = 'Your metabolites have been successfully mapped!', 
+           suggest = NULL)
+    }  
+  }, warning = function(warningMessage) {
+    list(status = 'warn', data = this, 
+         internalMessage = warningMessage,
+         message = 'Your compounds were mapped, but there may have been a problem.', 
+         suggest = NULL)
+  }, error = function(errorMessage) {
+    list(status = 'error', data = keggIDs$data, 
+         internalMessage = errorMessage,
+         message = paste0('There was an error mapping your compounds via KEGG. ',
+                          'Here are the KEGG compound IDs we queried.'),
+         suggest = 'Try changing your mapping parameters.')
+  })
   
-  keggGenesOfInterest <- keggDB %>%
-    dplyr::filter_("KEGG %in% importedVector") %>% 
-    rename_('Enzyme' = 'enzymes', 'Compound' = 'KEGG', 'Gene' = 'genes') %>% 
-    mutate(Compound = paste0('<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?cpd:',
-                             Compound, '">', Compound, '</a>')) %>% 
-    mutate(Enzyme = paste0('<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?ec:', 
-                           Enzyme, '">', Enzyme, '</a>'))
   
-  if (nrow(keggGenesOfInterest) != 0) {
-    return(keggGenesOfInterest)
-  } else if (nrow(keggIDsToMap) != 0) {
-    return(keggIDsToMap)
-  } else {
-    return(importDF %>% extract2(col))
-  }
+  return(keggGenesOfInterest)
 }
 
 
@@ -210,8 +288,11 @@ mapGenerally <- function(importDF, col, db, idType) {
   } else if (db == "MetaCyc") {
     mappedMetabolites <- mapMetaCyc(importDF = importDF, col = col, idType = idType)
   } else {
-    alert("Something went wrong when mapping generally
-          Probably an error with the database parameter.")
+    
+    mappingAlert(status  = "error", 
+                 message = paste0("Something went wrong when mapping generally, ",
+                                  "probably an error with the database parameter."), 
+                 suggest = "Please tweet to us to report this issue!")
   }
   return(mappedMetabolites)
 }
