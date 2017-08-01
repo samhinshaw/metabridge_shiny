@@ -11,8 +11,16 @@ library(pathview)
 
 ## Load System Data
 load('data/sysdata.rda')
-load('data/examplePathways_cat.RData')
+
+##### Read In Example KEGG Pathways ######
+load('data/examplePathways.RData') 
+# Will load full pathway set here
+##########################################
+
 load('data/name_map.RData')
+load(file = 'data/reactions_pathways_readable.RData')
+load(file = 'data/reactions_pathways.RData')
 
 source('mapGenerally.R', local = TRUE)$value
+source('pathwayMapping.R', local = TRUE)$value
 source('alertFunctions.R', local = TRUE)$value
