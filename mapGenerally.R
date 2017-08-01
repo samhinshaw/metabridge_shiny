@@ -26,7 +26,8 @@ mapMetaCyc <- function(importDF, col, idType) {
     # You don't need to state the return value via `return()` as code 
     # in the "try" part is not wrapped insided a function (unlike that
     # for the condition handlers for warnings and error below)
-    this <- data_frame(UQ(col) := importDF %>% use_series(UQ(col)) %>% as.character())
+    this <- data_frame(UQ(idType) := importDF %>% use_series(UQ(col)) %>% as.character())
+    # names(this)[1] <- UQ(quotedID)
     # Check to see if join failed silently
     if (nrow(this) == 0) {
       list(status = 'empty', data = importDF, 
@@ -39,10 +40,12 @@ mapMetaCyc <- function(importDF, col, idType) {
     }
   }, warning = function(warningMessage) {
     list(status = 'warn', data = this, 
+         internalMessage = warningMessage,
          message = 'We were unable to properly import your data.',
          suggest = 'Try changing your mapping parameters.')
   }, error = function(errorMessage) {
     list(status = 'error', data = importDF, 
+         internalMessage = errorMessage,
          message = 'We were unable to properly import your data.',
          suggest = 'Try changing your mapping parameters.')
   })
@@ -56,8 +59,8 @@ mapMetaCyc <- function(importDF, col, idType) {
   
   # Now map these to the MetaCyc Object IDs
   mappedToObjects <- tryCatch({
-    this <- inner_join(mappingDF$data, metaCycDBLinks, by = setNames(nm = c(col = idType))) %>% 
-      dplyr::select_(col, "Compound") %>% rename_("compound" = "Compound")
+    this <- inner_join(mappingDF$data, metaCycDBLinks, by = UQ(idType)) %>% 
+      dplyr::select_(idType, "Compound") %>% rename_("compound" = "Compound")
     # Check to see if join failed silently
     if (nrow(this) == 0) {
       list(status = 'empty', data = mappingDF$data, 
@@ -71,10 +74,12 @@ mapMetaCyc <- function(importDF, col, idType) {
     }
   }, warning = function(warningMessage) {
     list(status = 'warn', data = this, 
+         internalMessage = warningMessage,
          message = 'There was an unspecified error in mapping your compounds.',
          suggest = NULL)
   }, error = function(errorMessage) {
     list(status = 'error', data = mappingDF$data, 
+         internalMessage = errorMessage,
          message = 'We were unable to map your metabolites to MetaCyc Compound IDs.', 
          suggest = 'Try changing your mapping parameters.')
   })
@@ -102,10 +107,12 @@ mapMetaCyc <- function(importDF, col, idType) {
     }
   }, warning = function(warningMessage) {
     list(status = 'warn', data = this, 
+         internalMessage = warningMessage,
          message = 'Your compounds were mapped, but there may have been a problem.', 
          suggest = NULL)
   }, error = function(errorMessage) {
-    list(status = 'error', data = mappedToObjects$data, 
+    list(status = 'error', data = mappedToObjects$data,
+         internalMessage = errorMessage,
          message = 'We were unable to map your compounds to any reactions.', 
          suggest = 'Try changing your mapping parameters.')
   })
@@ -118,7 +125,7 @@ mapMetaCyc <- function(importDF, col, idType) {
   mappedToEnsembl <- tryCatch({
     this <- inner_join(mappedToReactions$data, metaCycGeneIDs,
                        by = c("MetaCyc Gene ID" = "Object ID")) %>% 
-      dplyr::select_(col, "Compound", "`MetaCyc Gene ID`", 
+      dplyr::select_(idType, "Compound", "`MetaCyc Gene ID`", 
                      "`Official Gene Symbol`", "Ensembl", "Reaction") %>% 
       rename_("Ensembl Gene ID" = "Ensembl")
     # Check to see if join failed silently
@@ -134,11 +141,13 @@ mapMetaCyc <- function(importDF, col, idType) {
     }  
   }, warning = function(warningMessage) {
     list(status = 'warn', data = this, 
+         internalMessage = warningMessage,
          message = 'Your compounds were mapped, but there may have been a problem.', 
          suggest = NULL)
   }, error = function(errorMessage) {
     print(errorMessage)
     list(status = 'error', data = mappedToReactions$data, 
+         internalMessage = errorMessage,
          error = 'There was an error mapping your compounds to human gene IDs.',
          suggest = 'Try changing your mapping parameters.')
   })
@@ -205,10 +214,4 @@ mapGenerally <- function(importDF, col, db, idType) {
           Probably an error with the database parameter.")
   }
   return(mappedMetabolites)
-}
-
-mapPathways <- function(compounds) {
-  metabPathways %>% 
-    filter_("KEGG %in% compounds") %>% 
-    extract2("pathways")
 }
