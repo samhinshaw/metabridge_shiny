@@ -219,6 +219,25 @@ shinyServer(function(input, output, session) {
                  suggest = mappingOutput$suggest)
   }, ignoreInit = TRUE)
   
+  ###############################################################
+  #                                                             #
+  # Interlude: Change ID Type to KEGG if KEGG DB is being used. #
+  # Otherwise, continue to use input ID type                    #
+  #                                                             #
+  ###############################################################
+  
+  idTypeOfInterest <- reactiveVal()
+  
+  observeEvent(input$mapButton, {
+    if (input$dbChosen == 'KEGG') {
+      idTypeOfInterest('KEGG')
+    } else {
+      idTypeOfInterest(input$idType)
+    }
+  })
+  
+  ############################# End ##############################
+  
   # Show a summary table of the mapped metabolites (just # of genes)
   mappingSummaryTable <- eventReactive(input$mapButton, {
     # Should never be null since we're not responding until map button is
@@ -227,11 +246,17 @@ shinyServer(function(input, output, session) {
       return(NULL)
     } else if (mappingObject()$status == "error" | mappingObject()$status == "empty") {
       return(NULL)
-    } else {
+    } else if (input$dbChosen == 'MetaCyc') {
       mappedMetabolites() %>% group_by_(input$idType, 'Compound') %>% summarize(
         "# of Genes (MetaCyc Gene ID)" = n_distinct(`MetaCyc Gene ID`),
         "# of Genes (Official Gene Symbol)" = n_distinct(`Official Gene Symbol`),
         "# of Genes (Ensembl Gene ID)" = n_distinct(`Ensembl Gene ID`)
+      )
+    } else if (input$dbChosen == 'KEGG') {
+      mappedMetabolites() %>% 
+        group_by_('Compound', input$idType, 'KEGG') %>% summarize(
+        "# of Enzymes" = n_distinct(Enzyme),
+        "# of Genes"   = n_distinct(Gene)
       )
     }
   }, ignoreInit = TRUE)
@@ -270,21 +295,39 @@ shinyServer(function(input, output, session) {
     } else if (is.null(input$mappingSummaryTable_rows_selected)){
       return(NULL)
     } else {
-      ### Pull the selected row and extract its compound ID
-      selectedMetab <- mappingSummaryTable()[as.numeric(rownames(mappingSummaryTable())) == 
-                                             input$mappingSummaryTable_rows_selected,] %>% 
-        extract2(input$idType)
       
       ### Quote necessary variables for dplyr
+      namedIDType <- as.name(idTypeOfInterest())
+      quotedIDType <- rlang::quo(idTypeOfInterest())
+      pastedIDType <- paste0(idTypeOfInterest())
+      pastedDB <- paste0(input$dbChosen)
+
+      ### Pull the selected row and extract its compound ID
+      selectedMetab <- mappingSummaryTable()[as.numeric(rownames(mappingSummaryTable())) == 
+                                             input$mappingSummaryTable_rows_selected,]
       
-      # To be treated like a variable
-      namedIDType <- as.name(input$idType)
-      # To be treated like a character string
-      quotedSelectedMetab <- rlang::enquo(selectedMetab)
-      
-      ### Pull out the metabolite-reaction that our compound is present in from the
-      filteredMappedMetaboliteTable <- mappedMetabolites() %>%
-        filter(rlang::UQ(namedIDType) == rlang::UQ(quotedSelectedMetab))
+      # If mapped against the KEGG database, pull out the KEGG cpd ID (even if
+      # not what was supplied), and extract the ID from the HTML contents of the
+      # cell
+      if (pastedDB == 'KEGG') {
+        selectedMetab %<>%
+          extract2('KEGG') %>% str_extract('C[0-9]{5}')
+        
+        quotedSelectedMetab <- rlang::enquo(selectedMetab)
+        
+        namedIDType <- as.name('bareKEGG')
+        
+        filteredMappedMetaboliteTable <- mappedMetabolites() %>%
+          filter(rlang::UQ(namedIDType) == rlang::UQ(quotedSelectedMetab))
+      } else {
+        selectedMetab %<>% 
+          extract2(pastedIDType)
+        
+        quotedSelectedMetab <- rlang::enquo(selectedMetab)
+        
+        filteredMappedMetaboliteTable <- mappedMetabolites() %>%
+          filter(rlang::UQ(namedIDType) == rlang::UQ(quotedSelectedMetab))
+      }
       
       return(filteredMappedMetaboliteTable)
     }
@@ -296,7 +339,7 @@ shinyServer(function(input, output, session) {
     if (is.null(mappedMetaboliteTable())) {
       return(data_frame())
     } else {
-      mappedMetaboliteTable()
+      mappedMetaboliteTable() %>% dplyr::select(-starts_with("bare"))
     }
   }, options = list(
     pageLength = 10,
@@ -401,16 +444,16 @@ shinyServer(function(input, output, session) {
     
     ### Assign results to their reactive values
     selectedRowAttrs$selectedCompound <- pathwayMappingAttrs$selectedMetab
-    selectedRowAttrs$selectedCompoundName <- selectedRowAttrs$selectedMetabName
-    selectedRowAttrs$genesOfSelectedCompound <- selectedRowAttrs$genesOfInterest
-    selectedRowAttrs$pathwaysOfSelectedCompound <- selectedRowAttrs$pathwaysOfInterest
+    selectedRowAttrs$selectedCompoundName <- pathwayMappingAttrs$selectedMetabName
+    selectedRowAttrs$genesOfSelectedCompound <- pathwayMappingAttrs$genesOfInterest
+    selectedRowAttrs$pathwaysOfSelectedCompound <- pathwayMappingAttrs$pathwaysOfInterest
     
     
   })
   
   output$pathwayPanel <- renderUI({
     tags$div(
-      tags$h4(paste0('Pathways for Compound ', tools::toTitleCase(tolower(selectedCompoundName())))),
+      tags$h4(paste0('Pathways for Compound ', tools::toTitleCase(tolower(selectedRowAttrs()$selectedCompoundName)))),
       selectInput(inputId = 'pathwaysPicked', label = 'Pathway', 
                   choices = selectedRowAttrs()$pathwaysOfSelectedCompound$namedPway,
                   selectize = FALSE)

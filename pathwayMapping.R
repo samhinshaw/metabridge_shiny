@@ -5,11 +5,12 @@ mapKEGGPathways <- function(idType, selectedRow, summaryTable, fullTable) {
   
   # To be treated like a variable
   namedIDType <- as.name(idType)
-  
+  bareKEGG <- as.name('bareKEGG')
+
   ### Pull the selected row and extract its compound ID
   selectedMetab <- summaryTable[as.numeric(rownames(summaryTable)) == 
                                            selectedRow,] %>% 
-    extract2(input$idType)
+    extract2(idType) %>% str_extract('C[0-9]{5}')
   
   # To be treated like a character string
   quotedMetab <- rlang::enquo(selectedMetab)
@@ -21,14 +22,14 @@ mapKEGGPathways <- function(idType, selectedRow, summaryTable, fullTable) {
   
   ### Pull out the pathways that our compound is present in from the
   ### metabPathways object stored in `data/`
-  pathwaysOfInterest <- exampleKEGGPathways %>%
+  pathwaysOfInterest <- keggPathways %>%
     filter(rlang::UQ(namedIDType) == rlang::UQ(quotedMetab))
   
   ## Find all the genes that compound interacts with (from our initial mapping
   ## table)
-  genesOfInterest <- mappedMetabolites() %>% 
-    filter(rlang::UQ(namedIDType) == rlang::UQ(quotedMetab)) %>% 
-    magrittr::extract2("Official Gene Symbol")
+  genesOfInterest <- fullTable %>%
+    filter(rlang::UQ(bareKEGG) == rlang::UQ(quotedMetab)) %>% 
+    magrittr::extract2("Gene")
   
   return(list(
     'selectedCompound' = selectedMetab,
@@ -78,12 +79,12 @@ mapMetaCycPathways <- function(idType, selectedRow, summaryTable, fullTable) {
 
 generalPathwayMapping <- function(db, idType, selectedRow, summaryTable, fullTable) {
   if (db == "KEGG") {
-    ## Do something
-    mapKEGGPathways(idType = idType, selectedRow = selectedRow, 
+    ## If KEGG was chosen, just use the KEGG Compound IDs
+    mapKEGGPathways(idType = 'KEGG', selectedRow = selectedRow, 
                     summaryTable = summaryTable, 
                     fullTable = fullTable)
   } else if (db == "MetaCyc") {
-    ## Do something else
+    ## If MetaCyc was chosen, use the selected ID Type
     mapMetaCycPathways(idType = idType, selectedRow = selectedRow, 
                        summaryTable = summaryTable,
                        fullTable = fullTable)
