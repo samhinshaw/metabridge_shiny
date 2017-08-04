@@ -14,55 +14,75 @@ generateSummaryTable <- function(mappingObject, idType, dbChosen) {
     )
   } else if (dbChosen == 'KEGG') {
     mappingObject$data %>% 
-      group_by_('Compound', idType, 'KEGG') %>% summarize(
+      group_by_('KEGG', idType) %>% summarize(
         "# of Enzymes" = n_distinct(Enzyme, na.rm = TRUE),
         "# of Genes"   = n_distinct(Gene, na.rm = TRUE)
       )
   }
 }
 
-generateSelectedMetabTable <- function(mappingObject, summaryTable, selectedRows, dbChosen) {
+generateMetaCycMetabTable <- function(mappingObject, summaryTable, selectedRows, idType) {
   # Should never be null since we're not responding until map button is
   # clicked, but good to have just in case
   if (is.null(mappingObject$data) | is.null(selectedRows) | is.null(summaryTable)) {
-    return(NULL)
-  } else if (){
-    return(NULL)
+    return(data.frame())
   } else {
     
     ### Quote necessary variables for dplyr
-    namedIDType <- as.name(idTypeOfInterest())
-    quotedIDType <- rlang::quo(idTypeOfInterest())
-    pastedIDType <- paste0(idTypeOfInterest())
-    pastedDB <- paste0(dbChosen)
-    
+    namedIDType <- as.name(idType)
+    quotedIDType <- rlang::quo(idType)
+    pastedIDType <- paste0(idType)
+
     ### Pull the selected row and extract its compound ID
     selectedMetab <- summaryTable[as.numeric(rownames(summaryTable)) == 
                                              selectedRows,]
+
+    selectedMetab %<>% 
+      extract2(pastedIDType)
     
-    # If mapped against the KEGG database, pull out the KEGG cpd ID (even if
-    # not what was supplied), and extract the ID from the HTML contents of the
-    # cell
-    if (pastedDB == 'KEGG') {
-      selectedMetab %<>%
-        extract2('KEGG') %>% str_extract('C[0-9]{5}')
-      
-      quotedSelectedMetab <- rlang::enquo(selectedMetab)
-      
-      namedIDType <- as.name('bareKEGG')
-      
-      filteredMappedMetaboliteTable <- mappedMetabolites() %>%
-        filter(rlang::UQ(namedIDType) == rlang::UQ(quotedSelectedMetab))
-    } else {
-      selectedMetab %<>% 
-        extract2(pastedIDType)
-      
-      quotedSelectedMetab <- rlang::enquo(selectedMetab)
-      
-      filteredMappedMetaboliteTable <- mappedMetabolites() %>%
-        filter(rlang::UQ(namedIDType) == rlang::UQ(quotedSelectedMetab))
-    }
+    quotedSelectedMetab <- rlang::enquo(selectedMetab)
+    
+    filteredMappedMetaboliteTable <- mappingObject$data %>%
+      filter(rlang::UQ(namedIDType) == rlang::UQ(quotedSelectedMetab))
     
     return(filteredMappedMetaboliteTable)
   }
 }
+
+generateKEGGMetabTable <- function(mappingObject, summaryTable, selectedRows, idType) {
+  # Should never be null since we're not responding until map button is
+  # clicked, but good to have just in case
+  if (is.null(mappingObject$data) | is.null(selectedRows) | is.null(summaryTable)) {
+    return(data.frame())
+  } else {
+    
+    ### Quote necessary variables for dplyr
+    namedIDType <- as.name(idType)
+    quotedIDType <- rlang::quo(idType)
+    pastedIDType <- paste0(idType)
+
+    ### Pull the selected row and extract its compound ID
+    selectedMetab <- summaryTable[as.numeric(rownames(summaryTable)) == 
+                                    selectedRows,]
+    
+    # If mapped against the KEGG database, pull out the KEGG cpd ID (even if
+    # not what was supplied), and extract the ID from the HTML contents of the
+    # cell
+    selectedMetab %<>%
+      extract2('KEGG') %>% str_extract('C[0-9]{5}')
+    
+    quotedSelectedMetab <- rlang::enquo(selectedMetab)
+    
+    namedIDType <- as.name('bareKEGG')
+    
+    filteredMappedMetaboliteTable <- mappingObject$data %>%
+      filter(rlang::UQ(namedIDType) == rlang::UQ(quotedSelectedMetab))
+
+    
+    return(filteredMappedMetaboliteTable)
+  }
+}
+
+# generateFullTable <- function(mappingObject) {
+#   
+# }

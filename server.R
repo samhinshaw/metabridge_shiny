@@ -226,36 +226,31 @@ shinyServer(function(input, output, session) {
   #                                                             #
   ###############################################################
   
-  idTypeOfInterest <- reactiveVal()
-  
-  observeEvent(input$mapButton, {
-    if (input$dbChosen == 'KEGG') {
-      idTypeOfInterest('KEGG')
-    } else {
-      idTypeOfInterest(input$idType)
-    }
-  })
+  # idTypeOfInterest <- reactiveVal()
+  # 
+  # observeEvent(input$mapButton, {
+  #   if (input$dbChosen == 'KEGG') {
+  #     idTypeOfInterest('KEGG')
+  #   } else {
+  #     idTypeOfInterest(input$idType)
+  #   }
+  # })
   
   ############################# End ##############################
   
   # Show a summary table of the mapped metabolites (just # of genes)
   mappingSummaryTable <- eventReactive(input$mapButton, {
-    generateSummaryTable(mappingObject(), input$idType, input$dbChosen)
-  }, ignoreInit = TRUE)
+    if (input$dbChosen == 'KEGG') {
+      generateSummaryTable(mappingObject(), input$idType, input$dbChosen)
+    } else if (input$dbChosen == 'MetaCyc') {
+      generateSummaryTable(mappingObject(), input$idType, input$dbChosen)
+    }
+  })
   
   ## Once metabolites have been mapped, render the results!
   output$mappingSummaryTable <- DT::renderDataTable({
     mappingSummaryTable()
-  }, options = list(
-    pageLength = 10,
-    lengthMenu = c(5, 10, 15, 20),
-    # autoWidth = TRUE,
-    scrollX = '100%', # AMAZING! Crucial argument to make sure DT doesn't overflow
-    # vertical scrolling options
-    scrollY = "200px",
-    scrollCollapse = TRUE, 
-    paging = FALSE
-  ),
+  },
   rownames= FALSE,
   style = 'bootstrap',
   class = 'table-bordered table-responsive compact', 
@@ -263,36 +258,72 @@ shinyServer(function(input, output, session) {
   selection = 'single'
   )
   
+  output$mappingSummaryPanel <- renderUI({
+    if (is.null(mappingObject())) {
+      return(NULL)
+    } else if (mappingObject()$status == 'error' | mappingObject()$status == 'empty') {
+      return (NULL)
+    } else {
+      tags$div(
+        tags$h3('Mapping Summary', class = "tab-header"),
+        DT::dataTableOutput('mappingSummaryTable')
+      )
+    }
+  })
+  
   # Now, show the filtered (unsummarized) table, based on what the user clicked on.
-  mappedMetaboliteTable <- eventReactive(input$mappingSummaryTable_rows_selected, {
-    generateSelectedMetabTable(mappingObject(), mappingSummaryTable(), 
-                               input$mappingSummaryTable_rows_selected, input$dbChosen)
-  }, ignoreInit = TRUE)
+  mappedMetaboliteTable <- eventReactive({
+    input$mappingSummaryTable_rows_selected
+    input$mapButton
+  }, {
+    
+    if (mappingObject()$status == 'error' | mappingObject()$status == 'empty') {
+      
+      mappingObject()$data
+      
+    } else if (input$dbChosen == 'KEGG') {
+      
+      generateKEGGMetabTable(mappingObject(), mappingSummaryTable(), 
+                             input$mappingSummaryTable_rows_selected, 
+                             input$idType)
+      
+    } else if (input$dbChosen == 'MetaCyc') {
+      
+      generateMetaCycMetabTable(mappingObject(), mappingSummaryTable(), 
+                                input$mappingSummaryTable_rows_selected, 
+                                input$idType)
+      
+    }
+  })
   
   ## Once metabolites have been mapped, render the results!
   output$mappedMetaboliteTable <- DT::renderDataTable({
     # Just really make sure we're not getting any errors thrown at the user
-    if (is.null(mappedMetaboliteTable())) {
-      return(data_frame())
-    } else {
+    if (mappingObject()$status == 'success' & input$dbChosen == 'KEGG') {
       mappedMetaboliteTable() %>% dplyr::select(-starts_with("bare"))
+    } else {
+      mappedMetaboliteTable()
     }
-  }, options = list(
-    pageLength = 10,
-    lengthMenu = c(5, 10, 15, 20),
-    # autoWidth = TRUE,
-    scrollX = '100%', # AMAZING! Crucial argument to make sure DT doesn't overflow
-    # vertical scrolling options
-    scrollY = "200px",
-    scrollCollapse = TRUE, 
-    paging = FALSE
-  ),
+  },
   rownames= FALSE,
   style = 'bootstrap',
   class = 'table-bordered table-responsive compact', 
   escape = FALSE,
   selection = 'single'
   )
+  
+  output$fullMappingResultsPanel <- renderUI({
+    tags$div(
+      if (is.null(mappingObject())) {
+        return(NULL)
+      } else if (mappingObject()$status == 'error' | mappingObject()$status == 'empty') {
+        tags$h3('Intermediate Results')
+      } else {
+        tags$h3('Per-Metabolite Mapping Results')
+      },
+      DT::dataTableOutput('mappedMetaboliteTable')
+    )
+  })
   
   # output$mappingTableTitle <- renderUI({
   #   if (!is.null(mappedMetabolites())){
@@ -325,7 +356,10 @@ shinyServer(function(input, output, session) {
                      choices = c('Comma-Separated Values' = 'csv', 
                                  'Tab-Separated Values' = 'tsv'), 
                      selected = 'csv'),
-        downloadButton('downloadMappingData', 'Download')
+        downloadButton('downloadMappingData', 'Download', 
+                       `data-toggle` = "tooltip",
+                       `data-placement` = "right",
+                       `data-original-title` = "Download your full mapping results.")
       )
     }
   })

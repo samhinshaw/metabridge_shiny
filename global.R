@@ -39,3 +39,17 @@ source('pathwayMapping.R', local = TRUE)$value
 # Source App Functions
 source('alertFunctions.R', local = TRUE)$value
 source('generateTables.R', local = TRUE)$value
+
+# Set global DataTables options: 
+
+options(DT.options = list(
+  pageLength = 10,
+  lengthMenu = c(5, 10, 15, 20),
+  # autoWidth = TRUE,
+  scrollX = '100%', # AMAZING! Crucial argument to make sure DT doesn't overflow
+  # vertical scrolling options
+  scrollY = "250px",
+  scrollCollapse = TRUE, 
+  paging = FALSE,
+  dom = 'tir'
+))

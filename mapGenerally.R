@@ -236,16 +236,9 @@ mapKEGG <- function(importDF, col, idType) {
          message = 'Your metabolites have been successfully mapped!', 
          suggest = NULL)
   } 
-
-  ## Finally, finally, map biocyc gene IDs to ensembl gene IDs
-  keggGenesOfInterest <- tryCatch({
-    this <- left_join(keggIDs$data, keggDB, by = "KEGG") %>% 
-      rename_('bareEnzyme' = 'enzymes', 'Gene' = 'genes', 'bareKEGG' = 'KEGG') %>% 
-      mutate(KEGG = paste0('<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?cpd:',
-                           bareKEGG, '">', bareKEGG, '</a>')) %>% 
-      mutate(Enzyme = paste0('<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?ec:', 
-                             bareEnzyme, '">', bareEnzyme, '</a>')) %>% 
-      select_('Compound', 'KEGG', idType, 'Enzyme', 'Gene', 'bareKEGG', 'bareEnzyme')
+  
+  keggEnzymesOfInterest <- tryCatch({
+    this <- left_join(keggIDs$data, keggEnzymeNames, by = "KEGG")
     # Check to see if join failed silently
     if (nrow(this) == 0) {
       list(status = 'empty', data = keggIDs$data, 
@@ -270,6 +263,45 @@ mapKEGG <- function(importDF, col, idType) {
                           'Here are the KEGG compound IDs we queried.'),
          suggest = 'Try changing your mapping parameters.')
   })
+
+  keggGenesOfInterest <- tryCatch({
+    keggGeneDB <- keggDB %>% select_('KEGG', 'genes')
+    this <- left_join(keggEnzymesOfInterest$data, keggGeneDB, by = "KEGG") %>% 
+      rename_('Gene' = 'genes', 'bareKEGG' = 'KEGG', 'bareEnzyme' = 'enzymes') %>% 
+      mutate(KEGG = paste0('<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?cpd:',
+                           bareKEGG, '">', bareKEGG, '</a>')) %>% 
+      mutate(Enzyme = paste0('<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?ec:', 
+                             bareEnzyme, '">', bareEnzyme, '</a>')) %>% 
+      mutate(enzymeName = str_extract(enzymeName, "^.*;\\n") %>% str_replace(";\\n", "")) %>% 
+      rename_('Enzyme Name' = 'enzymeName') %>% 
+      select_('KEGG', idType, 'Enzyme', '`Enzyme Name`',  'Gene', 'bareKEGG', 'bareEnzyme')
+    # Check to see if join failed silently
+    if (nrow(this) == 0) {
+      list(status = 'empty', data = keggEnzymesOfInterest$data, 
+           message = paste0('We were unable to match the enzymes your compounds ',
+                            'interact with to any human genes. Here are the enzymes ',
+                            'and their directly interacting enzymes. '), 
+           suggest = 'Try using a different compound ID or mapping via MetaCyc')
+    } else {
+      list(status = 'success', data = this, 
+           message = 'Your metabolites have been successfully mapped!', 
+           suggest = NULL)
+    }  
+  }, warning = function(warningMessage) {
+    list(status = 'warn', data = this, 
+         internalMessage = warningMessage,
+         message = 'Your compounds were mapped, but there may have been a problem.', 
+         suggest = NULL)
+  }, error = function(errorMessage) {
+    list(status = 'error', data = keggEnzymesOfInterest$data, 
+         internalMessage = errorMessage,
+         message = paste0('There was an error mapping your compounds via KEGG. ',
+                          'Here are the enzymes ',
+                          'and their directly interacting enzymes. '),
+         suggest = 'Try changing your mapping parameters.')
+  })
+  
+  
   
   
   return(keggGenesOfInterest)

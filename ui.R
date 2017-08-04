@@ -67,16 +67,19 @@ shinyUI(fluidPage(
                  radioButtons("dbChosen", "Choose Database", 
                               choices = c("MetaCyc", "KEGG"), 
                               selected = "MetaCyc"), 
-                 actionButton("mapButton", "Map")
+                 actionButton("mapButton", "Map", 
+                              `data-toggle` = "tooltip",
+                              `data-placement` = "right",
+                              `data-original-title` = "Map your metabolites against the selected database")
                ),
                uiOutput('saveMappingPanel')
              ),
              tags$div(
                class = "col-sm-9",
-               tags$h3('Mapping Summary', class = "tab-header"),
-               DT::dataTableOutput('mappingSummaryTable'),
-               tags$h3('Per-Metabolite Mapping Results'),
-               DT::dataTableOutput('mappedMetaboliteTable')
+               tags$h2('Mapping Results'),
+               hr(),
+               uiOutput('mappingSummaryPanel'),
+               uiOutput('fullMappingResultsPanel')
                # textOutput('horizontalScrollMessage')
              )
     ),
