@@ -36,3 +36,4 @@ source('pathwayMapping.R', local = TRUE)$value
 
 # Source App Functions
 source('alertFunctions.R', local = TRUE)$value
+source('generateTables.R', local = TRUE)$value
