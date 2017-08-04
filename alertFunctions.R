@@ -1,7 +1,7 @@
 mappingAlert <- function(message, suggest, status) {
   insertUI(
-    selector = "#mappingSummaryTable",
-    where = "beforeBegin",
+    selector = "#mapPanelSidebar",
+    where = "beforeEnd",
     ui = tags$div(
       id = 'mappingAlert',
       class = if (status == 'error' | status == 'empty') {

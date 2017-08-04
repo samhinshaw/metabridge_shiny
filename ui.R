@@ -60,6 +60,7 @@ shinyUI(fluidPage(
              # Manual Sidebar
              tags$div(
                class = "col-sm-3 manual-sidebar",
+               id = 'mapPanelSidebar',
                tags$form(
                  class = "well",
                  ## For now just allow one database. Later we can allow multiple
