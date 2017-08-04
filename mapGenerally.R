@@ -267,13 +267,11 @@ mapKEGG <- function(importDF, col, idType) {
   keggGenesOfInterest <- tryCatch({
     keggGeneDB <- keggDB %>% select_('KEGG', 'genes')
     this <- left_join(keggEnzymesOfInterest$data, keggGeneDB, by = "KEGG") %>% 
-      rename_('Gene' = 'genes', 'bareKEGG' = 'KEGG', 'bareEnzyme' = 'enzymes') %>% 
+      rename_('Gene' = 'genes', 'bareKEGG' = 'KEGG', 'bareEnzyme' = 'enzymes', 'Enzyme Name' = 'enzymeName') %>% 
       mutate(KEGG = paste0('<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?cpd:',
                            bareKEGG, '">', bareKEGG, '</a>')) %>% 
       mutate(Enzyme = paste0('<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?ec:', 
                              bareEnzyme, '">', bareEnzyme, '</a>')) %>% 
-      mutate(enzymeName = str_extract(enzymeName, "^.*;\\n") %>% str_replace(";\\n", "")) %>% 
-      rename_('Enzyme Name' = 'enzymeName') %>% 
       select_('KEGG', idType, 'Enzyme', '`Enzyme Name`',  'Gene', 'bareKEGG', 'bareEnzyme')
     # Check to see if join failed silently
     if (nrow(this) == 0) {
