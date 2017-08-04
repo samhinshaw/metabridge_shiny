@@ -19,7 +19,9 @@ load('data/name_map.RData')
 # Load KEGG Database Files
 # Import Enzymes & Enzyme Names here once scraping has been completed.
 load('data/k01_keggEnzymes.RData')
-load('data/k03_keggPathways.RData')
+load('data/k02_keggEnzymeNames.RData')
+load('data/k03_keggGenes.RData')
+load('data/k04_keggPathways.RData')
 
 # Load MetaCyc Database Files
 load('data/m01_metaCycDBLinks.RData')
