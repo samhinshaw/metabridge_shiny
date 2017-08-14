@@ -231,10 +231,12 @@ mapKEGG <- function(importDF, col, idType) {
            suggest = 'Try using a different compound ID or mapping via MetaCyc')
     })
   } else if (idType == "KEGG") {
+    ## Join compound name (to be scraped) to compound IDs here. Name the column 'Compound'
     this <- mappingDF$data
     keggIDs <- list(status = 'success', data = this, 
          message = 'Your metabolites have been successfully mapped!', 
          suggest = NULL)
+    
   } 
   
   keggEnzymesOfInterest <- tryCatch({
@@ -272,7 +274,7 @@ mapKEGG <- function(importDF, col, idType) {
                            bareKEGG, '">', bareKEGG, '</a>')) %>% 
       mutate(Enzyme = paste0('<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?ec:', 
                              bareEnzyme, '">', bareEnzyme, '</a>')) %>% 
-      select_('KEGG', idType, 'Enzyme', '`Enzyme Name`',  'Gene', 'bareKEGG', 'bareEnzyme')
+      select_('KEGG', idType, 'Compound', 'Enzyme', '`Enzyme Name`',  'Gene', 'bareKEGG', 'bareEnzyme')
     # Check to see if join failed silently
     if (nrow(this) == 0) {
       list(status = 'empty', data = keggEnzymesOfInterest$data, 

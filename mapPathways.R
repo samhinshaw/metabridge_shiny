@@ -64,6 +64,10 @@ mapMetaCycPathways <- function(idType, selectedRow, summaryTable, fullTable) {
   #  Get Info from Full Mapping Table   #
   #######################################
   
+  genesOfInterest <- fullTable %>%
+    filter(rlang::UQ(namedIDType) == rlang::UQ(quotedMetab)) %>% 
+    magrittr::extract2("Official Gene Symbol")
+  
   selectedReaction <- fullTable %>% 
     filter(rlang::UQ(namedIDType) == rlang::UQ(quotedMetab)) %>% 
     extract2('Reaction')
@@ -73,7 +77,12 @@ mapMetaCycPathways <- function(idType, selectedRow, summaryTable, fullTable) {
   pathwaysOfInterest <- metaCycPathways %>%
   filter(reaction %in% rlang::UQ(selectedReaction))
   
-  alert(paste0("There are ", nrow(pathwaysOfInterest), " pathways."))
+  return(list(
+    'selectedCompound' = selectedMetab,
+    'selectedCompoundName' = selectedMetabName,
+    'genesOfSelectedCompound' = genesOfInterest,
+    'pathwaysOfSelectedCompound' = pathwaysOfInterest
+  ))
   
 }
 

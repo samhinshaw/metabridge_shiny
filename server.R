@@ -413,21 +413,39 @@ shinyServer(function(input, output, session) {
     )
     
     ### Assign results to their reactive values
-    selectedRowAttrs$selectedCompound <- pathwayMappingAttrs$selectedMetab
-    selectedRowAttrs$selectedCompoundName <- pathwayMappingAttrs$selectedMetabName
-    selectedRowAttrs$genesOfSelectedCompound <- pathwayMappingAttrs$genesOfInterest
-    selectedRowAttrs$pathwaysOfSelectedCompound <- pathwayMappingAttrs$pathwaysOfInterest
+    selectedRowAttrs$selectedCompound <- pathwayMappingAttrs$selectedCompound
+    selectedRowAttrs$selectedCompoundName <- pathwayMappingAttrs$selectedCompoundName
+    selectedRowAttrs$genesOfSelectedCompound <- pathwayMappingAttrs$genesOfSelectedCompound
+    selectedRowAttrs$pathwaysOfSelectedCompound <- pathwayMappingAttrs$pathwaysOfSelectedCompound
     
     
   })
   
   output$pathwayPanel <- renderUI({
-    tags$div(
-      tags$h4(paste0('Pathways for Compound ', tools::toTitleCase(tolower(selectedRowAttrs()$selectedCompoundName)))),
-      selectInput(inputId = 'pathwaysPicked', label = 'Pathway', 
-                  choices = selectedRowAttrs()$pathwaysOfSelectedCompound$namedPway,
-                  selectize = FALSE)
-    )
+    
+    ## Check for results before rendering!
+    
+    if (nrow(selectedRowAttrs$pathwaysOfSelectedCompound) == 0) {
+      tags$div(
+        tags$h4(paste0('Pathways for Compound ', tools::toTitleCase(tolower(selectedRowAttrs$selectedCompoundName)))),
+        "No pathways found for this compound."
+      )
+    } else if (input$dbChosen == 'KEGG') {
+      tags$div(
+        tags$h4(paste0('Pathways for Compound ', tools::toTitleCase(tolower(selectedRowAttrs$selectedCompoundName)))),
+        selectInput(inputId = 'pathwaysPicked', label = 'Pathway', 
+                    choices = selectedRowAttrs$pathwaysOfSelectedCompound$namedPway,
+                    selectize = FALSE), 
+        "Note: each pathway may take some time to process. Especially map0110, Metabolic Pathways."
+      )
+    } else if (input$dbChosen == 'MetaCyc') {
+      tags$div(
+        tags$h4(paste0('Pathways for Compound ', tools::toTitleCase(tolower(selectedRowAttrs$selectedCompoundName)))),
+        selectInput(inputId = 'pathwaysPicked', label = 'Pathway', 
+                    choices = selectedRowAttrs$pathwaysOfSelectedCompound$pathwayName,
+                    selectize = FALSE)
+      )
+    }
   })
   
   output$pathwayView <- renderImage({
@@ -445,15 +463,15 @@ shinyServer(function(input, output, session) {
     selectedPathway <- rlang::quo(input$pathwaysPicked)
     
     # Pull the pathway ID from the pathway name selected by the user
-    selectedPathwayID <- pathwaysOfSelectedCompound() %>% 
+    selectedPathwayID <- selectedRowAttrs$pathwaysOfSelectedCompound %>% 
       filter(rlang::UQ(pathwayNameIDcol) == input$pathwaysPicked) %>% 
       extract2('id')
     
     # Generate the PNG
     suppressWarnings({
       pathview(
-        gene.data = genesOfSelectedCompound(),
-        cpd.data = selectedCompound(),
+        gene.data = selectedRowAttrs$genesOfSelectedCompound,
+        cpd.data = selectedRowAttrs$selectedCompound,
         pathway.id = selectedPathwayID,
         gene.idtype = "SYMBOL",
         species = "hsa",
