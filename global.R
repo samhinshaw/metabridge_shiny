@@ -34,7 +34,7 @@ load('data/humanRefs.RData')
 
 # Source Mapping Functions
 source('mapGenerally.R', local = TRUE)$value
-source('pathwayMapping.R', local = TRUE)$value
+source('mapPathways.R', local = TRUE)$value
 
 # Source App Functions
 source('alertFunctions.R', local = TRUE)$value
