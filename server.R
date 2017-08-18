@@ -436,7 +436,7 @@ shinyServer(function(input, output, session) {
         selectInput(inputId = 'pathwaysPicked', label = 'Pathway', 
                     choices = selectedRowAttrs$pathwaysOfSelectedCompound$namedPway,
                     selectize = FALSE), 
-        "Note: each pathway may take some time to process. Especially map0110, Metabolic Pathways."
+        "Note: each pathway may take some time to process."
       )
     } else if (input$dbChosen == 'MetaCyc') {
       tags$div(

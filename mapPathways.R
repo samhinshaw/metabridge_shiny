@@ -23,7 +23,8 @@ mapKEGGPathways <- function(idType, selectedRow, summaryTable, fullTable) {
   ### Pull out the pathways that our compound is present in from the
   ### metabPathways object stored in `data/`
   pathwaysOfInterest <- keggPathways %>%
-    filter(rlang::UQ(namedIDType) == rlang::UQ(quotedMetab))
+    filter(rlang::UQ(namedIDType) == rlang::UQ(quotedMetab)) %>% 
+    filter_("id %in% keggHumanPathways")
   
   ## Find all the genes that compound interacts with (from our initial mapping
   ## table)
