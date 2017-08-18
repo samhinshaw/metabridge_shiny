@@ -203,7 +203,6 @@ mapKEGG <- function(importDF, col, idType) {
   
   if (idType != "KEGG") {
     keggIDs <- tryCatch({
-      
       this <- metaCycDBLinks %>% 
         dplyr::filter(UQ(namedIDtype) %in% extract2(mappingDF$data, UQ(quotedIDtype)))
       
@@ -232,7 +231,7 @@ mapKEGG <- function(importDF, col, idType) {
     })
   } else if (idType == "KEGG") {
     ## Join compound name (to be scraped) to compound IDs here. Name the column 'Compound'
-    this <- mappingDF$data
+    this <- left_join(mappingDF$data, keggCompounds, by = 'KEGG')
     keggIDs <- list(status = 'success', data = this, 
          message = 'Your metabolites have been successfully mapped!', 
          suggest = NULL)
