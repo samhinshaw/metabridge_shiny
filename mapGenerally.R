@@ -26,7 +26,7 @@ mapMetaCyc <- function(importDF, col, idType) {
     # You don't need to state the return value via `return()` as code 
     # in the "try" part is not wrapped insided a function (unlike that
     # for the condition handlers for warnings and error below)
-    this <- data_frame(UQ(idType) := importDF %>% use_series(UQ(col)) %>% as.character())
+    this <- data_frame(UQ(idType) := importDF %>% use_series(UQ(col)) %>% as.character() %>% notNAs() %>% notEmpty() %>% str_trim())
     # names(this)[1] <- UQ(quotedID)
     # Check to see if join failed silently
     if (nrow(this) == 0) {
@@ -123,11 +123,13 @@ mapMetaCyc <- function(importDF, col, idType) {
 
     ## Finally, finally, map biocyc gene IDs to ensembl gene IDs
   mappedToEnsembl <- tryCatch({
-    this <- inner_join(mappedToReactions$data, metaCycGeneIDs,
+    this <- left_join(mappedToReactions$data, metaCycGeneIDs,
                        by = c("MetaCyc Gene ID" = "Object ID")) %>% 
       dplyr::select_(idType, "Compound", "`MetaCyc Gene ID`", 
                      "`Official Gene Symbol`", "Ensembl", "Reaction") %>% 
-      rename_("Ensembl Gene ID" = "Ensembl")
+      rename_("Ensembl Gene ID" = "Ensembl") %>%
+      # filter out rows where no gene IDs are present
+      filter(!(is.na(`MetaCyc Gene ID`) & is.na(`Official Gene Symbol`) & is.na(`Ensembl Gene ID`)))
     # Check to see if join failed silently
     if (nrow(this) == 0) {
       list(status = 'empty', data = mappedToReactions$data, 
@@ -178,7 +180,7 @@ mapKEGG <- function(importDF, col, idType) {
     # You don't need to state the return value via `return()` as code 
     # in the "try" part is not wrapped insided a function (unlike that
     # for the condition handlers for warnings and error below)
-    this <- data_frame(UQ(namedIDtype) := extract2(importDF, col))
+    this <- data_frame(UQ(namedIDtype) := extract2(importDF, col) %>% notNAs() %>% notEmpty() %>% str_trim())
     # Check to see if join failed silently
     if (nrow(this) == 0) {
       list(status = 'empty', data = importDF, 
