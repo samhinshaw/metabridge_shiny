@@ -112,8 +112,11 @@ shinyServer(function(input, output, session) {
       dataColumns <- names(metaboliteObject())
       tags$form(
         class = "well",
+        "Select the column that contains the metabolites you wish to map and the ID type. ",
+        br(),
+        br(),
         ## For now, just allow one column. Later we can allow multiple to be chosen. 
-        radioButtons("columnsPicked", "Choose Columns", dataColumns, 
+        radioButtons("columnsPicked", "Select Column", dataColumns, 
                      # If an HMDB column exists in the data, default to that
                      selected = if_else(
                        condition = is_in('hmdb', tolower(dataColumns)),
@@ -139,7 +142,11 @@ shinyServer(function(input, output, session) {
       selectInput("idType", "ID Type", width = "50%",
                   choices = c("HMDB", "KEGG", "PubChem", 'CAS'), 
                   selected = preSelectedIDType(), selectize = FALSE),
-      actionButton("continueToMap", "Proceed")
+      actionButton(inputId = "continueToMap", label = "Proceed", 
+                   class = "btn btn-default",
+                   `data-toggle` = "tooltip",
+                   `data-placement` = "right",
+                   `data-original-title` = "Proceed to the next tab")
     )
   })
   
@@ -352,6 +359,9 @@ shinyServer(function(input, output, session) {
     if (!is.null(mappedMetabolites())) {
       tags$form(
         class = "well",
+        "Download a copy of your full mapping results. ", 
+        br(),
+        br(),
         radioButtons("saveType", "Download Results",
                      choices = c('Comma-Separated Values' = 'csv', 
                                  'Tab-Separated Values' = 'tsv'), 
