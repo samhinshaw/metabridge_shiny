@@ -18,6 +18,7 @@ shinyServer(function(input, output, session) {
   mappedMetabolites <- reactiveVal()
   mappingObject <- reactiveVal()
   preSelectedIDType <- reactiveVal()
+  databaseChosen <- reactiveVal()
   
   ################################################
   #                                              #
@@ -211,6 +212,8 @@ shinyServer(function(input, output, session) {
   ## We now take the columns the user specified and map them to genes!
   ## Even better, now that we have a UI, we can choose 
   observeEvent(input$mapButton, {
+    # change the dbChosen reactive Value
+    databaseChosen(input$dbChosen)
     # Clear any pre-existing alerts
     removeUI(selector = "#mappingAlert")
     # Conduct the mapping
@@ -273,6 +276,12 @@ shinyServer(function(input, output, session) {
     } else {
       tags$div(
         tags$h3('Mapping Summary', class = "tab-header"),
+        if (databaseChosen() == "KEGG") {
+          tags$p(
+            "If you wish to visualize your results, please select a metabolite from ",
+            "this table and switch to the 'Visualize' tab."
+          )
+        },
         DT::dataTableOutput('mappingSummaryTable')
       )
     }
@@ -359,9 +368,7 @@ shinyServer(function(input, output, session) {
     if (!is.null(mappedMetabolites())) {
       tags$form(
         class = "well",
-        "Download a copy of your full mapping results. ", 
-        br(),
-        br(),
+        tags$p("Download a copy of your full mapping results. "), 
         radioButtons("saveType", "Download Results",
                      choices = c('Comma-Separated Values' = 'csv', 
                                  'Tab-Separated Values' = 'tsv'), 
@@ -373,6 +380,44 @@ shinyServer(function(input, output, session) {
       )
     }
   })
+  
+  # Navigate to Viz page when KEGG was chosen
+  
+  output$continueToViz <- renderUI({
+    # Do not render panel if no db has been mapped against yet (because
+    # databaseChosen does not get input$dbChosen until "mapButton" is clicked)
+    if (is.null(databaseChosen())) {
+      return(NULL)
+      # once mapped, render the panel
+    } else {
+      tags$form(
+        class = "well",
+        tags$p("Visualize Results"),
+        br(),
+        # If we mapped against KEGG, show visualize button
+        if (databaseChosen() == "KEGG" & !is.null(input$mappingSummaryTable_rows_selected)) {
+          actionButton(
+            inputId = "visualizeButton", 
+            label = "Visualize", 
+            class = "btn btn-default"
+          )
+          # But if we mapped against MetaCyc, we don't have visualizations for
+          # this yet, so disable the viz button
+        } else {
+          actionButton(
+            inputId = "visualizeButton", 
+            label = "Visualize", 
+            class = "btn btn-default disabled"
+          )
+        }
+      )
+    }
+  })
+  
+  # When clicking "Visualize", switch to Visualize panel
+  observeEvent(input$visualizeButton, {
+    updateNavbarPage(session, inputId = "navbarLayout", selected = "vizPanel")
+  }, ignoreInit = TRUE)
   
   ## Export data
   output$downloadMappingData <- downloadHandler(
@@ -438,7 +483,7 @@ shinyServer(function(input, output, session) {
     if (nrow(selectedRowAttrs$pathwaysOfSelectedCompound) == 0) {
       tags$div(
         tags$h4(paste0('Pathways for Compound ', tools::toTitleCase(tolower(selectedRowAttrs$selectedCompoundName)))),
-        "No pathways found for this compound."
+        tags$p("No pathways found for this compound.")
       )
     } else if (input$dbChosen == 'KEGG') {
       tags$div(
@@ -446,7 +491,7 @@ shinyServer(function(input, output, session) {
         selectInput(inputId = 'pathwaysPicked', label = 'Pathway', 
                     choices = selectedRowAttrs$pathwaysOfSelectedCompound$namedPway,
                     selectize = FALSE), 
-        "Note: each pathway may take some time to process."
+        tags$p("Note: each pathway may take some time to process.")
       )
     } else if (input$dbChosen == 'MetaCyc') {
       tags$div(
@@ -461,8 +506,8 @@ shinyServer(function(input, output, session) {
   output$pathwayView <- renderImage({
     if(is.null(input$pathwaysPicked)) {
       return({
-        list(src = 'material_loading.gif',
-             contentType = 'image/png',
+        list(src = './material_loading.gif',
+             contentType = 'image/gif',
              width = 297,
              height = 297,
              alt = "loading...")

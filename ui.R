@@ -11,7 +11,7 @@ shinyUI(fluidPage(
     tags$link(rel = "stylesheet", type = "text/css", href = "user.css")
   ),
   navbarPage(
-    title = "MetaBridge", id = "navbarLayout",
+    title = HTML("MetaBridge <sup class='tiny'>BETA</sup>"), id = "navbarLayout",
     header = tagList(
       useShinyjs()
     ),
@@ -34,8 +34,9 @@ shinyUI(fluidPage(
                tags$p(
                  "Welcome to MetaBridge, a web tool for network-based integrative ",
                  "analysis of metabolomics data. Here you can upload a set of metabolites ",
-                 "and identify the directly interacting enzymes for network integration. ",
-                 br(),
+                 "and identify the directly interacting enzymes for network integration. "
+               ),
+               tags$p(
                  "To start, you'll want a set of metabolites as",
                  "HMDB, KEGG, PubChem, or CAS IDs. We recommend ",
                  tags$a("MetaboAnalyst", href = "http://www.metaboanalyst.ca"),
@@ -48,9 +49,11 @@ shinyUI(fluidPage(
     tabPanel("Upload", value = "uploadPanel",
              tags$div(class = "col-sm-3 manual-sidebar",
                       tags$form(class = "well",
-                                "Upload a plain-text spreadsheet (CSV or TSV) containing your metabolites of interest in a single column, or try out our example dataset.",
-                                br(),
-                                br(),
+                                tags$p(
+                                  "Upload a plain-text spreadsheet (CSV or TSV) containing ",
+                                  "your metabolites of interest in a single column, or try ",
+                                  "out our example dataset."
+                                ),
                                 fileInput(inputId = 'metaboliteUpload', label = 'Upload Metabolites',
                                           # width = '50%', 
                                           accept = c('text/csv', 
@@ -84,9 +87,11 @@ shinyUI(fluidPage(
                id = 'mapPanelSidebar',
                tags$form(
                  class = "well",
-                 "Choose a database to map with. MetaCyc has higher quality annotations, but KEGG may yield more hits.",
-                 br(),
-                 br(),
+                 tags$p(
+                   "Choose a database to map with. MetaCyc has higher quality annotations, ",
+                   "but KEGG may yield more hits. If you map via KEGG, you also have the ",
+                   "option to visualize your results."
+                 ),
                  ## For now just allow one database. Later we can allow multiple
                  radioButtons("dbChosen", "Choose Database", 
                               choices = c("MetaCyc", "KEGG"), 
@@ -96,7 +101,8 @@ shinyUI(fluidPage(
                               `data-placement` = "right",
                               `data-original-title` = "Map your metabolites against the selected database")
                ),
-               uiOutput('saveMappingPanel')
+               uiOutput('saveMappingPanel'),
+               uiOutput('continueToViz')
              ),
              tags$div(
                class = "col-sm-9",
@@ -151,8 +157,7 @@ shinyUI(fluidPage(
                  tags$div(
                    class = "jumbotron",
                    h1("Help"),
-                   "For assistance, you can reach me on twitter, @samhinshaw.",
-                   br(),br(),
+                   tags$p("For assistance, you can reach me on twitter, @samhinshaw."),
                    HTML('<a href="https://twitter.com/intent/tweet?screen_name=samhinshaw" \
                         class="twitter-mention-button" data-show-count="false">
                         Tweet to @samhinshaw</a>
