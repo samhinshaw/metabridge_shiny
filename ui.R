@@ -18,16 +18,16 @@ shinyUI(fluidPage(
     windowTitle = "MetaBridge",
     collapsible = TRUE,
     tabPanel("Welcome", value = "welcomePanel",
-             # tags$div(
-             #   id = 'mappingAlert',
-             #   class = "alert alert-dismissible alert-danger",
-             #   tags$button(
-             #     HTML("&times;"),
-             #     type = "button",
-             #     class = "close",
-             #     `data-dismiss` = "alert"),
-             #   "Warning: In development environment!"
-             # ),
+             tags$div(
+               id = 'mappingAlert',
+               class = "alert alert-dismissible alert-danger",
+               tags$button(
+                 HTML("&times;"),
+                 type = "button",
+                 class = "close",
+                 `data-dismiss` = "alert"),
+               "Warning: In development environment!"
+             ),
              tags$div(
                class = "jumbotron",
                h1("Welcome"),
@@ -114,6 +114,7 @@ shinyUI(fluidPage(
              )
     ),
     tabPanel(title = "Visualize", value = "vizPanel",
+             id = "visualizationPanel",
              # Manual Sidebar
              tags$div(
                class = "col-sm-3 manual-sidebar",

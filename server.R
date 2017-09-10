@@ -19,6 +19,7 @@ shinyServer(function(input, output, session) {
   mappingObject <- reactiveVal()
   preSelectedIDType <- reactiveVal()
   databaseChosen <- reactiveVal()
+  selectedMetab <- reactiveVal()
   
   ################################################
   #                                              #
@@ -172,7 +173,6 @@ shinyServer(function(input, output, session) {
          ))
     walk(.x = selectedColPositions,
          .f = ~ addCssClass(
-
            class = "info",
            selector = paste0("#uploadedDataTable table th:nth-child(", .x, ")")
          ))
@@ -287,6 +287,17 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  # When a new metabolite is selected, set it to the selected metabolite!
+  observeEvent(input$mappingSummaryTable_rows_selected, {
+    selectedMetab(input$mappingSummaryTable_rows_selected)
+  })
+  
+  # But when the map button is selected, nullify and previously selected metabolites
+  observeEvent(input$mapButton, {
+    selectedMetab(NULL)
+  })
+  
+  
   # Now, show the filtered (unsummarized) table, based on what the user clicked on.
   mappedMetaboliteTable <- eventReactive({
     input$mappingSummaryTable_rows_selected
@@ -300,13 +311,13 @@ shinyServer(function(input, output, session) {
     } else if (input$dbChosen == 'KEGG') {
       
       generateKEGGMetabTable(mappingObject(), mappingSummaryTable(), 
-                             input$mappingSummaryTable_rows_selected, 
+                             selectedMetab(), 
                              input$idType)
       
     } else if (input$dbChosen == 'MetaCyc') {
       
       generateMetaCycMetabTable(mappingObject(), mappingSummaryTable(), 
-                                input$mappingSummaryTable_rows_selected, 
+                                selectedMetab(), 
                                 input$idType)
       
     }
@@ -395,7 +406,7 @@ shinyServer(function(input, output, session) {
         tags$p("Visualize Results"),
         br(),
         # If we mapped against KEGG, show visualize button
-        if (databaseChosen() == "KEGG" & !is.null(input$mappingSummaryTable_rows_selected)) {
+        if (databaseChosen() == "KEGG" & !is.null(selectedMetab())) {
           actionButton(
             inputId = "visualizeButton", 
             label = "Visualize", 
@@ -413,6 +424,23 @@ shinyServer(function(input, output, session) {
       )
     }
   })
+  
+  # Also disable viz tab in navbar when viz mapping is not possible
+  observeEvent(input$mapButton, {
+    if (databaseChosen() == "KEGG" & !is.null(selectedMetab())) {
+      runjs("$(\"a[data-value='vizPanel']\").parent().removeClass('disabled');")
+      } else {
+        runjs("$(\"a[data-value='vizPanel']\").parent().addClass('disabled');")
+      }
+  })
+  
+  observeEvent(input$mappingSummaryTable_rows_selected, {
+    if (databaseChosen() == "KEGG" & !is.null(selectedMetab())) {
+      runjs("$(\"a[data-value='vizPanel']\").parent().removeClass('disabled');")
+    } else {
+      runjs("$(\"a[data-value='vizPanel']\").parent().addClass('disabled');")
+      }
+    })
   
   # When clicking "Visualize", switch to Visualize panel
   observeEvent(input$visualizeButton, {
@@ -464,7 +492,7 @@ shinyServer(function(input, output, session) {
       fullTable = fullTable,
       idType = input$idType, 
       db = input$dbChosen,
-      selectedRow = input$mappingSummaryTable_rows_selected
+      selectedRow = selectedMetab()
     )
     
     ### Assign results to their reactive values
