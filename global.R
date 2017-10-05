@@ -42,19 +42,22 @@ source('mapPathways.R', local = TRUE)$value
 source('alertFunctions.R', local = TRUE)$value
 source('generateTables.R', local = TRUE)$value
 
-# Set global DataTables options: 
+# Set global DataTables options:
 
-options(DT.options = list(
-  pageLength = 10,
-  lengthMenu = c(5, 10, 15, 20),
-  # autoWidth = TRUE,
-  scrollX = '100%', # AMAZING! Crucial argument to make sure DT doesn't overflow
-  # vertical scrolling options
-  scrollY = "250px",
-  scrollCollapse = TRUE, 
-  paging = FALSE,
-  dom = 'tir'
-))
+options(
+  DT.options = list(
+    pageLength = 10,
+    lengthMenu = c(5, 10, 15, 20),
+    # autoWidth = TRUE,
+    scrollX = '100%',
+    # AMAZING! Crucial argument to make sure DT doesn't overflow
+    # vertical scrolling options
+    scrollY = "250px",
+    scrollCollapse = TRUE,
+    paging = FALSE,
+    dom = 'tir'
+  )
+)
 
 notNAs <- function(vector) {
   vector <- vector[!is.na(vector)]
@@ -62,6 +65,6 @@ notNAs <- function(vector) {
 }
 
 notEmpty <- function(vector) {
-  vector <- vector[!grepl(x = vector, pattern = '^$')]  
+  vector <- vector[!grepl(x = vector, pattern = '^$')]
   return(vector)
 }
