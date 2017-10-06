@@ -1,4 +1,3 @@
-"use strict";
 //
 // const data = {
 //   columns: []
@@ -34,6 +33,15 @@
 // });
 //
 // Initialize Tooltips with JQuery
-$(document).ready(function() {
-  $('[data-toggle="tooltip"]').tooltip();
+$(document).ready(() => {
+  // Disable viz panel on page load
+  $("a[data-value='vizPanel']")
+    .parent()
+    .addClass('disabled');
+  // Add css-tooltip class
+  $("a[data-value='vizPanel']").addClass('panel-tooltip');
+  // Add title class
+  $("a[data-value='vizPanel']").attr('title', 'Please select a mapped metabolite');
+  // Initialize JQuery tooltips (but we're not using them anymore!)
+  // $('[data-toggle="tooltip"]').tooltip();
 });

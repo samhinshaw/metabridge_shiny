@@ -34,13 +34,17 @@ load('data/m04_metaCycPathways.RData')
 # Load HumanCyc Cross-References
 load('data/humanRefs.RData')
 
+# Utility functions
+source(file.path('functions', 'utilityFunctions.R'), local = TRUE)$value
+
 # Source Mapping Functions
-source('mapGenerally.R', local = TRUE)$value
-source('mapPathways.R', local = TRUE)$value
+source(file.path('functions', 'mapGenerally.R'), local = TRUE)$value
+source(file.path('functions', 'mapPathways.R'), local = TRUE)$value
 
 # Source App Functions
-source('alertFunctions.R', local = TRUE)$value
-source('generateTables.R', local = TRUE)$value
+source(file.path('functions', 'alertFunctions.R'), local = TRUE)$value
+source(file.path('functions', 'generateTables.R'), local = TRUE)$value
+
 
 # Set global DataTables options:
 
@@ -58,13 +62,3 @@ options(
     dom = 'tir'
   )
 )
-
-notNAs <- function(vector) {
-  vector <- vector[!is.na(vector)]
-  return(vector)
-}
-
-notEmpty <- function(vector) {
-  vector <- vector[!grepl(x = vector, pattern = '^$')]
-  return(vector)
-}

@@ -81,3 +81,118 @@
 .tab-header {
   margin-top: 0;
 }
+
+/* Tooltip with CSS3 */
+/* Portion common to all tooltips */
+.css-tooltip {
+  display: inline;
+  position: relative;
+}
+/* This is the triangle portion of the tooltip */
+.css-tooltip:hover:before {
+  border: solid;
+  /* bottom: 40%; */
+  content: '';
+  /* right: -5%; */
+  position: absolute;
+  z-index: 99;
+}
+/* This is the box part of the tooltip */
+.css-tooltip:hover:after {
+  background: #333;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 5px;
+  /* bottom: 25%; */
+  color: #fff;
+  content: attr(title);
+  /* right: -74%; */
+  padding: 5px 15px;
+  position: absolute;
+  z-index: 98;
+  white-space: normal;
+  /* width: 110px; */
+}
+
+/* Specific overrides for sizes! */
+
+/* LARGE */
+/* Triangle Portion */
+.btn-lg.css-tooltip:hover:before {
+  border-color: transparent #333;
+  border-width: 6px 6px 6px 0;
+  bottom: 40%;
+  right: -5%;
+}
+/* Box Portion */
+.btn-lg.css-tooltip:hover:after {
+  bottom: 22%;
+  right: -73%;
+}
+
+/* MEDIUM MOBILE */
+@media (max-width: 767px) {
+  /* Triangle Portion */
+  .btn-med.css-tooltip:hover:before {
+    border-color: #333 transparent;
+    border-width: 6px 6px 0px 6px;
+    bottom: 100%;
+    right: 45%;
+  }
+  /* Box Portion */
+  .btn-med.css-tooltip:hover:after {
+    bottom: 110%;
+    left: -200%;
+  }
+}
+
+/* MEDIUM Desktop */
+@media (min-width: 768px) {
+  /* Triangle Portion */
+  .btn-med.css-tooltip:hover:before {
+    border-color: transparent #333;
+    border-width: 6px 6px 6px 0;
+    bottom: 30%;
+    right: -10%;
+  }
+  /* Box Portion */
+  .btn-med.css-tooltip:hover:after {
+    bottom: 10%;
+    left: 110%;
+  }
+}
+
+/* PANEL Tooltips */
+/* For DESKTOP only */
+/* Because panel will collapse! */
+@media (min-width: 768px) {
+  .panel-tooltip {
+    display: inline;
+    position: relative;
+  }
+  /* This is the triangle portion of the tooltip */
+  .panel-tooltip:hover:before {
+    border: solid;
+    content: '';
+    position: absolute;
+    z-index: 99;
+    border-color: #333 transparent;
+    border-width: 0 6px 6px 6px;
+    top: 60px;
+    right: 40%;
+  }
+  /* This is the box part of the tooltip */
+  .panel-tooltip:hover:after {
+    background: #333;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 5px;
+    color: #fff;
+    content: attr(title);
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 98;
+    white-space: normal;
+    /* width: 110px; */
+    top: 65px;
+    right: -10%;
+  }
+}

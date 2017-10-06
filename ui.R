@@ -7,23 +7,29 @@
 #
 
 shinyUI(fluidPage(
+  # Head linking to Flatly bootstrap theme & my personal tweaks
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css",
               href = "bootstrap.min.css"),
     tags$link(rel = "stylesheet", type = "text/css",
               href = "user.css")
   ),
+  # Body
   navbarPage(
+    # Navbar Brand
     title = HTML("MetaBridge <sup class='tiny'>BETA</sup>"),
     id = "navbarLayout",
+    # Make sure we use ShinyJS
     header = tagList(useShinyjs()),
     windowTitle = "MetaBridge",
     collapsible = TRUE,
+    # begin the tabPanel Layout!
     tabPanel(
+      # Our welcome tab
       "Welcome",
       value = "welcomePanel",
+      # Dev mode alert
       tags$div(
-        id = "mappingAlert",
         class = "alert alert-dismissible alert-danger",
         tags$button(
           HTML("&times;"),
@@ -33,6 +39,7 @@ shinyUI(fluidPage(
         ),
         "Warning: In development environment!"
       ),
+      # Welcome hero
       tags$div(
         class = "jumbotron",
         h1("Welcome"),
@@ -47,15 +54,21 @@ shinyUI(fluidPage(
           tags$a("MetaboAnalyst", href = "http://www.metaboanalyst.ca"),
           " for metabolomics data processing and ID conversion. "
         ),
-        actionButton("getStarted", "Get Started",
-                     class = "btn btn-primary btn-lg")
+        actionButton(
+          "getStarted", "Get Started",
+          class = "btn-primary btn-lg css-tooltip",
+          title = "Let's Go!"
+        )
       )
     ),
+    # Upload panel!
     tabPanel(
       "Upload",
       value = "uploadPanel",
+      # Sidebar
       tags$div(
         class = "col-sm-3 manual-sidebar",
+        # Separate form 'wells' within the sidebar
         tags$form(
           class = "well",
           tags$p(
@@ -63,6 +76,7 @@ shinyUI(fluidPage(
             "your metabolites of interest in a single column, or try ",
             "out our example dataset."
           ),
+          # Upload handling
           fileInput(
             inputId = 'metaboliteUpload',
             label = 'Upload Metabolites',
@@ -74,11 +88,13 @@ shinyUI(fluidPage(
               'text/tab-separated-values'
             )
           ),
+          # Header in file?
           checkboxInput(
             inputId = 'header',
             label = 'Header',
             value = TRUE
           ),
+          # TSV or CSV?
           radioButtons(
             inputId = 'sep',
             label = 'Separator',
@@ -89,24 +105,28 @@ shinyUI(fluidPage(
             ),
             selected = ','
           ),
+          # OR, try our examples!
           actionLink(
             inputId = "tryExamples",
-            class = "btn btn-link",
+            class = "btn btn-link btn-med css-tooltip",
             label = "Try Examples",
-            `data-toggle` = "tooltip",
-            `data-placement` = "right",
-            `data-original-title` = "Try an example dataset from MetaboAnalyst"
+            title = "Try an example dataset from MetaboAnalyst", 
+            # `data-toggle` = "tooltip",
+            # `data-placement` = "right",
+            # `data-original-title` = "Try an example dataset from MetaboAnalyst"
           )
         ),
+        # Show the columns of the uploaded file
         uiOutput('columnPickerPanel')
       ),
+      # Display the file that was uploaded
       tags$div(
         class = "col-sm-9",
-        # tags$h2('Uploaded Data', class = 'tab-header'),
-        uiOutput('uploadSuccess'),
+        uiOutput('uploadSuccess'), # (server-rendered)
         dataTableOutput('uploadedDataTable')
       )
     ),
+    ## Mapping Panel
     tabPanel(
       title = "Map",
       value = "mapPanel",
@@ -122,49 +142,47 @@ shinyUI(fluidPage(
             "but KEGG may yield more hits. If you map via KEGG, you also have the ",
             "option to visualize your results."
           ),
-          ## For now just allow one database. Later we can allow multiple
+          ## For now just allow one database. Later we can allow multiple mappings in one go
           radioButtons(
             "dbChosen",
             "Choose Database",
             choices = c("MetaCyc", "KEGG"),
             selected = "MetaCyc"
           ),
+          # Map!
           actionButton(
             "mapButton",
             "Map",
-            `data-toggle` = "tooltip",
-            `data-placement` = "right",
-            `data-original-title` = "Map your metabolites against the selected database"
+            class = "btn-med css-tooltip",
+            title = "Map your metabolites to the selected database", 
+            # `data-toggle` = "tooltip",
+            # `data-placement` = "right",
+            # `data-original-title` = "Map your metabolites against the selected database"
           )
+          # Maybe show tickbox to allow user to see full results rather than just the summary?
         ),
+        # Let user download results
         uiOutput('saveMappingPanel'),
+        # Show panel for continuing to visualize results
         uiOutput('continueToViz')
       ),
+      ## DISPLAY MAPPING RESULTS
       tags$div(
         class = "col-sm-9",
-        # tags$h2('Mapping Results'),
-        # hr(),
+        # Show summary table (server-rendered)
         uiOutput('mappingSummaryPanel'),
+        # Show FULL results for a selected metabolite (server-rendered)
         uiOutput('fullMappingResultsPanel')
-        # textOutput('horizontalScrollMessage')
       )
     ),
+    # Visualize the results!
     tabPanel(
       title = "Visualize",
       value = "vizPanel",
       id = "visualizationPanel",
-      # Manual Sidebar
-      tags$div(class = "col-sm-3 manual-sidebar",
-               tags$form(class = "well",
-                         uiOutput('pathwayPanel'))),
-      tags$div(
-        class = "col-sm-9",
-        tags$h2('Pathway View', class = "tab-header"),
-        imageOutput('pathwayView')
-      )
+      uiOutput('vizPanelUI')
     ),
-    # tabPanel("NetworkAnalyst"),
-    # Simple alternative to 'float: right'
+    # Finally, the 'More' Panel, with about, help, etcetera
     navbarMenu(
       "More",
       # "Info",
