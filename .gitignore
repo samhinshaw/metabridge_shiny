@@ -4,3 +4,5 @@
 .Ruserdata
 .DS_Store
 node_modules/
+data/index.backup
+data/innatedb_ppi.mitab
