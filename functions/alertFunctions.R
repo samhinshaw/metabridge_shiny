@@ -15,12 +15,12 @@ mappingAlert <- function(message, suggest, status) {
         HTML("&times;"),
         type = "button",
         class = "close",
-        `data-dismiss` = "alert"),
+        `data-dismiss` = "alert"
+      ),
       message,
       if (!is.null(suggest)) {
-        actionLink(
-          inputId = 'remap',
-          label = suggest)
+        actionLink(inputId = 'remap',
+                   label = suggest)
       },
       if (status == 'warn') {
         "Please contact me on twitter with the details!"
