@@ -29,16 +29,16 @@ shinyUI(fluidPage(
       "Welcome",
       value = "welcomePanel",
       # Dev mode alert
-      tags$div(
-        class = "alert alert-dismissible alert-danger",
-        tags$button(
-          HTML("&times;"),
-          type = "button",
-          class = "close",
-          `data-dismiss` = "alert"
-        ),
-        "Warning: In development environment!"
-      ),
+      # tags$div(
+      #   class = "alert alert-dismissible alert-danger",
+      #   tags$button(
+      #     HTML("&times;"),
+      #     type = "button",
+      #     class = "close",
+      #     `data-dismiss` = "alert"
+      #   ),
+      #   "Warning: In development environment!"
+      # ),
       # Welcome hero
       tags$div(
         class = "jumbotron",
