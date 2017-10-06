@@ -1,0 +1,32 @@
+{
+  "name": "metabridge_shiny",
+  "version": "1.0.0",
+  "description": "Network-based multi-omic integration of metabolomics data.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samhinshaw/metabridge_shiny.git"
+  },
+  "keywords": [
+    "integrative-analysis",
+    "shiny",
+    "rstats",
+    "bioinformatics",
+    "metabolomics"
+  ],
+  "author": "Sam Hinshaw",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/samhinshaw/metabridge_shiny/issues"
+  },
+  "homepage": "https://github.com/samhinshaw/metabridge_shiny#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^4.6.1",
+    "eslint-config-airbnb-base": "^12.0.2",
+    "eslint-plugin-import": "^2.7.0"
+  }
+}
