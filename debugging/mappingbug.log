@@ -1,0 +1,234 @@
+
+Attaching package: ‘shinyjs’
+
+The following object is masked from ‘package:shiny’:
+
+    runExample
+
+The following objects are masked from ‘package:methods’:
+
+    removeClass, show
+
+Loading tidyverse: ggplot2
+Loading tidyverse: tibble
+Loading tidyverse: tidyr
+Loading tidyverse: readr
+Loading tidyverse: purrr
+Loading tidyverse: dplyr
+Conflicts with tidy packages ---------------------------------------------------
+filter(): dplyr, stats
+lag():    dplyr, stats
+
+Attaching package: ‘magrittr’
+
+The following object is masked from ‘package:purrr’:
+
+    set_names
+
+The following object is masked from ‘package:tidyr’:
+
+    extract
+
+
+Attaching package: ‘DT’
+
+The following objects are masked from ‘package:shiny’:
+
+    dataTableOutput, renderDataTable
+
+
+Attaching package: ‘rlang’
+
+The following object is masked from ‘package:magrittr’:
+
+    set_names
+
+The following objects are masked from ‘package:purrr’:
+
+    %||%, %@%, as_function, flatten, flatten_chr, flatten_dbl,
+    flatten_int, flatten_lgl, invoke, list_along, modify, prepend,
+    rep_along, splice
+
+The following object is masked from ‘package:tibble’:
+
+    has_name
+
+Loading required package: org.Hs.eg.db
+Loading required package: AnnotationDbi
+Loading required package: stats4
+Loading required package: BiocGenerics
+Loading required package: parallel
+
+Attaching package: ‘BiocGenerics’
+
+The following objects are masked from ‘package:parallel’:
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
+
+The following objects are masked from ‘package:dplyr’:
+
+    combine, intersect, setdiff, union
+
+The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from ‘package:base’:
+
+    anyDuplicated, append, as.data.frame, cbind, colMeans, colnames,
+    colSums, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
+    grepl, intersect, is.unsorted, lapply, lengths, Map, mapply, match,
+    mget, order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+    rbind, Reduce, rowMeans, rownames, rowSums, sapply, setdiff, sort,
+    table, tapply, union, unique, unsplit, which, which.max, which.min
+
+Loading required package: Biobase
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+
+Attaching package: ‘Biobase’
+
+The following object is masked from ‘package:rlang’:
+
+    exprs
+
+Loading required package: IRanges
+Loading required package: S4Vectors
+
+Attaching package: ‘S4Vectors’
+
+The following objects are masked from ‘package:dplyr’:
+
+    first, rename
+
+The following object is masked from ‘package:tidyr’:
+
+    expand
+
+The following object is masked from ‘package:base’:
+
+    expand.grid
+
+
+Attaching package: ‘IRanges’
+
+The following objects are masked from ‘package:dplyr’:
+
+    collapse, desc, slice
+
+The following object is masked from ‘package:purrr’:
+
+    reduce
+
+
+Attaching package: ‘AnnotationDbi’
+
+The following object is masked from ‘package:dplyr’:
+
+    select
+
+
+##############################################################################
+Pathview is an open source software package distributed under GNU General
+Public License version 3 (GPLv3). Details of GPLv3 is available at
+http://www.gnu.org/licenses/gpl-3.0.html. Particullary, users are required to
+formally cite the original Pathview paper (not just mention it) in publications
+or products. For details, do citation("pathview") within R.
+
+The pathview downloads and uses KEGG data. Non-academic uses may require a KEGG
+license agreement (details at http://www.kegg.jp/kegg/legal.html).
+##############################################################################
+
+Listening on http://127.0.0.1:44780
+Warning: Error in grouped_df_impl: Column `KEGG` is unknown
+Stack trace (innermost first):
+    146: <Anonymous>
+    145: stop
+    144: grouped_df_impl
+    143: grouped_df
+    142: group_by.data.frame
+    141: group_by
+    140: group_by_.data.frame
+    139: group_by_
+    138: function_list[[i]]
+    137: freduce
+    136: _fseq
+    135: eval
+    134: eval
+    133: withVisible
+    132: %>%
+    131: generateSummaryTable
+    130: eventReactiveHandler [/home/sam/r_packages/metabridge_shiny/server.R#322]
+    110: mappingSummaryTable
+    109: generateKEGGMetabTable
+    108: eventReactiveHandler [/home/sam/r_packages/metabridge_shiny/server.R#406]
+     88: mappedMetaboliteTable
+     87: eval
+     86: eval
+     85: %>%
+     84: exprFunc [/home/sam/r_packages/metabridge_shiny/server.R#429]
+     83: widgetFunc
+     82: func
+     81: origRenderFunc
+     80: renderFunc
+     79: origRenderFunc
+     78: output$mappedMetaboliteTable
+      1: runApp
+Warning: Error in grouped_df_impl: Column `KEGG` is unknown
+Stack trace (innermost first):
+    87: <Anonymous>
+    86: stop
+    85: mappingSummaryTable
+    84: exprFunc [/home/sam/r_packages/metabridge_shiny/server.R#332]
+    83: widgetFunc
+    82: func
+    81: origRenderFunc
+    80: renderFunc
+    79: origRenderFunc
+    78: output$mappingSummaryTable
+     1: runApp
+Warning: Error in grouped_df_impl: Column `KEGG` is unknown
+Stack trace (innermost first):
+    90: <Anonymous>
+    89: stop
+    88: mappedMetaboliteTable
+    87: eval
+    86: eval
+    85: %>%
+    84: exprFunc [/home/sam/r_packages/metabridge_shiny/server.R#429]
+    83: widgetFunc
+    82: func
+    81: origRenderFunc
+    80: renderFunc
+    79: origRenderFunc
+    78: output$mappedMetaboliteTable
+     1: runApp
+Warning: Error in grouped_df_impl: Column `KEGG` is unknown
+Stack trace (innermost first):
+    112: <Anonymous>
+    111: stop
+    110: mappingSummaryTable
+    109: generateKEGGMetabTable
+    108: eventReactiveHandler [/home/sam/r_packages/metabridge_shiny/server.R#406]
+     88: mappedMetaboliteTable
+     87: eval
+     86: eval
+     85: %>%
+     84: exprFunc [/home/sam/r_packages/metabridge_shiny/server.R#429]
+     83: widgetFunc
+     82: func
+     81: origRenderFunc
+     80: renderFunc
+     79: origRenderFunc
+     78: output$mappedMetaboliteTable
+      1: runApp
+'select()' returned 1:1 mapping between keys and columns
+'select()' returned 1:1 mapping between keys and columns
+Info: Working in directory /home/sam/r_packages/metabridge_shiny
+Info: Writing image file hsa00120.pathview.png

@@ -268,7 +268,7 @@ shinyServer(function(input, output, session) {
     mappingOutput <- mapGenerally(
         importDF = metaboliteObject(),
         col = input$columnsPicked,
-        db = input$dbChosen,
+        db = databaseChosen(),
         idType = input$idType
       )
     # Assign the mapped data to our reactive value
@@ -294,7 +294,7 @@ shinyServer(function(input, output, session) {
   # idTypeOfInterest <- reactiveVal()
   #
   # observeEvent(input$mapButton, {
-  #   if (input$dbChosen == 'KEGG') {
+  #   if (databaseChosen() == 'KEGG') {
   #     idTypeOfInterest('KEGG')
   #   } else {
   #     idTypeOfInterest(input$idType)
@@ -318,10 +318,10 @@ shinyServer(function(input, output, session) {
   # We should make this optional!
   # Only render when 'map' clicked
   mappingSummaryTable <- eventReactive(input$mapButton, {
-    if (input$dbChosen == 'KEGG') {
-      generateSummaryTable(mappingObject(), input$idType, input$dbChosen)
-    } else if (input$dbChosen == 'MetaCyc') {
-      generateSummaryTable(mappingObject(), input$idType, input$dbChosen)
+    if (databaseChosen()== 'KEGG') {
+      generateSummaryTable(mappingObject(), input$idType, databaseChosen())
+    } else if (databaseChosen() == 'MetaCyc') {
+      generateSummaryTable(mappingObject(), input$idType, databaseChosen())
     }
   })
   
@@ -398,17 +398,17 @@ shinyServer(function(input, output, session) {
     # should default to the previous successful step. 
     if (mappingObject()$status == 'error' |
         mappingObject()$status == 'empty') {
-      mappingObject()$data
+        mappingObject()$data
       
       # Otherwise, generate our table depending on the chosen database! As with
       # `generateSummaryTable()`, these functions come from `generateTables.R`
-    } else if (input$dbChosen == 'KEGG') {
+    } else if (databaseChosen() == 'KEGG') {
       generateKEGGMetabTable(mappingObject(),
                              mappingSummaryTable(),
                              selectedMetab(),
                              input$idType)
       
-    } else if (input$dbChosen == 'MetaCyc') {
+    } else if (databaseChosen() == 'MetaCyc') {
       generateMetaCycMetabTable(mappingObject(),
                                 mappingSummaryTable(),
                                 selectedMetab(),
@@ -424,7 +424,7 @@ shinyServer(function(input, output, session) {
   output$mappedMetaboliteTable <- DT::renderDataTable({
     # Just really make sure we're not getting any errors thrown at the user
     if (mappingObject()$status == 'success' &
-        input$dbChosen == 'KEGG') {
+        databaseChosen() == 'KEGG') {
       # Exclude the 'bare' columns, which are redundant to the HTML-ified columns. 
       mappedMetaboliteTable() %>% dplyr::select(-starts_with("bare"))
       # Only render if we had non-null, non-error, non-empty results
@@ -572,7 +572,7 @@ shinyServer(function(input, output, session) {
           no = tools::file_path_sans_ext(input$metaboliteUpload$name)
         ),
         '_mapped_',
-        input$dbChosen,
+        databaseChosen(),
         ".",
         input$saveType
       )
@@ -611,7 +611,7 @@ shinyServer(function(input, output, session) {
       summaryTable = summaryTable,
       fullTable = fullTable,
       idType = input$idType,
-      db = input$dbChosen,
+      db = databaseChosen(),
       selectedRow = selectedMetab()
     )
     
@@ -638,7 +638,7 @@ shinyServer(function(input, output, session) {
         ))
       )),
       tags$p("No pathways found for this compound."))
-    } else if (input$dbChosen == 'KEGG') {
+    } else if (databaseChosen() == 'KEGG') {
       tags$div(
         tags$h4(paste0(
           'Pathways for Compound ', tools::toTitleCase(tolower(
@@ -653,7 +653,7 @@ shinyServer(function(input, output, session) {
         ),
         tags$p("Note: each pathway may take some time to process.")
       )
-    } else if (input$dbChosen == 'MetaCyc') {
+    } else if (databaseChosen() == 'MetaCyc') {
       tags$div(
         tags$h4(paste0(
           'Pathways for Compound ', tools::toTitleCase(tolower(

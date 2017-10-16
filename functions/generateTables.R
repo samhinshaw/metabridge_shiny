@@ -8,25 +8,24 @@ generateSummaryTable <- function(mappingObject, idType, dbChosen) {
     return(mappingObject$data)
   } else if (dbChosen == 'MetaCyc') {
     mappingObject$data %>% group_by_(idType, 'Compound') %>% summarize(
-      "# Unique Reactions"                    = n_distinct(Reaction,               na.rm = TRUE),
-      "# Unique Genes (MetaCyc Gene ID)"      = n_distinct(`MetaCyc Gene ID`,      na.rm = TRUE),
-      "# Unique Genes (Official Gene Symbol)" = n_distinct(`Official Gene Symbol`, na.rm = TRUE),
-      "# Unique Genes (Ensembl Gene ID)"      = n_distinct(`Ensembl Gene ID`,      na.rm = TRUE)
+      "# Unique Reactions"                    = n_distinct("Reaction",               na.rm = TRUE),
+      "# Unique Genes (MetaCyc Gene ID)"      = n_distinct("MetaCyc Gene ID",      na.rm = TRUE),
+      "# Unique Genes (Official Gene Symbol)" = n_distinct("Official Gene Symbol", na.rm = TRUE),
+      "# Unique Genes (Ensembl Gene ID)"      = n_distinct("Ensembl Gene ID",      na.rm = TRUE)
     )
   } else if (dbChosen == 'KEGG') {
     mappingObject$data %>%
       group_by_('KEGG', idType, 'Compound') %>% summarize(
-        "# Unique Enzymes" = n_distinct(Enzyme, na.rm = TRUE),
-        "# Unique Genes"   = n_distinct(Gene, na.rm = TRUE)
+        "# Unique Enzymes" = n_distinct("Enzyme", na.rm = TRUE),
+        "# Unique Genes"   = n_distinct("Gene", na.rm = TRUE)
       )
   }
 }
 
-generateMetaCycMetabTable <-
-  function(mappingObject,
-           summaryTable,
-           selectedRows,
-           idType) {
+generateMetaCycMetabTable <- function(mappingObject,
+                                      summaryTable,
+                                      selectedRows,
+                                      idType) {
     # Should never be null since we're not responding until map button is
     # clicked, but good to have just in case
     if (is.null(mappingObject$data) |
@@ -55,11 +54,10 @@ generateMetaCycMetabTable <-
     }
   }
 
-generateKEGGMetabTable <-
-  function(mappingObject,
-           summaryTable,
-           selectedRows,
-           idType) {
+generateKEGGMetabTable <- function(mappingObject,
+                                   summaryTable,
+                                   selectedRows,
+                                   idType) {
     # Should never be null since we're not responding until map button is
     # clicked, but good to have just in case
     if (is.null(mappingObject$data) |
