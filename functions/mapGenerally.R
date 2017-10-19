@@ -1,4 +1,6 @@
-## Define Functions
+# Only load packages on demand
+library(stringr)
+library(magrittr)
 
 mapMetaCyc <- function(importDF, col, idType) {
   enquotedCol <- enquo(col)

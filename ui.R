@@ -177,7 +177,7 @@ shinyUI(fluidPage(
     ),
     # Visualize the results!
     tabPanel(
-      title = "Visualize",
+      title = "Pathview",
       value = "vizPanel",
       id = "visualizationPanel",
       uiOutput('vizPanelUI')

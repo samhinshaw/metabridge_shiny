@@ -57,11 +57,13 @@ shinyServer(function(input, output, session) {
     input$sep
     input$header
   }, {
+    library(readr)
     read_delim(
       file = input$metaboliteUpload$datapath,
       col_names = input$header,
       delim = input$sep
     ) %>%
+      # and save to the reactiveVal
       metaboliteObject()
   }, ignoreNULL = TRUE, ignoreInit = TRUE)
   
@@ -86,6 +88,8 @@ shinyServer(function(input, output, session) {
     input$sep
     input$header
   }, {
+    # load DT on demand
+    library(DT)
     if (is.null(metaboliteObject())) {
       return(NULL)
     } else {
@@ -202,6 +206,9 @@ shinyServer(function(input, output, session) {
     input$sep
     input$header
   }, {
+    # Load PURRR on demand
+    library(dplyr)
+    library(purrr)
     # Vector of column positions
     possibleColPositions <- seq_along(names(metaboliteObject()))
     # Match the columns picked to their integer positions in the DF
@@ -670,6 +677,10 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  ## have conditional renderUI here instead, so we can add our loading image with JS
+  ## Different div ID depending on the image
+  ## Perhaps can style this div to be full screen size
+
   output$pathwayView <- renderImage({
     if (is.null(input$pathwaysPicked)) {
       return({
@@ -682,39 +693,32 @@ shinyServer(function(input, output, session) {
         )
       })
     }
+    
     # Setup named variables for standard eval
     pathwayNameIDcol <- as.name('namedPway')
     selectedPathway <- rlang::quo(input$pathwaysPicked)
-    
+
     # Pull the pathway ID from the pathway name selected by the user
     selectedPathwayID <-
       selectedRowAttrs$pathwaysOfSelectedCompound %>%
       filter(rlang::UQ(pathwayNameIDcol) == input$pathwaysPicked) %>%
       extract2('id')
     
-    # Generate the PNG
-    suppressWarnings({
-      pathview(
-        gene.data = selectedRowAttrs$genesOfSelectedCompound,
-        cpd.data = selectedRowAttrs$selectedCompound,
-        pathway.id = selectedPathwayID,
-        gene.idtype = "SYMBOL",
-        species = "hsa",
-        kegg.dir = 'pathways'
-      )
-    })
-    
-    filename <- paste0('hsa', selectedPathwayID, ".pathview.png")
+  source(file.path('functions', 'visualizePathways.R'))
+  filename <- visualizePathview(
+    pathway = selectedPathwayID, 
+    genes = selectedRowAttrs$genesOfSelectedCompound, 
+    cpd = selectedRowAttrs$selectedCompound
+  )
     
     # Return a list containing the filename
-    list(
+    return(list(
       src = filename,
       contentType = 'image/png',
       width = 700,
       height = 700,
       alt = paste0("Pathway map of KEGG Pathway ", input$pathwaysPicked)
-    ) %>%
-      return()
+    ))
   }, deleteFile = TRUE)
 
   ## Render entire UI for vizPanel

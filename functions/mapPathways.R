@@ -1,5 +1,3 @@
-
-
 mapKEGGPathways <-
   function(idType,
            selectedRow,
