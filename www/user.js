@@ -41,7 +41,10 @@ $(document).ready(() => {
   // Add css-tooltip class
   $("a[data-value='vizPanel']").addClass('panel-tooltip');
   // Add title class
-  $("a[data-value='vizPanel']").attr('title', 'Please select a mapped metabolite');
+  $("a[data-value='vizPanel']").attr(
+    'title',
+    'Please select a metabolite that has been mapped via KEGG'
+  );
   // Initialize JQuery tooltips (but we're not using them anymore!)
   // $('[data-toggle="tooltip"]').tooltip();
 });
