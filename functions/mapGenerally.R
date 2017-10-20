@@ -499,7 +499,7 @@ mapGenerally <- function(importDF, col, db, idType) {
     mappingAlert(
       status  = "error",
       message = paste0(
-        "Something went wrong when mapping generally, ",
+        "Something went wrong when mapping your metabolites, ",
         "probably an error with the database parameter."
       ),
       suggest = "Please tweet to us to report this issue!"

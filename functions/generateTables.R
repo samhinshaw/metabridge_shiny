@@ -8,7 +8,7 @@ generateSummaryTable <- function(mappingObject, idType, dbChosen) {
     return(mappingObject$data)
   } else if (dbChosen == 'MetaCyc') {
     mappingObject$data %>% group_by_(idType, 'Compound') %>% summarize(
-      "# Unique Reactions"                    = n_distinct("Reaction",               na.rm = TRUE),
+      "# Unique Reactions"                    = n_distinct("Reaction",             na.rm = TRUE),
       "# Unique Genes (MetaCyc Gene ID)"      = n_distinct("MetaCyc Gene ID",      na.rm = TRUE),
       "# Unique Genes (Official Gene Symbol)" = n_distinct("Official Gene Symbol", na.rm = TRUE),
       "# Unique Genes (Ensembl Gene ID)"      = n_distinct("Ensembl Gene ID",      na.rm = TRUE)
