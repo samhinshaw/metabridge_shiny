@@ -96,15 +96,26 @@ shinyServer(function(input, output, session) {
     )
   })
   
-  # Isolate rendering of dataTable
-  uploadedDataTable <- eventReactive({
-    # reload on button clicks
-    input$tryExamples
-    input$metaboliteUpload
-    # OR if the sep or header changes
-    input$sep
-    input$header
-  }, {
+  # # Isolate rendering of dataTable
+  # uploadedDataTable <- eventReactive({
+  #   # reload on button clicks
+  #   input$tryExamples
+  #   input$metaboliteUpload
+  #   # OR if the sep or header changes
+  #   input$sep
+  #   input$header
+  # }, {
+  #   if (is.null(metaboliteObject())) {
+  #     # Return null if nothing so that we don't pass an error
+  #     return(NULL)
+  #   } else {
+  #     # Render the (reactive value) uploadedDataTable
+  #     metaboliteObject()
+  #   }
+  # })
+  
+  ## Once data is populated, render preview of data to user
+  output$uploadedDataTable <- DT::renderDataTable({
     if (is.null(metaboliteObject())) {
       # Return null if nothing so that we don't pass an error
       return(NULL)
@@ -112,11 +123,6 @@ shinyServer(function(input, output, session) {
       # Render the (reactive value) uploadedDataTable
       metaboliteObject()
     }
-  })
-  
-  ## Once data is populated, render preview of data to user
-  output$uploadedDataTable <- DT::renderDataTable({
-    uploadedDataTable()
   # DataTables options
   }, options = list(
     pageLength = 10,
