@@ -98,6 +98,10 @@ shinyServer(function(input, output, session) {
   
   ## Once data is populated, render preview of data to user
   output$uploadedDataTable <- DT::renderDataTable({
+    input$tryExamples
+    input$sep
+    input$header
+    input$metaboliteUpload
     if (is.null(metaboliteObject())) {
       # Return null if nothing so that we don't pass an error
       return(NULL)
@@ -271,6 +275,8 @@ shinyServer(function(input, output, session) {
 
   # when the map button is clicked, update the dbChosen. 
   observeEvent(input$mapButton, {
+    # Run JS to clear table content
+    runjs('handlers.clearMappingTables();')
     # change the dbChosen reactive Value
     databaseChosen(input$dbChosen)
     # Clear any pre-existing alerts
@@ -329,11 +335,7 @@ shinyServer(function(input, output, session) {
   # We should make this optional!
   # Only render when 'map' clicked
   mappingSummaryTable <- eventReactive(input$mapButton, {
-    if (databaseChosen()== 'KEGG') {
-      generateSummaryTable(mappingObject(), input$idType, databaseChosen())
-    } else if (databaseChosen() == 'MetaCyc') {
-      generateSummaryTable(mappingObject(), input$idType, databaseChosen())
-    }
+    generateSummaryTable(mappingObject(), input$idType, databaseChosen())
   })
   
   ## STEP TWO
@@ -353,6 +355,7 @@ shinyServer(function(input, output, session) {
   # Render the panel separately so we have reactive control over all the UI
   # elements surrounding the DataTable, not just the dataTable
   output$mappingSummaryPanel <- renderUI({
+    input$mapButton
     if (is.null(mappingObject())) {
       return(NULL)
     } else if (mappingObject()$status == 'error' |
@@ -433,6 +436,7 @@ shinyServer(function(input, output, session) {
   ## ~~~~~~~~~~
   # Once metabolites have been mapped, render the results!
   output$mappedMetaboliteTable <- DT::renderDataTable({
+    input$mapButton
     # Just really make sure we're not getting any errors thrown at the user
     if (mappingObject()$status == 'success' &
         databaseChosen() == 'KEGG') {

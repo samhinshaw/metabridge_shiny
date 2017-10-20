@@ -65,6 +65,16 @@ const handlers = {
     getStartedButton.classList.remove('disabled');
     // add css-tooltip class
     getStartedButton.classList.add('css-tooltip');
+  },
+  clearMappingTables: () => {
+    const mappingTable = document.getElementById('mappedMetaboliteTable');
+    mappingTable.innerHTML = '';
+    const mappingSummaryTable = document.getElementById('mappingSummaryTable');
+    mappingSummaryTable.innerHTML = '';
+  },
+  clearUploadedTable: () => {
+    const uploadedDataTable = document.getElementById('uploadedDataTable');
+    uploadedDataTable.innerHTML = '';
   }
 };
 
