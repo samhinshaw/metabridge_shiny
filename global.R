@@ -1,6 +1,9 @@
 ## Load Packages
 library(shiny)
 library(shinyjs)
+## This is ABSOLUTELY NECESSARY, as we have a dataTable output in UI.R, which loads immediately. 
+## We can ONLY avoid this is we server-render it. 
+# library(DT)
 
 # Load System Data
 # This has since been re-saved to individual files.

@@ -124,11 +124,7 @@ shinyUI(fluidPage(
         uiOutput('columnPickerPanel')
       ),
       # Display the file that was uploaded
-      tags$div(
-        class = "col-sm-9",
-        uiOutput('uploadSuccess'), # (server-rendered)
-        dataTableOutput('uploadedDataTable') #%>% withSpinner(type = 8, color = '#303E4E')
-      )
+      uiOutput('uploadedTablePanel')
     ),
     ## Mapping Panel
     tabPanel(

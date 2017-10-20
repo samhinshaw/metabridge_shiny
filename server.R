@@ -96,24 +96,6 @@ shinyServer(function(input, output, session) {
     )
   })
   
-  # # Isolate rendering of dataTable
-  # uploadedDataTable <- eventReactive({
-  #   # reload on button clicks
-  #   input$tryExamples
-  #   input$metaboliteUpload
-  #   # OR if the sep or header changes
-  #   input$sep
-  #   input$header
-  # }, {
-  #   if (is.null(metaboliteObject())) {
-  #     # Return null if nothing so that we don't pass an error
-  #     return(NULL)
-  #   } else {
-  #     # Render the (reactive value) uploadedDataTable
-  #     metaboliteObject()
-  #   }
-  # })
-  
   ## Once data is populated, render preview of data to user
   output$uploadedDataTable <- DT::renderDataTable({
     if (is.null(metaboliteObject())) {
@@ -139,6 +121,14 @@ shinyServer(function(input, output, session) {
   selection = 'none',
   style = 'bootstrap',
   class = 'table-bordered table-responsive')
+
+  output$uploadedTablePanel <- renderUI({
+    tags$div(
+      class = "col-sm-9",
+      uiOutput('uploadSuccess'), 
+      dataTableOutput('uploadedDataTable') %>% withSpinner(type = 8, color = '#303E4E')
+    )
+  })
   
   # Render the UI for the column picker panel
   columnPickerUI <- eventReactive({
