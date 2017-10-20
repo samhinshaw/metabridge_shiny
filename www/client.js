@@ -65,17 +65,14 @@ const handlers = {
     getStartedButton.classList.remove('disabled');
     // add css-tooltip class
     getStartedButton.classList.add('css-tooltip');
-    // remove i tag
   }
 };
 
 // handlers.lazyLoadPackages(0);
 
 // We must use shiny:sessioninitialized, not DOM Content Loaded
-$(document).on('shiny:sessioninitialized', function(event) {
+$(document).on('shiny:sessioninitialized', () => {
   handlers.lazyLoadPackages(1);
-  // handlers.initGetStarted();
-  // run this from Shiny, after packages load
 });
 
 // document.addEventListener('DOMContentLoaded', () => {
