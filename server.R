@@ -126,7 +126,7 @@ shinyServer(function(input, output, session) {
     tags$div(
       class = "col-sm-9",
       uiOutput('uploadSuccess'), 
-      dataTableOutput('uploadedDataTable') %>% withSpinner(type = 8, color = '#303E4E')
+      dataTableOutput('uploadedDataTable')# %>% withSpinner(type = 8, color = '#303E4E')
     )
   })
   
