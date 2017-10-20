@@ -57,6 +57,7 @@ shinyServer(function(input, output, session) {
     input$sep
     input$header
   }, {
+    print('LOADING READR')
     library(readr)
     read_delim(
       file = input$metaboliteUpload$datapath,
@@ -207,7 +208,9 @@ shinyServer(function(input, output, session) {
     input$header
   }, {
     # Load PURRR on demand
+    print('LOADING DPLYR')
     library(dplyr)
+    print('LOADING PURRR')
     library(purrr)
     # Vector of column positions
     possibleColPositions <- seq_along(names(metaboliteObject()))
