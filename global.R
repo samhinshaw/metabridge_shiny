@@ -8,7 +8,7 @@ library(tools)
 # library(stringr) # moved to observeEvent in server.R
 # library(magrittr) # moved to first invocation in mapGenerally.R
 # library(rlang) # moved to first invocation in mapGenerally.R
-# library(DT) # moved to generateTables.R
+library(DT) # moved to generateTables.R
 # library(pathview) # moved to visualizePathways.R
 
 # Load System Data
