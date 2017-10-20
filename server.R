@@ -19,6 +19,7 @@ shinyServer(function(input, output, session) {
     library(rlang) # moved to first invocation in mapGenerally.R
     library(DT) # moved to generateTables.R
     library(pathview) # moved to visualizePathways.R
+    library(shinycssloaders)
     # After packages loaded, run button transform to signal ready states
     runjs('handlers.initGetStarted();')
   }, ignoreNULL = TRUE, ignoreInit = TRUE)
@@ -799,7 +800,7 @@ shinyServer(function(input, output, session) {
         tags$div(
           class = "col-sm-9",
           tags$h2('Pathway View', class = "tab-header"),
-          imageOutput('pathwayView')
+          imageOutput('pathwayView') %>% withSpinner(type = 8, color = '#303E4E')
         )
       )
     }
