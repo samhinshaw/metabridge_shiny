@@ -73,15 +73,15 @@ shinyServer(function(input, output, session) {
     input$sep
     input$header
   }, {
-    print('LOADING READR')
-    library(readr)
-    read_delim(
-      file = input$metaboliteUpload$datapath,
-      col_names = input$header,
-      delim = input$sep
-    ) %>%
-      # and save to the reactiveVal
-      metaboliteObject()
+    if(!is.null(input$metaboliteUpload)) {
+      read_delim(
+        file = input$metaboliteUpload$datapath,
+        col_names = input$header,
+        delim = input$sep
+      ) %>%
+        # and save to the reactiveVal
+        metaboliteObject()
+    }
   }, ignoreNULL = TRUE, ignoreInit = TRUE)
   
   ## Once data is populated, render help text to user
@@ -105,13 +105,7 @@ shinyServer(function(input, output, session) {
     input$sep
     input$header
   }, {
-    # load DT on demand
-    library(DT)
-    if (is.null(metaboliteObject())) {
-      return(NULL)
-    } else {
-      metaboliteObject()
-    }
+    metaboliteObject()
   })
   
   ## Once data is populated, render preview of data to user
@@ -223,11 +217,6 @@ shinyServer(function(input, output, session) {
     input$sep
     input$header
   }, {
-    # Load PURRR on demand
-    print('LOADING DPLYR')
-    library(dplyr)
-    print('LOADING PURRR')
-    library(purrr)
     # Vector of column positions
     possibleColPositions <- seq_along(names(metaboliteObject()))
     # Match the columns picked to their integer positions in the DF
