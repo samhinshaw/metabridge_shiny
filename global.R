@@ -1,16 +1,6 @@
 ## Load Packages
 library(shiny)
 library(shinyjs)
-# library(tools)
-# library(tidyverse)
-# # library(dplyr) # moved to observeEvent in server.R
-# # library(readr) # moved to observeEvent in server.R
-# # library(purrr) # moved to observeEvent in server.R
-# library(stringr) # moved to observeEvent in server.R
-# library(magrittr) # moved to first invocation in mapGenerally.R
-# library(rl?ang) # moved to first invocation in mapGenerally.R
-# library(DT) # moved to generateTables.R
-# library(pathview) # moved to visualizePathways.R
 
 # Load System Data
 # This has since been re-saved to individual files.

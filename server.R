@@ -105,18 +105,18 @@ shinyServer(function(input, output, session) {
     input$sep
     input$header
   }, {
-    metaboliteObject()
-  })
-  
-  ## Once data is populated, render preview of data to user
-  output$uploadedDataTable <- DT::renderDataTable({
-    if (is.null(uploadedDataTable())) {
+    if (is.null(metaboliteObject())) {
       # Return null if nothing so that we don't pass an error
       return(NULL)
     } else {
       # Render the (reactive value) uploadedDataTable
-      uploadedDataTable()
+      metaboliteObject()
     }
+  })
+  
+  ## Once data is populated, render preview of data to user
+  output$uploadedDataTable <- DT::renderDataTable({
+    uploadedDataTable()
   # DataTables options
   }, options = list(
     pageLength = 10,

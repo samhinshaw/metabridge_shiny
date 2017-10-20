@@ -127,7 +127,7 @@ shinyUI(fluidPage(
       tags$div(
         class = "col-sm-9",
         uiOutput('uploadSuccess'), # (server-rendered)
-        dataTableOutput('uploadedDataTable')
+        dataTableOutput('uploadedDataTable') #%>% withSpinner(type = 8, color = '#303E4E')
       )
     ),
     ## Mapping Panel
