@@ -6,7 +6,7 @@ library(KEGGgraph)
 library(pathview)
 testResults <- mapMetaCyc(importDF = name_map, col = 'KEGG', idType = 'KEGG')$data
 miniTestResults <- testResults %>% 
-  filter(UQ(theNameOfKEGG) == "C00300")
+  dplyr::filter(UQ(theNameOfKEGG) == "C00300")
 
 pathview(
   gene.data = miniTestResults$`Official Gene Symbol`,

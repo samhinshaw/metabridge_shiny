@@ -185,7 +185,7 @@ mapMetaCyc <- function(importDF, col, idType) {
       ) %>%
       rename_("Ensembl Gene ID" = "Ensembl") %>%
       # filter out rows where no gene IDs are present
-      filter(!(
+      dplyr::filter(!(
         is.na(`MetaCyc Gene ID`) &
           is.na(`Official Gene Symbol`) & is.na(`Ensembl Gene ID`)
       ))

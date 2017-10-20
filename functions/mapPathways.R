@@ -27,13 +27,13 @@ mapKEGGPathways <-
     ### Pull out the pathways that our compound is present in from the
     ### metabPathways object stored in `data/`
     pathwaysOfInterest <- keggPathways %>%
-      filter(rlang::UQ(namedIDType) == rlang::UQ(quotedMetab)) %>%
+      dplyr::filter(rlang::UQ(namedIDType) == rlang::UQ(quotedMetab)) %>%
       filter_("id %in% keggHumanPathways")
     
     ## Find all the genes that compound interacts with (from our initial mapping
     ## table)
     genesOfInterest <- fullTable %>%
-      filter(rlang::UQ(bareKEGG) == rlang::UQ(quotedMetab)) %>%
+      dplyr::filter(rlang::UQ(bareKEGG) == rlang::UQ(quotedMetab)) %>%
       magrittr::extract2("Gene")
     
     return(
@@ -78,17 +78,17 @@ mapMetaCycPathways <-
     #######################################
     
     genesOfInterest <- fullTable %>%
-      filter(rlang::UQ(namedIDType) == rlang::UQ(quotedMetab)) %>%
+      dplyr::filter(rlang::UQ(namedIDType) == rlang::UQ(quotedMetab)) %>%
       magrittr::extract2("Official Gene Symbol")
     
     selectedReaction <- fullTable %>%
-      filter(rlang::UQ(namedIDType) == rlang::UQ(quotedMetab)) %>%
+      dplyr::filter(rlang::UQ(namedIDType) == rlang::UQ(quotedMetab)) %>%
       extract2('Reaction')
     
     quotedSelectedReaction <- rlang::enquo(selectedReaction)
     
     pathwaysOfInterest <- metaCycPathways %>%
-      filter(reaction %in% rlang::UQ(selectedReaction))
+      dplyr::filter(reaction %in% rlang::UQ(selectedReaction))
     
     return(
       list(

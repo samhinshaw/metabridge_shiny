@@ -22,7 +22,7 @@ shinyServer(function(input, output, session) {
     library(shinycssloaders)
     # After packages loaded, run button transform to signal ready states
     runjs('handlers.initGetStarted();')
-  }, ignoreNULL = TRUE, ignoreInit = TRUE)
+  }, ignoreNULL = TRUE, ignoreInit = TRUE, once = TRUE)
   
   # 'Disable' the Viz tab on load
   # runjs("$(\"a[data-value='vizPanel']\").parent().addClass('disabled');")
@@ -705,7 +705,7 @@ shinyServer(function(input, output, session) {
     # Pull the pathway ID from the pathway name selected by the user
     selectedPathwayID <-
       selectedRowAttrs$pathwaysOfSelectedCompound %>%
-      filter(rlang::UQ(pathwayNameIDcol) == input$pathwaysPicked) %>%
+      dplyr::filter(rlang::UQ(pathwayNameIDcol) == input$pathwaysPicked) %>%
       extract2('id')
     
   source(file.path('functions', 'visualizePathways.R'))

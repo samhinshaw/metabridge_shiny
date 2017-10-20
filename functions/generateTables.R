@@ -48,7 +48,7 @@ generateMetaCycMetabTable <- function(mappingObject,
       quotedSelectedMetab <- rlang::enquo(selectedMetab)
       
       filteredMappedMetaboliteTable <- mappingObject$data %>%
-        filter(rlang::UQ(namedIDType) == rlang::UQ(quotedSelectedMetab))
+        dplyr::filter(rlang::UQ(namedIDType) == rlang::UQ(quotedSelectedMetab))
       
       return(filteredMappedMetaboliteTable)
     }
@@ -85,7 +85,7 @@ generateKEGGMetabTable <- function(mappingObject,
       namedIDType <- as.name('bareKEGG')
       
       filteredMappedMetaboliteTable <- mappingObject$data %>%
-        filter(rlang::UQ(namedIDType) == rlang::UQ(quotedSelectedMetab))
+        dplyr::filter(rlang::UQ(namedIDType) == rlang::UQ(quotedSelectedMetab))
       
       
       return(filteredMappedMetaboliteTable)
