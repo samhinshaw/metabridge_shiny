@@ -1,9 +1,6 @@
 # Only load packages on demand
-print('LOADING STRINGR')
 library(stringr)
-print('LOADING MAGRITTR')
 library(magrittr)
-print('LOADING RLANG')
 
 mapMetaCyc <- function(importDF, col, idType) {
   enquotedCol <- enquo(col)

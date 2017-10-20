@@ -7,6 +7,21 @@
 #
 
 shinyServer(function(input, output, session) {
+
+  # Wait for sessionInitialized to load packages. This does not have to be defined
+  # in your UI, as the input will be passed via Shiny.onInputChange()
+  observeEvent(input$sessionInitialized, {
+    library(shinyjs)
+    library(tools)
+    library(tidyverse)
+    library(stringr) # moved to observeEvent in server.R
+    library(magrittr) # moved to first invocation in mapGenerally.R
+    library(rlang) # moved to first invocation in mapGenerally.R
+    library(DT) # moved to generateTables.R
+    library(pathview) # moved to visualizePathways.R
+    # After packages loaded, run button transform to signal ready states
+    runjs('handlers.initGetStarted();')
+  }, ignoreNULL = TRUE, ignoreInit = TRUE)
   
   # 'Disable' the Viz tab on load
   # runjs("$(\"a[data-value='vizPanel']\").parent().addClass('disabled');")

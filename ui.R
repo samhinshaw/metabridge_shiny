@@ -43,6 +43,7 @@ shinyUI(fluidPage(
       tags$div(
         class = "jumbotron",
         h1("Welcome"),
+        br(),
         tags$p(
           "Welcome to MetaBridge, a web tool for network-based integrative ",
           "analysis of metabolomics data. Here you can upload a set of metabolites ",
@@ -54,10 +55,13 @@ shinyUI(fluidPage(
           tags$a("MetaboAnalyst", href = "http://www.metaboanalyst.ca"),
           " for metabolomics data processing and ID conversion. "
         ),
+        br(),
         actionButton(
-          "getStarted", "Get Started",
-          class = "btn-primary btn-lg css-tooltip",
-          title = "Let's Go!"
+          inputId = "getStarted", 
+          label = "Loading R Packages...",
+          class = "btn-primary btn-lg disabled", # css-tooltip
+          title = "Let's Go!",
+          icon("circle-o-notch", class = "fa fa-spin", lib = "font-awesome")
         )
       )
     ),
@@ -154,7 +158,7 @@ shinyUI(fluidPage(
             "mapButton",
             "Map",
             class = "btn-med css-tooltip",
-            title = "Map your metabolites to the selected database", 
+            title = "Map your metabolites to the selected database"
             # `data-toggle` = "tooltip",
             # `data-placement` = "right",
             # `data-original-title` = "Map your metabolites against the selected database"
@@ -234,7 +238,7 @@ shinyUI(fluidPage(
                  ))
                  )
                  ),
-  tags$script(src = "user.js"),
+  tags$script(src = "client.js"),
   HTML(
     "<!-- Global Site Tag (gtag.js) - Google Analytics -->
     <script async src='https://www.googletagmanager.com/gtag/js?id=UA-106038065-1'></script>

@@ -1,6 +1,3 @@
-## Load pathview only on demand
-library(pathview)
-
 visualizePathview <- function(pathway, genes, cpd) {
 
   # Generate the PNG

@@ -196,3 +196,14 @@
     right: -10%;
   }
 }
+
+/* Remove awkward top margin in jumbotron */
+.jumbotron h1,
+.jumbotron .h1 {
+  margin-top: 0;
+}
+
+/* Give loading spinners within buttons some room to breathe */
+.btn .fa {
+  margin-right: 5px;
+}
