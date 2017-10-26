@@ -133,15 +133,15 @@
 @media (max-width: 767px) {
   /* Triangle Portion */
   .btn-med.css-tooltip:hover:before {
-    border-color: #333 transparent;
-    border-width: 6px 6px 0px 6px;
-    bottom: 100%;
-    right: 45%;
+    border-color: transparent #333;
+    border-width: 6px 6px 6px 0;
+    left: 102%;
+    bottom: 40%;
   }
   /* Box Portion */
   .btn-med.css-tooltip:hover:after {
-    bottom: 110%;
-    left: -200%;
+    /* bottom: 110%; */
+    left: 107%;
   }
 }
 
