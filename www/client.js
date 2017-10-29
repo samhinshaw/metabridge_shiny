@@ -75,6 +75,19 @@ const handlers = {
   clearUploadedTable: () => {
     const uploadedDataTable = document.getElementById('uploadedDataTable');
     uploadedDataTable.innerHTML = '';
+  },
+  addToolTips: () => {
+    // Disable viz panel on page load
+    $("a[data-value='vizPanel']")
+      .parent()
+      .addClass('disabled');
+    // Add css-tooltip class
+    $("a[data-value='vizPanel']").addClass('panel-tooltip');
+    // Add title class
+    $("a[data-value='vizPanel']").attr(
+      'title',
+      'Please select a metabolite that has been mapped via KEGG'
+    );
   }
 };
 
@@ -83,6 +96,7 @@ const handlers = {
 // We must use shiny:sessioninitialized, not DOM Content Loaded
 $(document).on('shiny:sessioninitialized', () => {
   handlers.lazyLoadPackages(1);
+  handlers.addToolTips();
 });
 
 // document.addEventListener('DOMContentLoaded', () => {
