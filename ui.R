@@ -60,8 +60,9 @@ shinyUI(fluidPage(
         br(),
         actionButton(
           inputId = "getStarted", 
-          label = "Loading R Packages...",
+          label = "Initializing App...",
           class = "btn-primary btn-lg disabled", # btn-tooltip
+          `data-position` = "right",
           title = "Let's Go!",
           icon("circle-o-notch", class = "fa fa-spin", lib = "font-awesome")
         )
