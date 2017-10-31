@@ -38,7 +38,7 @@
 //   $("a[data-value='vizPanel']")
 //     .parent()
 //     .addClass('disabled');
-//   // Add css-tooltip class
+//   // Add btn-tooltip class
 //   $("a[data-value='vizPanel']").addClass('panel-tooltip');
 //   // Add title class
 //   $("a[data-value='vizPanel']").attr(
@@ -63,8 +63,10 @@ const handlers = {
     getStartedButton.innerHTML = 'Get Started';
     // remove disabled class
     getStartedButton.classList.remove('disabled');
-    // add css-tooltip class
-    getStartedButton.classList.add('css-tooltip');
+    // add btn-tooltip class
+    getStartedButton.classList.add('btn-tooltip');
+    // activate tippy on this button!
+    handlers.activateTooltips(['#getStarted']);
   },
   clearMappingTables: () => {
     const mappingTable = document.getElementById('mappedMetaboliteTable');
@@ -81,13 +83,22 @@ const handlers = {
     $("a[data-value='vizPanel']")
       .parent()
       .addClass('disabled');
-    // Add css-tooltip class
+    // Add tooltip class
     $("a[data-value='vizPanel']").addClass('panel-tooltip');
     // Add title class
     $("a[data-value='vizPanel']").attr(
       'title',
       'Please select a metabolite that has been mapped via KEGG'
     );
+  },
+  activateTooltips: selectors => {
+    const tippyOptions = {
+      size: 'big',
+      duration: 150
+    };
+    selectors.map(selector => {
+      tippy(selector, tippyOptions);
+    });
   }
 };
 
@@ -97,6 +108,8 @@ const handlers = {
 $(document).on('shiny:sessioninitialized', () => {
   handlers.lazyLoadPackages(1);
   handlers.addToolTips();
+  handlers.activateTooltips(['.panel-tooltip', '.btn-tooltip']);
+  // handlers.activateTooltips('.btn-tooltip');
 });
 
 // document.addEventListener('DOMContentLoaded', () => {

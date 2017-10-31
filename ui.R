@@ -10,14 +10,16 @@ shinyUI(fluidPage(
   # Head linking to Flatly bootstrap theme & my personal tweaks
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css",
-              href = "bootstrap.min.css"),
+              href = "css/bootstrap.min.css"),
     tags$link(rel = "stylesheet", type = "text/css",
-              href = "user.css")
+              href = "css/user.css"),
+    tags$link(rel = "stylesheet", type = "text/css",
+              href = "css/tippy.css")
   ),
   # Body
   navbarPage(
     # Navbar Brand
-    title = HTML("MetaBridge <sup class='tiny'>BETA</sup>"),
+    title = HTML("MetaBridge <sup class='tiny'>BETA</sup>"), # <img src ='/favicon.png' alt='MetaBridge' height='28'>
     id = "navbarLayout",
     # Make sure we use ShinyJS
     header = tagList(useShinyjs()),
@@ -59,7 +61,7 @@ shinyUI(fluidPage(
         actionButton(
           inputId = "getStarted", 
           label = "Loading R Packages...",
-          class = "btn-primary btn-lg disabled", # css-tooltip
+          class = "btn-primary btn-lg disabled", # btn-tooltip
           title = "Let's Go!",
           icon("circle-o-notch", class = "fa fa-spin", lib = "font-awesome")
         )
@@ -112,10 +114,10 @@ shinyUI(fluidPage(
           # OR, try our examples!
           actionLink(
             inputId = "tryExamples",
-            class = "btn btn-link btn-med css-tooltip",
+            class = "btn btn-link btn-med btn-tooltip",
             label = "Try Examples",
-            title = "Try an example dataset from MetaboAnalyst", 
-            # `data-toggle` = "tooltip",
+            title = "Try an example dataset from MetaboAnalyst"
+            # `data-toggle` = "btn-tooltip",
             # `data-placement` = "right",
             # `data-original-title` = "Try an example dataset from MetaboAnalyst"
           )
@@ -153,9 +155,9 @@ shinyUI(fluidPage(
           actionButton(
             "mapButton",
             "Map",
-            class = "btn-med css-tooltip",
+            class = "btn-med btn-tooltip",
             title = "Map your metabolites to the selected database"
-            # `data-toggle` = "tooltip",
+            # `data-toggle` = "btn-tooltip",
             # `data-placement` = "right",
             # `data-original-title` = "Map your metabolites against the selected database"
           )
@@ -234,7 +236,8 @@ shinyUI(fluidPage(
                  ))
                  )
                  ),
-  tags$script(src = "client.js"),
+  tags$script(src = "js/tippy.min.js"),
+  tags$script(src = "js/client.js"),
   HTML(
     "<!-- Global Site Tag (gtag.js) - Google Analytics -->
     <script async src='https://www.googletagmanager.com/gtag/js?id=UA-106038065-1'></script>

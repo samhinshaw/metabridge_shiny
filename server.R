@@ -197,9 +197,9 @@ shinyServer(function(input, output, session) {
       actionButton(
         inputId = "continueToMap",
         label = "Proceed",
-        class = "btn-med css-tooltip",
+        class = "btn-med btn-tooltip",
         title = "Proceed to mapping your metabolites"
-        # `data-toggle` = "tooltip",
+        # `data-toggle` = "btn-tooltip",
         # `data-placement` = "right",
         # `data-original-title` = "Proceed to the next tab"
       )
@@ -497,9 +497,9 @@ shinyServer(function(input, output, session) {
         downloadButton(
           'downloadMappingData',
           'Download',
-          class = "btn-med css-tooltip",
+          class = "btn-med btn-tooltip",
           title = "Download your full mapping results"
-          # `data-toggle` = "tooltip",
+          # `data-toggle` = "btn-tooltip",
           # `data-placement` = "right",
           # `data-original-title` = "Download your full mapping results."
         )
@@ -534,14 +534,14 @@ shinyServer(function(input, output, session) {
                     !is.null(selectedMetab())) {
                   actionButton(inputId = "visualizeButton",
                                label = "Visualize",
-                               class = "btn btn-med css-tooltip", 
+                               class = "btn btn-med btn-tooltip", 
                                title = "Visualize your results with pathview")
                   # But if we mapped against MetaCyc, we don't have visualizations for
                   # this yet, so disable the viz button
                 } else {
                   actionButton(inputId = "visualizeButton",
                                label = "Visualize",
-                               class = "btn btn-med css-tooltip disabled", 
+                               class = "btn btn-med btn-tooltip disabled", 
                                title = "Select a metabolite from the summary table")
                 })
     }
