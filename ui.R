@@ -116,11 +116,9 @@ shinyUI(fluidPage(
           actionLink(
             inputId = "tryExamples",
             class = "btn btn-link btn-med btn-tooltip",
+            `data-position` = "right",
             label = "Try Examples",
             title = "Try an example dataset from MetaboAnalyst"
-            # `data-toggle` = "btn-tooltip",
-            # `data-placement` = "right",
-            # `data-original-title` = "Try an example dataset from MetaboAnalyst"
           )
         ),
         # Show the columns of the uploaded file
@@ -157,6 +155,7 @@ shinyUI(fluidPage(
             "mapButton",
             "Map",
             class = "btn-med btn-tooltip",
+            `data-position` = "right",
             title = "Map your metabolites to the selected database"
             # `data-toggle` = "btn-tooltip",
             # `data-placement` = "right",
