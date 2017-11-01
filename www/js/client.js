@@ -112,6 +112,10 @@ $(document).on('shiny:sessioninitialized', () => {
   // handlers.activateTooltips('.btn-tooltip');
 });
 
+window.onbeforeunload = function() {
+  return 'Note: If you navigate away, you will lose all of your intermediate results! Are you sure?';
+};
+
 // document.addEventListener('DOMContentLoaded', () => {
 //   handlers.lazyLoadPackages(1);
 // });
