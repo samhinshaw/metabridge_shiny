@@ -65,6 +65,8 @@ const handlers = {
     getStartedButton.classList.remove('disabled');
     // add btn-tooltip class
     getStartedButton.classList.add('btn-tooltip');
+    // Add title
+    getStartedButton.setAttribute('title', "Let's Go!");
     // activate tippy on this button!
     handlers.activateTooltips(['#getStarted']);
   },
@@ -99,10 +101,35 @@ const handlers = {
     selectors.map(selector => {
       tippy(selector, tippyOptions);
     });
+  },
+  passWindowInformation: () => {
+    const windowWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    const windowHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    const navbarHeight = document.getElementsByClassName(
+      'navbar navbar-default navbar-static-top'
+    )[0].offsetHeight;
+    const vizPanelTabHeaderHeight = $('#vizPanelUI .tab-header').outerHeight(true);
+
+    // If the viz panel has been rendered...
+    if (document.getElementById('vizPanelUI').getElementsByClassName('col-sm-9')[0]) {
+      const vizPanelWidth =
+        document.getElementById('vizPanelUI').getElementsByClassName('col-sm-9')[0].offsetWidth -
+        15;
+
+      // It's still easiest to use JQuery to get height WITH margin
+      const vizPanelHeight = windowHeight - navbarHeight - vizPanelTabHeaderHeight - 25;
+
+      Shiny.onInputChange('vizPanelHeight', vizPanelHeight);
+      Shiny.onInputChange('vizPanelWidth', vizPanelWidth);
+    }
+
+    // First argument is input name
+    // Second argument is value to send
+    Shiny.onInputChange('windowWidth', windowWidth);
+    Shiny.onInputChange('windowHeight', windowHeight);
+    Shiny.onInputChange('navbarHeight', navbarHeight);
   }
 };
-
-// handlers.lazyLoadPackages(0);
 
 // We must use shiny:sessioninitialized, not DOM Content Loaded
 $(document).on('shiny:sessioninitialized', () => {
@@ -110,11 +137,18 @@ $(document).on('shiny:sessioninitialized', () => {
   handlers.addToolTips();
   handlers.activateTooltips(['.panel-tooltip', '.btn-tooltip']);
   // handlers.activateTooltips('.btn-tooltip');
+  // Pass DOM sizing info to Shiny upon session initialization
+  handlers.passWindowInformation();
 });
 
 window.onbeforeunload = function() {
   return 'Note: If you navigate away, you will lose all of your intermediate results! Are you sure?';
 };
+
+// Also pass window information to shiny upon window resize
+window.addEventListener('resize', ev => {
+  handlers.passWindowInformation();
+});
 
 // document.addEventListener('DOMContentLoaded', () => {
 //   handlers.lazyLoadPackages(1);

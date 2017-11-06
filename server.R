@@ -16,9 +16,6 @@ shinyServer(function(input, output, session) {
     runjs('handlers.initGetStarted();')
   }, ignoreNULL = TRUE, ignoreInit = TRUE, once = TRUE)
   
-  # 'Disable' the Viz tab on load
-  # runjs("$(\"a[data-value='vizPanel']\").parent().addClass('disabled');")
-
   ################################################
   #                                              #
   #          Define reactive variables           #
@@ -676,10 +673,19 @@ shinyServer(function(input, output, session) {
       )
     }
   })
-  
+
+  ## Set up reactive values for image width based on window resize  
+  imageWidth = reactiveVal()
+  imageHeight = reactiveVal()
   ## have conditional renderUI here instead, so we can add our loading image with JS
   ## Different div ID depending on the image
   ## Perhaps can style this div to be full screen size
+
+  # Don't redraw image every time the window is resized, but every time the pathway is changed.
+  observeEvent(input$pathwaysPicked, {
+    imageWidth(input$vizPanelWidth)
+    imageHeight(input$vizPanelHeight)
+  })
 
   output$pathwayView <- renderImage({
     if (is.null(input$pathwaysPicked)) {
@@ -704,19 +710,37 @@ shinyServer(function(input, output, session) {
       dplyr::filter(rlang::UQ(pathwayNameIDcol) == input$pathwaysPicked) %>%
       extract2('id')
     
-  source(file.path('functions', 'visualizePathways.R'))
   filename <- visualizePathview(
     pathway = selectedPathwayID, 
     genes = selectedRowAttrs$genesOfSelectedCompound, 
     cpd = selectedRowAttrs$selectedCompound
   )
+
+  ## Width
+  # We're using a 3/9 split in bootstrap on desktop (>=768px), so we need to use 2/3 width in that case
+  # However, on mobile, we want full width
+  # if (input$windowWidth < 768) {
+  #   imageWidth(input$windowWidth)
+  # } else {
+    # imageWidth(input$vizPanelWidth)
+  # }
+
+  ## Height
+  # On mobile, our users will have to scroll down to get past the controls
+  # Therefore, they will have already scrolled past the navbar, meaning we do not need to worry about its height. 
+  # However, on desktop, we want our users to have to scroll as little as possible, so we'll get the height minus the navbar heights
+  # if (input$windowHeight < 768) {
+  #   imageHeight(input$windowHeight)
+  # } else {
+    # imageHeight((input$windowHeight - input$navbarHeight))
+  # }
     
     # Return a list containing the filename
     return(list(
       src = filename,
       contentType = 'image/png',
-      width = 700,
-      height = 700,
+      width = imageWidth(),
+      height = imageHeight(),
       alt = paste0("Pathway map of KEGG Pathway ", input$pathwaysPicked)
     ))
   }, deleteFile = TRUE)
