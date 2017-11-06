@@ -27,6 +27,15 @@ mapMetaCyc <- function(importDF, col, idType) {
       data_frame(
         UQ(idType) := importDF %>% use_series(UQ(col)) %>% as.character() %>% notNAs() %>% notEmpty() %>% str_trim()
       )
+    
+    # Sanitize our HMDB IDs if we are using HMDB IDs
+    if (idType == 'HMDB') {
+      # We can specify exact column names here, since we know that idType will
+      # be exactly one thing due to our if statement
+      this %<>% rowwise() %>% 
+        mutate(UQ(idType) := matchHMDB(UQ(as.name(idType)))) %>%
+        ungroup()
+    }
     # names(this)[1] <- UQ(quotedID)
     # Check to see if join failed silently
     if (nrow(this) == 0) {
@@ -252,6 +261,15 @@ mapKEGG <- function(importDF, col, idType) {
       data_frame(
         UQ(namedIDtype) := extract2(importDF, col) %>% notNAs() %>% notEmpty() %>% str_trim()
       )
+    
+    if (idType == 'HMDB') {
+      # We can specify exact column names here, since we know that idType will
+      # be exactly one thing due to our if statement
+      this %<>% rowwise() %>% 
+        mutate(UQ(idType) := matchHMDB(UQ(as.name(idType)))) %>%
+        ungroup()
+    }
+    
     # Check to see if join failed silently
     if (nrow(this) == 0) {
       list(
