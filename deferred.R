@@ -8,6 +8,10 @@ library(DT) # moved to generateTables.R
 library(pathview) # moved to visualizePathways.R
 library(shinycssloaders)
 
+# EXAMINE THIS ###############
+# load KEGGDB??
+load('data/sysdata.rda')
+# ^^^^^^^^^^^^^^^^^^^^^^^^
 
 # Load Example Data
 load('data/examples.RData')
@@ -36,6 +40,7 @@ source(file.path('functions', 'utilityFunctions.R'), local = TRUE)$value
 # Source Mapping Functions
 source(file.path('functions', 'mapGenerally.R'), local = TRUE)$value
 source(file.path('functions', 'mapPathways.R'), local = TRUE)$value
+source(file.path('functions', 'visualizePathways.R'), local = TRUE)$value
 
 # Source App Functions
 source(file.path('functions', 'alertFunctions.R'), local = TRUE)$value
