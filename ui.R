@@ -63,7 +63,7 @@ shinyUI(fluidPage(
           label = "Initializing App...",
           class = "btn-primary btn-lg disabled", # btn-tooltip
           `data-position` = "right",
-          title = "Let's Go!",
+          # title = "Let's Go!",
           icon("circle-o-notch", class = "fa fa-spin", lib = "font-awesome")
         )
       )
@@ -226,13 +226,7 @@ shinyUI(fluidPage(
                tags$div(
                  class = "jumbotron",
                  h1("Help"),
-                 tags$p("For assistance, you can reach me on twitter, @samhinshaw."),
-                 HTML(
-                   '<a href="https://twitter.com/intent/tweet?screen_name=samhinshaw" \
-                   class="twitter-mention-button" data-show-count="false">
-                   Tweet to @samhinshaw</a>
-                   <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>'
-                 )
+                 tags$p("For assistance, you can reach me on twitter, @samhinshaw.")
                  ))
                  )
                  ),
