@@ -2,8 +2,7 @@ library(tidyverse)
 library(pathview)
 # TEST
 theNameOfKEGG <- quo(KEGG)
-library(KEGGgraph)
-library(pathview)
+
 testResults <- mapMetaCyc(importDF = name_map, col = 'KEGG', idType = 'KEGG')$data
 miniTestResults <- testResults %>% 
   dplyr::filter(UQ(theNameOfKEGG) == "C00300")
