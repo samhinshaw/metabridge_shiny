@@ -214,24 +214,20 @@ shinyServer(function(input, output, session) {
     # Get the unselected columns
     unselectedColPositions <- setdiff(possibleColPositions, selectedColPositions)
     # Add CSS classes to selected columns
-    walk(.x = selectedColPositions,
-         .f = ~ addCssClass(
+    walk(.x = selectedColPositions, .f = ~ addCssClass(
            class = "info",
            selector = paste0("#uploadedDataTable table td:nth-child(", .x, ")")
          ))
-    walk(.x = selectedColPositions,
-         .f = ~ addCssClass(
+    walk(.x = selectedColPositions, .f = ~ addCssClass(
            class = "info",
            selector = paste0("#uploadedDataTable table th:nth-child(", .x, ")")
          ))
     # Remove CSS classes from unselected columns
-    walk(.x = unselectedColPositions,
-         .f = ~ removeCssClass(
+    walk(.x = unselectedColPositions, .f = ~ removeCssClass(
            class = "info",
            selector = paste0("#uploadedDataTable table td:nth-child(", .x, ")")
          ))
-    walk(.x = unselectedColPositions,
-         .f = ~ removeCssClass(
+    walk(.x = unselectedColPositions, .f = ~ removeCssClass(
            class = "info",
            selector = paste0("#uploadedDataTable table th:nth-child(", .x, ")")
          ))
