@@ -199,8 +199,31 @@ lactateGenes <- left_join(lactateReactions, reactionsGenes, by = 'reaction')
 glimpse(lactateGenes)
 ```
 
-
 ### Step 4: Map to gene IDs
+```{r message=FALSE, warning=FALSE}
+genesIDs <- read_tsv(file.path(updateDir, '4_genes_and_IDs.tsv'))
+glimpse(genesIDs)
+genesIDs %<>% 
+  mutate(webEnsembl = Ensembl) %>% mutate(webGeneCards = GeneCards) %>% 
+  mutate(Ensembl = str_replace(Ensembl, "^<a href='.*'>", "")) %>% 
+  mutate(Ensembl = str_replace(Ensembl, "<\\/a>$", "")) %>% 
+  mutate(GeneCards = str_replace(GeneCards, "^<a href='.*'>", "")) %>% 
+  mutate(GeneCards = str_replace(GeneCards, "<\\/a>$", "")) %>% 
+  rename('geneID' = 'Gene Name', 'Symbol' = 'GeneCards') %>% 
+  select(-`Accession-1`, -ends_with('End-Position'))
+glimpse(genesIDs)
+```
+
+And join to the table
+```{r}
+lactateGenesIDs <- left_join(lactateGenes, genesIDs, by = 'geneID')
+glimpse(lactateGenesIDs)
+```
+
+
 
 ### Step 5: Map to pathways
+```{r}
+pathwaysReactions <- read_tsv(file.path(updateDir, '5_pathways_and_reactions.tsv'))
+```
 
