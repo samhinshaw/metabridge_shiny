@@ -117,7 +117,9 @@ matchHMDB <- function(hmdbID) {
     return(NA)
   }
 }
+```
 
+```{r eval=FALSE}
 matchHMDB('HMDB0000190')  # HMDB00190
 matchHMDB('HMDB00190')    # HMDB00190
 matchHMDB(200)            # NA
@@ -126,7 +128,9 @@ matchHMDB('superlong')    # NA
 matchHMDB('hmdb0000190')  # HMDB00190
 matchHMDB('hmdb00190')    # HMDB00190
 matchHMDB('hmdbWRONG')    # hmdbWRONG # not currently supporting EVERY edge case
+```
 
+```{r}
 compoundIDs %>% 
   dplyr::filter(HMDB == matchHMDB('HMDB0000190'))
 

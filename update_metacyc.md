@@ -152,53 +152,18 @@ matchHMDB <- function(hmdbID) {
     return(NA)
   }
 }
+```
 
+``` r
 matchHMDB('HMDB0000190')  # HMDB00190
-```
-
-    ## [1] "HMDB00190"
-
-``` r
 matchHMDB('HMDB00190')    # HMDB00190
-```
-
-    ## [1] "HMDB00190"
-
-``` r
 matchHMDB(200)            # NA
-```
-
-    ## [1] NA
-
-``` r
 matchHMDB('HMDB00000190') # NA
-```
-
-    ## [1] NA
-
-``` r
 matchHMDB('superlong')    # NA
-```
-
-    ## [1] NA
-
-``` r
 matchHMDB('hmdb0000190')  # HMDB00190
-```
-
-    ## [1] "HMDB00190"
-
-``` r
 matchHMDB('hmdb00190')    # HMDB00190
-```
-
-    ## [1] "HMDB00190"
-
-``` r
 matchHMDB('hmdbWRONG')    # hmdbWRONG # not currently supporting EVERY edge case
 ```
-
-    ## [1] "HMDBWRONG"
 
 ``` r
 compoundIDs %>% 
