@@ -52,7 +52,7 @@ output: github_document
 ## Step 1: Cross-referencing Databases
 
 Unfortunately, all of these tables require munging! The have been formatted for display with HTML entities and anchor tags. 
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 library(stringr)
 library(magrittr)
@@ -86,7 +86,7 @@ compoundIDs %<>%
 ```
 
 Looks good for the first dataset. Let's give it a test!
-```{r}
+```{r message=FALSE, warning=FALSE}
 lactate <- read_csv(file.path(exampleDir, 'lactate.csv'))
 
 # MetaCyc only supports the older format, 5 digit HMDB IDs. If we detect your
@@ -141,7 +141,7 @@ linkedLactate <- compoundIDs %>%
 ### Step 2: Map to Reactions
 
 Now we can check our second table.
-```{r}
+```{r message=FALSE, warning=FALSE}
 compoundsReactions <- read_tsv(file.path(updateDir, '2_reactions_and_compounds.tsv'))
 glimpse(compoundsReactions)
 ```
@@ -154,7 +154,7 @@ glimpse(compoundsReactions)
 ```
 
 Almost, but we need to meld the data.frame to have one compound per row. I really like the 'splitstackshape' library for this.
-```{r}
+```{r message=FALSE}
 library(splitstackshape)
 compoundsReactions %<>% cSplit(splitCols = c('compoundID'), 
                               sep = ', ', direction = 'long', 
@@ -174,7 +174,7 @@ glimpse(lactateReactions)
 Good to go!
 
 ## Step 3: Map reactions to genes
-```{r}
+```{r message=FALSE, warning=FALSE}
 reactionsGenes <- read_tsv(file.path(updateDir, '3_reactions_and_genes.tsv'))
 reactionsGenes %<>% dplyr::select(-X4)
 reactionsGenes %<>% dplyr::rename('geneID' = 'ID', 'geneName' = 'Name', 'reaction' = 'Matches')

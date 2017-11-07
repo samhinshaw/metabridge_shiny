@@ -88,37 +88,8 @@ formatted for display with HTML entities and anchor tags.
 
 ``` r
 library(tidyverse)
-```
-
-    ## Loading tidyverse: ggplot2
-    ## Loading tidyverse: tibble
-    ## Loading tidyverse: tidyr
-    ## Loading tidyverse: readr
-    ## Loading tidyverse: purrr
-    ## Loading tidyverse: dplyr
-
-    ## Conflicts with tidy packages ----------------------------------------------
-
-    ## filter(): dplyr, stats
-    ## lag():    dplyr, stats
-
-``` r
 library(stringr)
 library(magrittr)
-```
-
-    ## 
-    ## Attaching package: 'magrittr'
-
-    ## The following object is masked from 'package:purrr':
-    ## 
-    ##     set_names
-
-    ## The following object is masked from 'package:tidyr':
-    ## 
-    ##     extract
-
-``` r
 library(rprojroot)
 
 rootDir <- rprojroot::find_rstudio_root_file()
@@ -126,26 +97,7 @@ updateDir <- file.path(rootDir, 'database_updates')
 exampleDir <- file.path(rootDir, 'example_data')
 
 compoundIDs <- read_tsv(file.path(updateDir, '1_compounds_and_IDs.tsv'))
-```
 
-    ## Parsed with column specification:
-    ## cols(
-    ##   Compound = col_character(),
-    ##   CAS = col_character(),
-    ##   HMDB = col_character(),
-    ##   KEGG = col_character(),
-    ##   PubChem = col_character()
-    ## )
-
-    ## Warning in rbind(names(probs), probs_f): number of columns of result is not
-    ## a multiple of vector length (arg 1)
-
-    ## Warning: 72 parsing failures.
-    ## row # A tibble: 5 x 5 col     row   col           expected actual expected   <int> <chr>              <chr>  <chr> actual 1  2785   CAS delimiter or quote        file 2  2785   CAS delimiter or quote      < row 3  3185   CAS delimiter or quote        col 4  3185   CAS delimiter or quote      < expected 5  3599   CAS delimiter or quote        actual # ... with 1 more variables: file <chr>
-    ## ... ................. ... ....................................... ........ ....................................... ...... ....................................... .... ....................................... ... ....................................... ... ....................................... ........ ....................................... ...... .......................................
-    ## See problems(...) for more details.
-
-``` r
 compoundIDs %<>% 
   # Create new columns that represent 'web' columns
   mutate(webHMDB = HMDB) %>% mutate(webCAS = CAS) %>% 
@@ -171,17 +123,7 @@ Looks good for the first dataset. Let’s give it a test!
 
 ``` r
 lactate <- read_csv(file.path(exampleDir, 'lactate.csv'))
-```
 
-    ## Parsed with column specification:
-    ## cols(
-    ##   kegg = col_character(),
-    ##   hmdbID = col_character(),
-    ##   CAS = col_character(),
-    ##   PubChem = col_integer()
-    ## )
-
-``` r
 # MetaCyc only supports the older format, 5 digit HMDB IDs. If we detect your
 # HMDB IDs are in the newer 7 digit formar, we will trim the leading characters
 # if they are zeros. If they are not zeros, we will return an error.
@@ -294,19 +236,6 @@ Now we can check our second table.
 
 ``` r
 compoundsReactions <- read_tsv(file.path(updateDir, '2_reactions_and_compounds.tsv'))
-```
-
-    ## Warning: Missing column names filled in: 'X4' [4]
-
-    ## Parsed with column specification:
-    ## cols(
-    ##   ID = col_character(),
-    ##   Name = col_character(),
-    ##   Matches = col_character(),
-    ##   X4 = col_character()
-    ## )
-
-``` r
 glimpse(compoundsReactions)
 ```
 
@@ -339,22 +268,6 @@ I really like the ‘splitstackshape’ library for this.
 
 ``` r
 library(splitstackshape)
-```
-
-    ## Loading required package: data.table
-
-    ## 
-    ## Attaching package: 'data.table'
-
-    ## The following objects are masked from 'package:dplyr':
-    ## 
-    ##     between, first, last
-
-    ## The following object is masked from 'package:purrr':
-    ## 
-    ##     transpose
-
-``` r
 compoundsReactions %<>% cSplit(splitCols = c('compoundID'), 
                               sep = ', ', direction = 'long', 
                               type.convert = FALSE)
@@ -388,19 +301,6 @@ Step 3: Map reactions to genes
 
 ``` r
 reactionsGenes <- read_tsv(file.path(updateDir, '3_reactions_and_genes.tsv'))
-```
-
-    ## Warning: Missing column names filled in: 'X4' [4]
-
-    ## Parsed with column specification:
-    ## cols(
-    ##   ID = col_character(),
-    ##   Name = col_character(),
-    ##   Matches = col_character(),
-    ##   X4 = col_character()
-    ## )
-
-``` r
 reactionsGenes %<>% dplyr::select(-X4)
 reactionsGenes %<>% dplyr::rename('geneID' = 'ID', 'geneName' = 'Name', 'reaction' = 'Matches')
 head(reactionsGenes)
