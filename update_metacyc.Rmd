@@ -49,6 +49,8 @@ output: github_document
 
 ## Munge Tables
 
+## Step 1: Cross-referencing Databases
+
 Unfortunately, all of these tables require munging! The have been formatted for display with HTML entities and anchor tags. 
 ```{r}
 library(tidyverse)
@@ -86,7 +88,6 @@ compoundIDs %<>%
 Looks good for the first dataset. Let's give it a test!
 ```{r}
 lactate <- read_csv(file.path(exampleDir, 'lactate.csv'))
-
 
 # MetaCyc only supports the older format, 5 digit HMDB IDs. If we detect your
 # HMDB IDs are in the newer 7 digit formar, we will trim the leading characters
@@ -127,9 +128,75 @@ matchHMDB('hmdb00190')    # HMDB00190
 matchHMDB('hmdbWRONG')    # hmdbWRONG # not currently supporting EVERY edge case
 
 compoundIDs %>% 
-  filter(HMDB == matchHMDB('HMDB0000190'))
+  dplyr::filter(HMDB == matchHMDB('HMDB0000190'))
 
 compoundIDs %>% 
-  filter(HMDB == matchHMDB(lactate$hmdbID[1]))
+  dplyr::filter(HMDB == lactate %>% extract2('hmdbID') %>% matchHMDB())
+
+# Good, let's save that
+linkedLactate <- compoundIDs %>% 
+  dplyr::filter(HMDB == lactate %>% extract2('hmdbID') %>% matchHMDB())
 ```
+
+### Step 2: Map to Reactions
+
+Now we can check our second table.
+```{r}
+compoundsReactions <- read_tsv(file.path(updateDir, '2_reactions_and_compounds.tsv'))
+glimpse(compoundsReactions)
+```
+
+We can see there are some HTML markup and entities in there, but they are restricted to the "Name" column, which we are not mapping against. However, we should rename the columns and drop the extraneous 4th column.
+```{r}
+compoundsReactions %<>% dplyr::select(-X4)
+compoundsReactions %<>% dplyr::rename('reaction' = 'ID', 'reactionName' = 'Name', 'compoundID' = 'Matches')
+glimpse(compoundsReactions)
+```
+
+Almost, but we need to meld the data.frame to have one compound per row. I really like the 'splitstackshape' library for this.
+```{r}
+library(splitstackshape)
+compoundsReactions %<>% cSplit(splitCols = c('compoundID'), 
+                              sep = ', ', direction = 'long', 
+                              type.convert = FALSE)
+glimpse(compoundsReactions)
+```
+
+
+Now let's give it a test
+```{r}
+lactateReactions <- compoundsReactions %>% 
+  dplyr::filter(compoundID %in% extract2(linkedLactate, 'Compound'))
+glimpse(lactateReactions)
+```
+
+
+Good to go!
+
+## Step 3: Map reactions to genes
+```{r}
+reactionsGenes <- read_tsv(file.path(updateDir, '3_reactions_and_genes.tsv'))
+reactionsGenes %<>% dplyr::select(-X4)
+reactionsGenes %<>% dplyr::rename('geneID' = 'ID', 'geneName' = 'Name', 'reaction' = 'Matches')
+head(reactionsGenes)
+```
+
+Again, we see there are some HTML markup and entities in there, but they are restricted to the "geneName" column, which we are not mapping against. We also need to split our reactions column.
+```{r}
+reactionsGenes %<>% cSplit(splitCols = c('reaction'), 
+                           sep = ', ', direction = 'long', 
+                           type.convert = FALSE)
+glimpse(reactionsGenes)
+```
+
+Now we can test out step 3. Let's do a join here rather than a filter so we retain our relational information. That is to say, how we go to this step. 
+```{r}
+lactateGenes <- left_join(lactateReactions, reactionsGenes, by = 'reaction')
+glimpse(lactateGenes)
+```
+
+
+### Step 4: Map to gene IDs
+
+### Step 5: Map to pathways
 
