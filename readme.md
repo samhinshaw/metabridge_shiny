@@ -20,7 +20,7 @@ MetaBridge is designed to facilitate integrative analysis by identifying the enz
   + One of the reactions lactate participates in (listed under the Reactions tab) is [EC 3.1.1.1](https://metacyc.org/META/NEW-IMAGE?type=REACTION&object=CARBOXYLESTERASE-RXN). 
   + However, if you look up this reaction in a SmartTable of all reactions, the listed participants are: Carboxylates, Carboxylic-esters, Alcohols, WATER, PROTON. 
   + Lactate is a Carboxylate, but we do not currently have that ontology accounted for in our system! 
-  + If we look back at the [Lactate](https://metacyc.org/compound?orgid=META&id=L-LACTATE#tab=ONT) entry in MetaCyc, we can find the annotation on the Ontology tab. However, this annotation is difficult to build in a SmartTable. It is technically possible, by selecting [Transform] -> [Ontology - parents of class], but this produces limited results. In the case of Lactate, it *only* provides us with 'L-2-hydroxyacids // Lactate'. This is compared to the rich and complex results we get on the compound's page, listed below:
+  + If we look back at the [Lactate](https://metacyc.org/compound?orgid=META&id=L-LACTATE#tab=ONT) entry in MetaCyc, we can find the annotation on the Ontology tab. However, this annotation is difficult to build in a SmartTable. It is technically possible, by selecting [Transform] -> [Ontology - parents of class], but this produces limited results. In the case of Lactate, it *only* provides us with 'L-2-hydroxyacids' and 'Lactate'. This is compared to the rich and complex results we get on the compound's page, listed below:
 
 - an acid
   - all carboxy acids
@@ -45,9 +45,18 @@ I think the best fix for this will be to simply interact *directly* with the Met
 - Block back button or reload navigation
 - Change location of download button to inside table?
 
+- Remove `+AC0` from MetaCyc Reaction IDs
+  + Link to MetaCyc Reactions
+- Refactor table display to new functions which wrap table in HTML on command
+
 
 ### Errors:
+
+- Can't make table that is not yet displayed invisible
 
 ```js
 Uncaught TypeError: Cannot set property 'innerHTML' of null
 ```
+
+- Be able to choose import column by clicking on DT
+- Have to click twice on summary table?

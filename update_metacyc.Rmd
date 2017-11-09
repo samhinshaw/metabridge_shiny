@@ -57,6 +57,7 @@ library(tidyverse)
 library(stringr)
 library(magrittr)
 library(rprojroot)
+library(splitstackshape)
 
 rootDir <- rprojroot::find_rstudio_root_file()
 updateDir <- file.path(rootDir, 'database_updates')
@@ -87,7 +88,8 @@ compoundIDs %<>%
 
 Looks good for the first dataset. Let's give it a test!
 ```{r message=FALSE, warning=FALSE}
-lactate <- read_csv(file.path(exampleDir, 'lactate.csv'))
+# lactate <- read_csv(file.path(exampleDir, 'lactate.csv'))
+exampleCompound <- read_csv(file.path(exampleDir, 'urea.csv'))
 
 # MetaCyc only supports the older format, 5 digit HMDB IDs. If we detect your
 # HMDB IDs are in the newer 7 digit formar, we will trim the leading characters
@@ -135,11 +137,11 @@ compoundIDs %>%
   dplyr::filter(HMDB == matchHMDB('HMDB0000190'))
 
 compoundIDs %>% 
-  dplyr::filter(HMDB == lactate %>% extract2('hmdbID') %>% matchHMDB())
+  dplyr::filter(HMDB == exampleCompound %>% extract2('HMDB') %>% matchHMDB())
 
 # Good, let's save that
-linkedLactate <- compoundIDs %>% 
-  dplyr::filter(HMDB == lactate %>% extract2('hmdbID') %>% matchHMDB())
+linkedExampleCompound <- compoundIDs %>% 
+  dplyr::filter(HMDB == exampleCompound %>% extract2('HMDB') %>% matchHMDB())
 ```
 
 ### Step 2: Map to Reactions
@@ -159,19 +161,18 @@ glimpse(compoundsReactions)
 
 Almost, but we need to meld the data.frame to have one compound per row. I really like the 'splitstackshape' library for this.
 ```{r message=FALSE}
-library(splitstackshape)
 compoundsReactions %<>% cSplit(splitCols = c('compoundID'), 
                               sep = ', ', direction = 'long', 
-                              type.convert = FALSE)
+                              type.convert = FALSE, stripWhite = FALSE)
 glimpse(compoundsReactions)
 ```
 
 
 Now let's give it a test
 ```{r}
-lactateReactions <- compoundsReactions %>% 
-  dplyr::filter(compoundID %in% extract2(linkedLactate, 'Compound'))
-glimpse(lactateReactions)
+exampleReactions <- compoundsReactions %>% 
+  dplyr::filter(compoundID %in% extract2(linkedExampleCompound, 'Compound'))
+glimpse(exampleReactions)
 ```
 
 
@@ -189,14 +190,14 @@ Again, we see there are some HTML markup and entities in there, but they are res
 ```{r}
 reactionsGenes %<>% cSplit(splitCols = c('reaction'), 
                            sep = ', ', direction = 'long', 
-                           type.convert = FALSE)
+                           type.convert = FALSE, stripWhite = FALSE)
 glimpse(reactionsGenes)
 ```
 
 Now we can test out step 3. Let's do a join here rather than a filter so we retain our relational information. That is to say, how we go to this step. 
 ```{r}
-lactateGenes <- left_join(lactateReactions, reactionsGenes, by = 'reaction')
-glimpse(lactateGenes)
+exampleGenes <- left_join(exampleReactions, reactionsGenes, by = 'reaction')
+glimpse(exampleGenes)
 ```
 
 ### Step 4: Map to gene IDs
@@ -216,8 +217,8 @@ glimpse(genesIDs)
 
 And join to the table
 ```{r}
-lactateGenesIDs <- left_join(lactateGenes, genesIDs, by = 'geneID')
-glimpse(lactateGenesIDs)
+exampleGenesIDs <- left_join(exampleGenes, genesIDs, by = 'geneID')
+glimpse(exampleGenesIDs)
 ```
 
 
