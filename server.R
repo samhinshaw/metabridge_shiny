@@ -30,6 +30,7 @@ shinyServer(function(input, output, session) {
   preSelectedIDType <- reactiveVal()
   databaseChosen <- reactiveVal()
   selectedMetab <- reactiveVal()
+  idTypeChosen <- reactiveVal()
   
   ################################################
   #                                              #
@@ -62,7 +63,7 @@ shinyServer(function(input, output, session) {
     input$sep
     input$header
   }, {
-    if(!is.null(input$metaboliteUpload)) {
+    if (!is.null(input$metaboliteUpload)) {
       read_delim(
         file = input$metaboliteUpload$datapath,
         col_names = input$header,
@@ -261,7 +262,7 @@ shinyServer(function(input, output, session) {
   # when the map button is clicked, update the dbChosen. 
   observeEvent(input$mapButton, {
     # Run JS to clear table content
-    runjs('handlers.clearMappingTables();')
+    # runjs('handlers.clearMappingTables();') # do not clear by setting innerHTML!
     # change the dbChosen reactive Value
     databaseChosen(input$dbChosen)
     # Clear any pre-existing alerts
@@ -312,7 +313,7 @@ shinyServer(function(input, output, session) {
   #    from #1 because we need to assign the reactive table object to its own
   #    output Object. 
   # 3. Render the entire UI surrounding the table and insert the rendered DT. 
-
+  
   ## STEP ONE
   # ~~~~~~~~~~
   # Show a summary table of the mapped metabolites (just # of genes)
@@ -340,7 +341,6 @@ shinyServer(function(input, output, session) {
   # Render the panel separately so we have reactive control over all the UI
   # elements surrounding the DataTable, not just the dataTable
   output$mappingSummaryPanel <- renderUI({
-    input$mapButton
     if (is.null(mappingObject())) {
       return(NULL)
     } else if (mappingObject()$status == 'error' |
@@ -348,14 +348,8 @@ shinyServer(function(input, output, session) {
       return(NULL)
       # Only render if we had non-null, non-error, non-empty results
     } else {
-      tags$div(
+      tagList(
         tags$h3('Mapping Summary', class = "tab-header"),
-        if (databaseChosen() == "KEGG") {
-          tags$p(
-            "If you wish to visualize your results, please select a metabolite from ",
-            "this table and switch to the 'Visualize' tab."
-          )
-        },
         # Insert the datatable here that we rendered above. 
         DT::dataTableOutput('mappingSummaryTable')
       )
@@ -388,8 +382,8 @@ shinyServer(function(input, output, session) {
   # Now, show the filtered (unsummarized) table, based on what metabolite user clicked on.
   mappedMetaboliteTable <- eventReactive({
     # When we select a new metabolite in the summary table...
-    input$mappingSummaryTable_rows_selected
-    # or when we click the map button... (this is important because we need to be
+    selectedMetab()
+    # When we click the map button... (this is important because we need to be
     # able to update in case there are errors we need to display)
     input$mapButton
   }, {
