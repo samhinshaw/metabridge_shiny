@@ -2,6 +2,7 @@ library(shinyjs)
 library(tools)
 library(dplyr)
 library(purrr)
+library(readr)
 library(stringr) # moved to observeEvent in server.R
 library(magrittr) # moved to first invocation in mapGenerally.R
 library(rlang) # moved to first invocation in mapGenerally.R
