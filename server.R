@@ -255,6 +255,11 @@ shinyServer(function(input, output, session) {
   #                                              #
   ################################################
   
+  # Store ID type chosen as reactive variable which only changes when the map button is clicked
+  observeEvent(input$mapButton, {
+    idTypeChosen(input$idType)
+  })
+  
   ## Here's where the heavy lifting takes place!!
   ## We now take the columns the user specified and map them to genes!
   ## Even better, now that we have a UI, we can choose
@@ -272,7 +277,7 @@ shinyServer(function(input, output, session) {
         importDF = metaboliteObject(),
         col = input$columnsPicked,
         db = databaseChosen(),
-        idType = input$idType
+        idType = idTypeChosen()
       )
     # Assign the mapped data to our reactive value
     mappedMetabolites(mappingOutput$data)
@@ -321,7 +326,8 @@ shinyServer(function(input, output, session) {
   # We should make this optional!
   # Only render when 'map' clicked
   mappingSummaryTable <- eventReactive(input$mapButton, {
-    generateSummaryTable(mappingObject(), input$idType, databaseChosen())
+    # create the summary tables
+    generateSummaryTable(mappingObject(), idTypeChosen(), databaseChosen())
   })
   
   ## STEP TWO
@@ -399,13 +405,13 @@ shinyServer(function(input, output, session) {
       generateKEGGMetabTable(mappingObject(),
                              mappingSummaryTable(),
                              selectedMetab(),
-                             input$idType)
+                             idTypeChosen())
       
     } else if (databaseChosen() == 'MetaCyc') {
       generateMetaCycMetabTable(mappingObject(),
                                 mappingSummaryTable(),
                                 selectedMetab(),
-                                input$idType)
+                                idTypeChosen())
       
     }
   })
@@ -604,7 +610,7 @@ shinyServer(function(input, output, session) {
     pathwayMappingAttrs <- generalPathwayMapping(
       summaryTable = summaryTable,
       fullTable = fullTable,
-      idType = input$idType,
+      idType = idTypeChosen(),
       db = databaseChosen(),
       selectedRow = selectedMetab()
     )
