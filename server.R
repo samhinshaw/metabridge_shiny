@@ -759,14 +759,5 @@ shinyServer(function(input, output, session) {
       )
     }
   })
-  
-  output$debugWindow <- renderTable(genesOfSelectedCompound()
-    # Select table via DT API for row selection. UNFORTUNATELY, as far as I know
-    # this must be done via row number. Fortunately, since DT is in charge of
-    # all of the sorting/interaction, as well as providing the row index, there
-    # should not be much disagreement
-    # mappedMetabolites()[as.numeric(rownames(mappedMetabolites())) ==
-    #                       input$mappingSummaryTable_rows_selected,])
-  )
 })
   
