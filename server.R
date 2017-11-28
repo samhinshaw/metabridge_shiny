@@ -356,6 +356,11 @@ shinyServer(function(input, output, session) {
         mappingObject()$status == 'empty') {
         mappingObject()$data
       
+      # Also make sure our mapping was actually conducted
+      # Sometimes the click doesn't register??
+      # Use DOM API here to read header
+    # } else if () {
+
       # Otherwise, generate our table depending on the chosen database! As with
       # `generateSummaryTable()`, these functions come from `generateTables.R`
     } else if (databaseChosen() == 'KEGG') {
