@@ -7,7 +7,7 @@ mapKEGGPathways <-
     
     # To be treated like a variable
     namedIDType <- as.name(idType)
-    bareKEGG <- as.name('bareKEGG')
+    KEGGname <- as.name('KEGG')
     
     ### Pull the selected row and extract its compound ID
     selectedMetab <-
@@ -33,7 +33,7 @@ mapKEGGPathways <-
     ## Find all the genes that compound interacts with (from our initial mapping
     ## table)
     genesOfInterest <- fullTable %>%
-      dplyr::filter(rlang::UQ(bareKEGG) == rlang::UQ(quotedMetab)) %>%
+      dplyr::filter(rlang::UQ(KEGGname) == rlang::UQ(quotedMetab)) %>%
       magrittr::extract2("Gene")
     
     return(

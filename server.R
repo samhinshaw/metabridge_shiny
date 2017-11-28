@@ -333,8 +333,24 @@ shinyServer(function(input, output, session) {
   ## STEP TWO
   # ~~~~~~~~~~
   # Once metabolites have been mapped, render the results!
-  output$mappingSummaryTable <- DT::renderDataTable(
-    { mappingSummaryTable() },
+  output$mappingSummaryTable <- DT::renderDataTable({
+    if (databaseChosen() == 'KEGG') {
+      mappingSummaryTable() %>%
+      # format IDs with hyperlinks
+      # note this is ONLY changed in the displayed table now, not changed server-side!
+      mutate(
+        KEGG = paste0(
+          '<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?cpd:',
+          KEGG,
+          '">',
+          KEGG,
+          '</a>'
+        )
+      )
+    } else if (databaseChosen() == 'MetaCyc') {
+      mappingSummaryTable()
+    }
+  },
     rownames = FALSE,
     style = 'bootstrap',
     class = 'table-bordered table-responsive compact',
@@ -349,8 +365,7 @@ shinyServer(function(input, output, session) {
   output$mappingSummaryPanel <- renderUI({
     if (is.null(mappingObject())) {
       return(NULL)
-    } else if (mappingObject()$status == 'error' |
-               mappingObject()$status == 'empty') {
+    } else if (mappingObject()$status == 'error' | mappingObject()$status == 'empty') {
       return(NULL)
       # Only render if we had non-null, non-error, non-empty results
     } else {
@@ -377,7 +392,7 @@ shinyServer(function(input, output, session) {
   # THREE STEP RENDER PROCESS
   # 1. Generate Table from `generateTables.R::generateSummaryTable()`, depending
   #    only on the mapButton click. 
-  # 2. Render the generated table with DR::renderDataTable(). This is separate
+  # 2. Render the generated table with DT::renderDataTable(). This is separate
   #    from #1 because we need to assign the reactive table object to its own
   #    output Object. 
   # 3. Render the entire UI surrounding the table and insert the rendered DT. 
@@ -421,12 +436,29 @@ shinyServer(function(input, output, session) {
   ## ~~~~~~~~~~
   # Once metabolites have been mapped, render the results!
   output$mappedMetaboliteTable <- DT::renderDataTable({
-    input$mapButton
-    # Just really make sure we're not getting any errors thrown at the user
-    if (mappingObject()$status == 'success' &
-        databaseChosen() == 'KEGG') {
-      # Exclude the 'bare' columns, which are redundant to the HTML-ified columns. 
-      mappedMetaboliteTable() %>% dplyr::select(-starts_with("bare"))
+    if (is.null(mappingObject()) | is.null(selectedMetab())) {
+      return(data.frame())
+    } else if (mappingObject()$status == 'success' &
+      databaseChosen() == 'KEGG') {
+        mappedMetaboliteTable() %>%
+          # format IDs with hyperlinks
+          # note this is ONLY changed in the displayed table now, not changed server-side!
+          mutate(
+            KEGG = paste0(
+              '<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?cpd:',
+              KEGG,
+              '">',
+              KEGG,
+              '</a>'
+            ),
+            Enzyme = paste0(
+              '<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?ec:',
+              Enzyme,
+              '">',
+              Enzyme,
+              '</a>'
+            )
+          )
       # Only render if we had non-null, non-error, non-empty results
     } else {
       mappedMetaboliteTable()

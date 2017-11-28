@@ -12,13 +12,14 @@ generateSummaryTable <- function(mappingObject, idType, dbChosen) {
       "# Unique Genes (MetaCyc Gene ID)"      = n_distinct(`MetaCyc Gene ID`,      na.rm = TRUE),
       "# Unique Genes (Official Gene Symbol)" = n_distinct(`Official Gene Symbol`, na.rm = TRUE),
       "# Unique Genes (Ensembl Gene ID)"      = n_distinct(`Ensembl Gene ID`,      na.rm = TRUE)
-    )
+    ) %>% ungroup()
   } else if (dbChosen == 'KEGG') {
     mappingObject$data %>%
       group_by_('KEGG', idType, 'Compound') %>% summarize(
         "# Unique Enzymes" = n_distinct(`Enzyme`, na.rm = TRUE),
-        "# Unique Genes"   = n_distinct(`Gene`, na.rm = TRUE)
-      )
+        "# Unique Genes (Official Gene Symbol)" = n_distinct(`Official Gene Symbol`, na.rm = TRUE),
+        "# Unique Genes (Entrez Gene ID)" = n_distinct(`Entrez Gene ID`, na.rm = TRUE)
+      ) %>% ungroup()
   }
 }
 
@@ -78,11 +79,13 @@ generateKEGGMetabTable <- function(mappingObject,
       # not what was supplied), and extract the ID from the HTML contents of the
       # cell
       selectedMetab %<>%
-        extract2('KEGG') %>% str_extract('C[0-9]{5}')
+        extract2('KEGG') %>% 
+        # make sure we've just got the kegg compound ID
+        str_extract('C[0-9]{5}')
       
       quotedSelectedMetab <- rlang::enquo(selectedMetab)
       
-      namedIDType <- as.name('bareKEGG')
+      namedIDType <- as.name('KEGG')
       
       filteredMappedMetaboliteTable <- mappingObject$data %>%
         dplyr::filter(rlang::UQ(namedIDType) == rlang::UQ(quotedSelectedMetab))

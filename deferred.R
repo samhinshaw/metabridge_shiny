@@ -1,4 +1,3 @@
-library(shinyjs)
 library(tools)
 library(dplyr)
 library(purrr)
@@ -12,7 +11,7 @@ library(shinycssloaders)
 
 # EXAMINE THIS ###############
 # load KEGGDB??
-load('data/sysdata.rda')
+# load('data/sysdata.rda')
 # ^^^^^^^^^^^^^^^^^^^^^^^^
 
 # Load Example Data
@@ -20,14 +19,19 @@ load('data/examples.RData')
 
 # Load KEGG Database Files
 # Import Enzymes & Enzyme Names here once scraping has been completed.
+# 
 load('data/k00_keggCompounds.RData')
-load('data/k01_keggEnzymes.RData')
+# load('data/k01_keggEnzymes.RData')
 load('data/k02b_keggEnzymeShortNames.RData') # use the shorter names for now!
 load('data/k03_keggGenes.RData')
+# for the moment, only keep enzyme - gene relationships
+keggGenes %<>% dplyr::select(-KEGG) %>% unique()
 load('data/k04_keggPathways.RData')
 load('data/k05_keggHumanPathways.RData')
 
 # Load MetaCyc Database Files
+# Check our new TSVs for compatibility
+# Build TSV -> RDA in db update script. 
 load('data/m01_metaCycDBLinks.RData')
 load('data/m02_metaCycDB.RData')
 load('data/m03_metaCycGeneIDs.RData')

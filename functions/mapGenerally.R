@@ -262,6 +262,7 @@ mapKEGG <- function(importDF, col, idType) {
         UQ(namedIDtype) := extract2(importDF, col) %>% notNAs() %>% notEmpty() %>% str_trim()
       )
     
+    # use our matchHMDB function if using the HMDB id
     if (idType == 'HMDB') {
       # We can specify exact column names here, since we know that idType will
       # be exactly one thing due to our if statement
@@ -406,42 +407,26 @@ mapKEGG <- function(importDF, col, idType) {
   })
   
   keggGenesOfInterest <- tryCatch({
-    keggGeneDB <- keggDB %>% select_('KEGG', 'genes')
+    keggGeneDB <- keggGenes %>% select_('enzymes', 'entrez', 'symbol')
     this <-
-      left_join(keggEnzymesOfInterest$data, keggGeneDB, by = "KEGG") %>%
+      left_join(keggEnzymesOfInterest$data, keggGeneDB, by = "enzymes") %>%
+      # Make column names display-friendly
       rename_(
-        'Gene' = 'genes',
-        'bareKEGG' = 'KEGG',
-        'bareEnzyme' = 'enzymes',
-        'Enzyme Name' = 'enzymeName'
+        'KEGG' = 'KEGG',
+        'Enzyme' = 'enzymes',
+        'Enzyme Name' = 'enzymeName', 
+        'Official Gene Symbol' = 'symbol',
+        'Entrez Gene ID' = 'entrez'
       ) %>%
-      mutate(
-        KEGG = paste0(
-          '<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?cpd:',
-          bareKEGG,
-          '">',
-          bareKEGG,
-          '</a>'
-        )
-      ) %>%
-      mutate(
-        Enzyme = paste0(
-          '<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?ec:',
-          bareEnzyme,
-          '">',
-          bareEnzyme,
-          '</a>'
-        )
-      ) %>%
+      # Use select to reorder
       select_(
         'KEGG',
         idType,
         'Compound',
         'Enzyme',
         '`Enzyme Name`',
-        'Gene',
-        'bareKEGG',
-        'bareEnzyme'
+        '`Official Gene Symbol`',
+        '`Entrez Gene ID`'
       )
     # Check to see if join failed silently
     if (nrow(this) == 0) {
