@@ -125,6 +125,33 @@ shinyServer(function(input, output, session) {
     )
   })
   
+  # This has to be rendered separately from the column picker panel. Otherwise,
+  # the entire column picker panel has to be re-rendered when the preselected ID
+  # type gets updated, which resets the entire panel, which reverts to the
+  # preselected column, effectively making it impossible to switch columns!
+  output$idSelector <- renderUI({
+    tags$div(
+      selectInput(
+        "idType",
+        "ID Type",
+        width = "50%",
+        choices = c("HMDB", "KEGG", "PubChem", 'CAS'),
+        selected = preSelectedIDType(),
+        selectize = FALSE
+      ),
+      # Include button to proceed. 
+      actionButton(
+        inputId = "continueToMap",
+        label = "Proceed",
+        class = "btn-med btn-tooltip",
+        title = "Proceed to mapping your metabolites"
+        # `data-toggle` = "btn-tooltip",
+        # `data-placement` = "right",
+        # `data-original-title` = "Proceed to the next tab"
+      )
+    )
+  })
+  
   # Render the UI for the column picker panel
   columnPickerUI <- eventReactive({
     # Change on button click (upload/examples)
@@ -160,33 +187,6 @@ shinyServer(function(input, output, session) {
   # specific events triggering re-renders.
   output$columnPickerPanel <- renderUI({
     columnPickerUI()
-  })
-  
-  # This has to be rendered separately from the column picker panel. Otherwise,
-  # the entire column picker panel has to be re-rendered when the preselected ID
-  # type gets updated, which resets the entire panel, which reverts to the
-  # preselected column, effectively making it impossible to switch columns!
-  output$idSelector <- renderUI({
-    tags$div(
-      selectInput(
-        "idType",
-        "ID Type",
-        width = "50%",
-        choices = c("HMDB", "KEGG", "PubChem", 'CAS'),
-        selected = preSelectedIDType(),
-        selectize = FALSE
-      ),
-      # Include button to proceed. 
-      actionButton(
-        inputId = "continueToMap",
-        label = "Proceed",
-        class = "btn-med btn-tooltip",
-        title = "Proceed to mapping your metabolites"
-        # `data-toggle` = "btn-tooltip",
-        # `data-placement` = "right",
-        # `data-original-title` = "Proceed to the next tab"
-      )
-    )
   })
   
   # If the selected ID type is a column name in the DF, preselect that

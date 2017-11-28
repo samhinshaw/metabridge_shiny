@@ -129,13 +129,7 @@ mapMetaCyc <- function(importDF, col, idType) {
   # Finally, join the reaction-gene table!
   mappedToReactions <- tryCatch({
     this <-
-      inner_join(mappedToObjects$data, metaCycDB, by = "compound") %>%
-      rename_(
-        "Reaction" = "reaction",
-        "Compound" = "compound",
-        "MetaCyc Gene ID" = "gene",
-        "Official Gene Symbol" = "geneName"
-      )
+      inner_join(mappedToObjects$data, metaCycCompoundsReactions, by = "compound")
     # Check to see if join failed silently
     if (nrow(this) == 0) {
       list(
@@ -174,25 +168,75 @@ mapMetaCyc <- function(importDF, col, idType) {
       mappedToReactions$status == 'empty') {
     return(mappedToReactions)
   }
+
+  # Finally, join the reaction-gene table!
+  mappedToGenes <- tryCatch({
+    this <-
+      inner_join(mappedToReactions$data, metaCycReactionsGenes, by = "reaction") %>%
+      rename_(
+        "Reaction" = "reaction",
+        "Reaction Name" = "reactionName",
+        "Compound" = "compound",
+        "MetaCyc" = "geneID",
+        "HGNC" = "geneName"
+      )
+    # Check to see if join failed silently
+    if (nrow(this) == 0) {
+      list(
+        status = 'empty',
+        data = mappedToReactions$data,
+        message = 'We were unable to map your reactions to any genes.',
+        suggest = 'Try using a different compound ID or mapping via KEGG.'
+      )
+    } else {
+      list(
+        status = 'success',
+        data = this,
+        message = 'Your metabolites have been successfully mapped!',
+        suggest = NULL
+      )
+    }
+  }, warning = function(warningMessage) {
+    list(
+      status = 'warn',
+      data = this,
+      internalMessage = warningMessage,
+      message = 'Your compounds were mapped, but there may have been a problem.',
+      suggest = NULL
+    )
+  }, error = function(errorMessage) {
+    list(
+      status = 'error',
+      data = mappedToReactions$data,
+      internalMessage = errorMessage,
+      message = 'We were unable to map your reactions to any genes.',
+      suggest = 'Try changing your mapping parameters.'
+    )
+  })
+
+  if (mappedToGenes$status == 'error' |
+      mappedToGenes$status == 'empty') {
+    return(mappedToGenes)
+  }
   
   ## Finally, finally, map biocyc gene IDs to ensembl gene IDs
   mappedToEnsembl <- tryCatch({
-    this <- left_join(mappedToReactions$data,
+    this <- left_join(mappedToGenes$data,
                       metaCycGeneIDs,
-                      by = c("MetaCyc Gene ID" = "Object ID")) %>%
+                      by = c("MetaCyc" = "Object ID")) %>%
       dplyr::select_(
         idType,
         "Compound",
-        "`MetaCyc Gene ID`",
-        "`Official Gene Symbol`",
-        "Ensembl",
-        "Reaction"
+        "Reaction",
+        "`Reaction Name`",
+        "`MetaCyc`",
+        "`HGNC`",
+        "Ensembl"
       ) %>%
-      rename_("Ensembl Gene ID" = "Ensembl") %>%
       # filter out rows where no gene IDs are present
       dplyr::filter(!(
-        is.na(`MetaCyc Gene ID`) &
-          is.na(`Official Gene Symbol`) & is.na(`Ensembl Gene ID`)
+        is.na(`MetaCyc`) &
+          is.na(`HGNC`) & is.na(`Ensembl`)
       ))
     # Check to see if join failed silently
     if (nrow(this) == 0) {
@@ -415,8 +459,8 @@ mapKEGG <- function(importDF, col, idType) {
         'KEGG' = 'KEGG',
         'Enzyme' = 'enzymes',
         'Enzyme Name' = 'enzymeName', 
-        'Official Gene Symbol' = 'symbol',
-        'Entrez Gene ID' = 'entrez'
+        'HGNC' = 'symbol',
+        'Entrez' = 'entrez'
       ) %>%
       # Use select to reorder
       select_(
@@ -425,8 +469,8 @@ mapKEGG <- function(importDF, col, idType) {
         'Compound',
         'Enzyme',
         '`Enzyme Name`',
-        '`Official Gene Symbol`',
-        '`Entrez Gene ID`'
+        '`HGNC`',
+        '`Entrez`'
       )
     # Check to see if join failed silently
     if (nrow(this) == 0) {

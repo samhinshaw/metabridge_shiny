@@ -30,12 +30,11 @@ load('data/k04_keggPathways.RData')
 load('data/k05_keggHumanPathways.RData')
 
 # Load MetaCyc Database Files
-# Check our new TSVs for compatibility
-# Build TSV -> RDA in db update script. 
 load('data/m01_metaCycDBLinks.RData')
-load('data/m02_metaCycDB.RData')
-load('data/m03_metaCycGeneIDs.RData')
-load('data/m04_metaCycPathways.RData')
+load('data/m02_metaCycCompoundsReactions.RData')
+load('data/m03_metaCycReactionsGenes.RData')
+load('data/m04_metaCycGeneIDs.RData')
+load('data/m05_metaCycPathways.RData')
 
 # Load HumanCyc Cross-References
 load('data/humanRefs.RData')

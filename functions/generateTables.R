@@ -8,17 +8,17 @@ generateSummaryTable <- function(mappingObject, idType, dbChosen) {
     return(mappingObject$data)
   } else if (dbChosen == 'MetaCyc') {
     mappingObject$data %>% group_by_(idType, 'Compound') %>% summarize(
-      "# Unique Reactions"                    = n_distinct(`Reaction`,             na.rm = TRUE),
-      "# Unique Genes (MetaCyc Gene ID)"      = n_distinct(`MetaCyc Gene ID`,      na.rm = TRUE),
-      "# Unique Genes (Official Gene Symbol)" = n_distinct(`Official Gene Symbol`, na.rm = TRUE),
-      "# Unique Genes (Ensembl Gene ID)"      = n_distinct(`Ensembl Gene ID`,      na.rm = TRUE)
+      "# Reactions"                    = n_distinct(`Reaction`,             na.rm = TRUE),
+      "# Genes (MetaCyc)"      = n_distinct(`MetaCyc`,      na.rm = TRUE),
+      "# Genes (HGNC)" = n_distinct(`HGNC`, na.rm = TRUE),
+      "# Genes (Ensembl)"      = n_distinct(`Ensembl`,      na.rm = TRUE)
     ) %>% ungroup()
   } else if (dbChosen == 'KEGG') {
     mappingObject$data %>%
       group_by_('KEGG', idType, 'Compound') %>% summarize(
-        "# Unique Enzymes" = n_distinct(`Enzyme`, na.rm = TRUE),
-        "# Unique Genes (Official Gene Symbol)" = n_distinct(`Official Gene Symbol`, na.rm = TRUE),
-        "# Unique Genes (Entrez Gene ID)" = n_distinct(`Entrez Gene ID`, na.rm = TRUE)
+        "# Enzymes" = n_distinct(`Enzyme`, na.rm = TRUE),
+        "# Genes (HGNC)" = n_distinct(`HGNC`, na.rm = TRUE),
+        "# Genes (Entrez)" = n_distinct(`Entrez`, na.rm = TRUE)
       ) %>% ungroup()
   }
 }

@@ -62,6 +62,7 @@ library(splitstackshape)
 rootDir <- rprojroot::find_rstudio_root_file()
 updateDir <- file.path(rootDir, 'database_updates')
 exampleDir <- file.path(rootDir, 'example_data')
+dataDir <- file.path(rootDir, 'data')
 
 compoundIDs <- read_tsv(file.path(updateDir, '1_compounds_and_IDs.tsv'))
 
@@ -155,16 +156,22 @@ glimpse(compoundsReactions)
 We can see there are some HTML markup and entities in there, but they are restricted to the "Name" column, which we are not mapping against. However, we should rename the columns and drop the extraneous 4th column.
 ```{r}
 compoundsReactions %<>% dplyr::select(-X4)
-compoundsReactions %<>% dplyr::rename('reaction' = 'ID', 'reactionName' = 'Name', 'compoundID' = 'Matches')
+compoundsReactions %<>% dplyr::rename('reaction' = 'ID', 'reactionName' = 'Name', 'compound' = 'Matches')
 glimpse(compoundsReactions)
 ```
 
 Almost, but we need to meld the data.frame to have one compound per row. I really like the 'splitstackshape' library for this.
 ```{r message=FALSE}
-compoundsReactions %<>% cSplit(splitCols = c('compoundID'), 
+compoundsReactions %<>% cSplit(splitCols = c('compound'), 
                               sep = ', ', direction = 'long', 
                               type.convert = FALSE, stripWhite = FALSE)
 glimpse(compoundsReactions)
+```
+
+Save our results
+```{r}
+metaCycCompoundsReactions <- compoundsReactions
+save(metaCycCompoundsReactions, file = file.path(dataDir, 'm02_metaCycCompoundsReactions.RData'))
 ```
 
 
@@ -193,6 +200,12 @@ reactionsGenes %<>% cSplit(splitCols = c('reaction'),
                            type.convert = FALSE, stripWhite = FALSE)
 glimpse(reactionsGenes)
 ```
+
+```{r}
+metaCycReactionsGenes <- reactionsGenes
+save(metaCycReactionsGenes, file = file.path(dataDir, 'm03_metaCycReactionsGenes.RData'))
+```
+
 
 Now we can test out step 3. Let's do a join here rather than a filter so we retain our relational information. That is to say, how we go to this step. 
 ```{r}
