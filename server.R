@@ -113,7 +113,7 @@ shinyServer(function(input, output, session) {
     paging = FALSE
   ),
   rownames = FALSE,
-  selection = list(mode = 'single', target = 'column'),
+  selection = list(mode = 'single', target = 'column', selected = 0),
   style = 'bootstrap',
   class = 'table-bordered table-responsive')
 
@@ -309,10 +309,12 @@ shinyServer(function(input, output, session) {
       return(NULL)
       # Only render if we had non-null, non-error, non-empty results
     } else {
-      tagList(
-        tags$h3('Mapping Summary', class = "tab-header"),
-        # Insert the datatable here that we rendered above. 
-        DT::dataTableOutput('mappingSummaryTable')
+      return(
+        tagList(
+          tags$h3(paste0('Mapping Summary - ', databaseChosen()), class = "tab-header"),
+          # Insert the datatable here that we rendered above. 
+          DT::dataTableOutput('mappingSummaryTable')
+        )
       )
     }
   })
