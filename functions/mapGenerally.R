@@ -177,7 +177,7 @@ mapMetaCyc <- function(importDF, col, idType) {
         "Reaction" = "reaction",
         "Reaction Name" = "reactionName",
         "Compound" = "compound",
-        "MetaCyc" = "geneID",
+        "MetaCyc Gene" = "geneID",
         "HGNC" = "geneName"
       )
     # Check to see if join failed silently
@@ -223,19 +223,19 @@ mapMetaCyc <- function(importDF, col, idType) {
   mappedToEnsembl <- tryCatch({
     this <- left_join(mappedToGenes$data,
                       metaCycGeneIDs,
-                      by = c("MetaCyc" = "Object ID")) %>%
+                      by = c("MetaCyc Gene" = "Object ID")) %>%
       dplyr::select_(
         idType,
         "Compound",
         "Reaction",
         "`Reaction Name`",
-        "`MetaCyc`",
+        "`MetaCyc Gene`",
         "`HGNC`",
         "Ensembl"
       ) %>%
       # filter out rows where no gene IDs are present
       dplyr::filter(!(
-        is.na(`MetaCyc`) &
+        is.na(`MetaCyc Gene`) &
           is.na(`HGNC`) & is.na(`Ensembl`)
       ))
     # Check to see if join failed silently

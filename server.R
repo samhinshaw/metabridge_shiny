@@ -151,7 +151,7 @@ shinyServer(function(input, output, session) {
       )
     )
   })
-  
+
   # Render the UI for the column picker panel
   columnPickerUI <- eventReactive({
     # Change on button click (upload/examples)
@@ -290,7 +290,7 @@ shinyServer(function(input, output, session) {
   # Once metabolites have been mapped, render the results!
   output$mappingSummaryTable <- DT::renderDataTable({
     if (databaseChosen() == 'KEGG') {
-      mappingSummaryTable() %>%
+      hyperLinkedSummaryTable <- mappingSummaryTable() %>%
       # format IDs with hyperlinks
       # note this is ONLY changed in the displayed table now, not changed server-side!
       mutate(
@@ -302,8 +302,31 @@ shinyServer(function(input, output, session) {
           '</a>'
         )
       )
+      if (idTypeChosen() == 'HMDB') {
+        hyperLinkedSummaryTable %<>%
+          mutate(
+            HMDB = paste0(
+              '<a target="_blank" href="http://www.hmdb.ca/metabolites/',
+              HMDB, '">', HMDB, '</a>'
+            )
+          )
+      }
+
+      return(hyperLinkedSummaryTable)
     } else if (databaseChosen() == 'MetaCyc') {
-      mappingSummaryTable()
+      hyperLinkedSummaryTable <- mappingSummaryTable()
+
+      if (idTypeChosen() == 'HMDB') {
+        hyperLinkedSummaryTable %<>%
+          mutate(
+            HMDB = paste0(
+              '<a target="_blank" href="http://www.hmdb.ca/metabolites/',
+              HMDB, '">', HMDB, '</a>'
+            )
+          )
+      }
+
+      return(hyperLinkedSummaryTable)
     }
   },
     rownames = FALSE,
@@ -393,30 +416,63 @@ shinyServer(function(input, output, session) {
   output$mappedMetaboliteTable <- DT::renderDataTable({
     if (is.null(mappingObject()) | is.null(selectedMetab())) {
       return(data.frame())
-    } else if (mappingObject()$status == 'success' &
-      databaseChosen() == 'KEGG') {
-        mappedMetaboliteTable() %>%
+    } else if (mappingObject()$status == 'success' & databaseChosen() == 'KEGG') {
+        hyperLinkedMappedMetabs <- mappedMetaboliteTable() %>%
           # format IDs with hyperlinks
           # note this is ONLY changed in the displayed table now, not changed server-side!
           mutate(
             KEGG = paste0(
               '<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?cpd:',
-              KEGG,
-              '">',
-              KEGG,
-              '</a>'
+              KEGG, '">', KEGG, '</a>'
             ),
             Enzyme = paste0(
               '<a target="_blank" href="http://www.genome.jp/dbget-bin/www_bget?ec:',
-              Enzyme,
-              '">',
-              Enzyme,
-              '</a>'
+              Enzyme, '">', Enzyme, '</a>'
             )
           )
+        
+        if (idTypeChosen() == 'HMDB') {
+          hyperLinkedMappedMetabs %<>%
+            mutate(
+              HMDB = paste0(
+                '<a target="_blank" href="http://www.hmdb.ca/metabolites/',
+                HMDB, '">', HMDB, '</a>'
+              )
+            )
+        }
+
+        return(hyperLinkedMappedMetabs)
       # Only render if we had non-null, non-error, non-empty results
-    } else {
-      mappedMetaboliteTable()
+    } else if (mappingObject()$status == 'success' & databaseChosen() == 'MetaCyc') {
+      hyperLinkedMappedMetabs <- mappedMetaboliteTable() %>%
+        # format IDs with hyperlinks
+        # note this is ONLY changed in the displayed table now, not changed server-side!
+        mutate(
+          Compound = paste0(
+            '<a target="_blank" href="https://metacyc.org/compound?orgid=META&id=',
+            Compound, '">', Compound, '</a>'
+          ),
+          Reaction = paste0(
+            '<a target="_blank" href="https://metacyc.org/META/NEW-IMAGE?type=REACTION&object=',
+            Reaction, '">', Reaction, '</a>'
+          ),
+          `MetaCyc Gene` = paste0(
+            '<a target="_blank" href="https://metacyc.org/gene?orgid=META&id=',
+            `MetaCyc Gene`, '">', `MetaCyc Gene`, '</a>'
+          )
+        )
+
+        if (idTypeChosen() == 'HMDB') {
+          hyperLinkedMappedMetabs %<>%
+            mutate(
+              HMDB = paste0(
+                '<a target="_blank" href="http://www.hmdb.ca/metabolites/',
+                HMDB, '">', HMDB, '</a>'
+              )
+            )
+        }
+
+      return(hyperLinkedMappedMetabs)
     }
   },
   rownames = FALSE,
