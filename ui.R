@@ -19,7 +19,7 @@ shinyUI(fluidPage(
   # Body
   navbarPage(
     # Navbar Brand
-    title = HTML("MetaBridge <sup class='tiny'>BETA</sup>"), # <img src ='/favicon.png' alt='MetaBridge' height='28'>
+    title = HTML("<img src ='/favicon.png' alt='MetaBridge' height='28'>"), #  MetaBridge <sup class='tiny'>BETA</sup>
     id = "navbarLayout",
     # Make sure we use ShinyJS
     header = tagList(useShinyjs()),
@@ -28,7 +28,7 @@ shinyUI(fluidPage(
     # begin the tabPanel Layout!
     tabPanel(
       # Our welcome tab
-      "Welcome",
+      title = HTML("MetaBridge <sup class='tiny'>BETA</sup>"),#"Welcome",
       value = "welcomePanel",
       # Dev mode alert
       # tags$div(
