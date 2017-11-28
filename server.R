@@ -31,6 +31,7 @@ shinyServer(function(input, output, session) {
   databaseChosen <- reactiveVal()
   selectedMetab <- reactiveVal()
   idTypeChosen <- reactiveVal()
+  columnPicked <- reactiveVal()
   
   ################################################
   #                                              #
@@ -82,7 +83,7 @@ shinyServer(function(input, output, session) {
     tags$p(
       class = "conditional-help",
       "Check below to see that your data has been uploaded properly.  ",
-      "If so, pick a column and proceed to the 'Map' tab!"
+      "If so, click a column and ID type and proceed to the 'Map' tab!"
     )
   })
   
@@ -112,7 +113,7 @@ shinyServer(function(input, output, session) {
     paging = FALSE
   ),
   rownames = FALSE,
-  selection = 'none',
+  selection = list(mode = 'single', target = 'column'),
   style = 'bootstrap',
   class = 'table-bordered table-responsive')
 
@@ -133,26 +134,10 @@ shinyServer(function(input, output, session) {
     input$sep
     input$header
   }, {
-      # Only render if NOT NULL
+    # Only render if NOT NULL
     if (!is.null(metaboliteObject())) {
-      dataColumns <- names(metaboliteObject())
       tags$form(
         class = "well",
-        "Select the column that contains the metabolites you wish to map and the ID type. ",
-        br(),
-        br(),
-        ## For now, just allow one column. Later we can allow multiple to be chosen.
-        radioButtons(
-          "columnsPicked",
-          "Select Column",
-          dataColumns,
-          # If an HMDB column exists in the data, default to that
-          selected = if_else(
-            condition = is_in('hmdb', tolower(dataColumns)),
-            true = 'HMDB',
-            false = NULL
-          )
-        ),
         # Dynamically render the idType selector panel here (see below) This is
         # intentionally separate to that we do not have a feedback loop that
         # triggers re-rendering. Otherwise, as soon as you change this value,
@@ -160,6 +145,14 @@ shinyServer(function(input, output, session) {
         uiOutput('idSelector')
       )
     }
+  })
+
+  observeEvent(input$uploadedDataTable_columns_selected, {
+    # DataTables indexes by 0, so we add one
+    columnIndex <- input$uploadedDataTable_columns_selected + 1
+    # Then pick the column name!
+    columnName <- colnames(metaboliteObject())[columnIndex]
+    columnPicked(columnName)
   })
   
   # When data is populated, show column picker panel for users to select. This
@@ -196,49 +189,11 @@ shinyServer(function(input, output, session) {
     )
   })
   
-  ## Get column positions of selected columns and add CSS class to make the selection obvious!
-  observeEvent({
-    # Re-run when column picked changes
-    input$columnsPicked
-    # OR when the dataframe changes
-    input$tryExamples
-    input$metaboliteUpload
-    # OR on header change
-    input$sep
-    input$header
-  }, {
-    # Vector of column positions
-    possibleColPositions <- seq_along(names(metaboliteObject()))
-    # Match the columns picked to their integer positions in the DF
-    selectedColPositions <- input$columnsPicked %>%
-      match(names(metaboliteObject()))
-    # Get the unselected columns
-    unselectedColPositions <- setdiff(possibleColPositions, selectedColPositions)
-    # Add CSS classes to selected columns
-    walk(.x = selectedColPositions, .f = ~ addCssClass(
-           class = "info",
-           selector = paste0("#uploadedDataTable table td:nth-child(", .x, ")")
-         ))
-    walk(.x = selectedColPositions, .f = ~ addCssClass(
-           class = "info",
-           selector = paste0("#uploadedDataTable table th:nth-child(", .x, ")")
-         ))
-    # Remove CSS classes from unselected columns
-    walk(.x = unselectedColPositions, .f = ~ removeCssClass(
-           class = "info",
-           selector = paste0("#uploadedDataTable table td:nth-child(", .x, ")")
-         ))
-    walk(.x = unselectedColPositions, .f = ~ removeCssClass(
-           class = "info",
-           selector = paste0("#uploadedDataTable table th:nth-child(", .x, ")")
-         ))
-  }, ignoreNULL = FALSE, ignoreInit = TRUE)
-  
   # If the selected ID type is a column name in the DF, preselect that
-  observeEvent(input$columnsPicked,
+  observeEvent(columnPicked(),
                {
-                 if (tolower(input$columnsPicked) %in% c("cas", "pubchem", "hmdb", "kegg")) {
-                   preSelectedIDType(input$columnsPicked)
+                 if (tolower(columnPicked()) %in% c("cas", "pubchem", "hmdb", "kegg")) {
+                   preSelectedIDType(columnPicked())
                  }
                },
                ignoreNULL = TRUE,
@@ -275,7 +230,7 @@ shinyServer(function(input, output, session) {
     # Conduct the mapping from our mapGenerally() function defined in mapGenerally.R
     mappingOutput <- mapGenerally(
         importDF = metaboliteObject(),
-        col = input$columnsPicked,
+        col = columnPicked(),
         db = databaseChosen(),
         idType = idTypeChosen()
       )
