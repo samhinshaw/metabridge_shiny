@@ -409,7 +409,7 @@ mapKEGG <- function(importDF, col, idType) {
   keggGenesOfInterest <- tryCatch({
     keggGeneDB <- keggGenes %>% select_('enzymes', 'entrez', 'symbol')
     this <-
-      left_join(keggEnzymesOfInterest$data, keggGeneDB, by = "enzymes") %>%
+      inner_join(keggEnzymesOfInterest$data, keggGeneDB, by = "enzymes") %>%
       # Make column names display-friendly
       rename_(
         'KEGG' = 'KEGG',
