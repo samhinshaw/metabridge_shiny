@@ -23,7 +23,7 @@ shinyUI(fluidPage(
   # Body
   navbarPage(
     # Navbar Brand
-    title = HTML("<img src ='/header2.svg' alt='MetaBridge' height='28'"), #  MetaBridge <sup class='tiny'>BETA</sup>
+    title = HTML("<img src ='/header.svg' alt='MetaBridge' height='28'"), #  MetaBridge <sup class='tiny'>BETA</sup>
     id = "navbarLayout",
     # Make sure we use ShinyJS
     header = tagList(useShinyjs()),
