@@ -103,7 +103,7 @@ within the background fill of the hero element */
 
 @media only screen and (max-width: 767px) {
   .logoWrapper {
-    background: url(/logo_background.svg) no-repeat center center;
+    background: url(/logo_background.svg) no-repeat center top;
     background-size: contain;
   }
 }
