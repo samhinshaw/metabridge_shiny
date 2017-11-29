@@ -14,12 +14,19 @@ shinyUI(fluidPage(
     tags$link(rel = "stylesheet", type = "text/css",
               href = "css/user.css"),
     tags$link(rel = "stylesheet", type = "text/css",
-              href = "css/tippy.css")
+              href = "css/tippy.css"),
+    # Favicon options
+    tags$link(rel="apple-touch-icon", sizes="180x180", href="/apple-touch-icon.png"),
+    tags$link(rel="icon", type="image/png", sizes="32x32", href="/favicon-32x32.png"),
+    tags$link(rel="icon", type="image/png", sizes="16x16", href="/favicon-16x16.png"),
+    tags$link(rel="manifest", href="/manifest.json"),
+    tags$link(rel="mask-icon", href="/safari-pinned-tab.svg", color="#5bbad5"),
+    tags$meta(name="theme-color", content="#ffffff")
   ),
   # Body
   navbarPage(
     # Navbar Brand
-    title = HTML("<img src ='/favicon.png' alt='MetaBridge' height='28'>"), #  MetaBridge <sup class='tiny'>BETA</sup>
+    title = HTML("<img src ='/header2.svg' alt='MetaBridge' height='28' style='padding-bottom: 4px;'>"), #  MetaBridge <sup class='tiny'>BETA</sup>
     id = "navbarLayout",
     # Make sure we use ShinyJS
     header = tagList(useShinyjs()),
@@ -57,6 +64,9 @@ shinyUI(fluidPage(
           tags$a("MetaboAnalyst", href = "http://www.metaboanalyst.ca"),
           " for metabolomics data processing and ID conversion. "
         ),
+        tags$p(
+          ""
+        )
         br(),
         actionButton(
           inputId = "getStarted", 
