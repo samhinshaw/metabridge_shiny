@@ -23,7 +23,7 @@ shinyUI(fluidPage(
   # Body
   navbarPage(
     # Navbar Brand
-    title = HTML("<img src ='/header.svg' alt='MetaBridge' height='28'"), #  MetaBridge <sup class='tiny'>BETA</sup>
+    title = HTML("<img src ='/logo_white.svg' alt='MetaBridge' height='28'"), #  MetaBridge <sup class='tiny'>BETA</sup>
     id = "navbarLayout",
     # Make sure we use ShinyJS
     header = tagList(useShinyjs()),
@@ -47,37 +47,49 @@ shinyUI(fluidPage(
       # ),
       # Welcome hero
       tags$div(
+        id = "welcomeHero",
         class = "jumbotron",
-        h1("Welcome"),
-        br(),
-        tags$p(
-          "Welcome to MetaBridge, a web tool for network-based integrative ",
-          "analysis of metabolomics data. Here you can upload a set of metabolites ",
-          "and identify the directly interacting enzymes for network integration. "
-        ),
-        tags$p(
-          "To start, you'll want a set of metabolites as",
-          "HMDB, KEGG, PubChem, or CAS IDs. We recommend ",
-          tags$a("MetaboAnalyst", href = "http://www.metaboanalyst.ca"),
-          " for metabolomics data processing and ID conversion. "
-        ),
-        tags$p(
-          "With the output of MetaBridge, you can create a ",
-          "protein-protein interaction network representative ",
-          "of your metabolomics data. We recommend ",
-          tags$a("NetworkAnalyst", href = "http://www.networkanalyst.ca"), 
-          "for generation of these networks and for network-based integration ",
-          "with protein-protein interaction networks created from other ", 
-          "omics types."
-        ),
-        br(),
-        actionButton(
-          inputId = "getStarted", 
-          label = "Initializing App...",
-          class = "btn-primary btn-lg disabled", # btn-tooltip
-          `data-position` = "right",
-          # title = "Let's Go!",
-          icon("circle-o-notch", class = "fa fa-spin", lib = "font-awesome")
+        tags$div(
+          class = "logoWrapper",
+          h1("Welcome"),
+          br(),
+          tags$p(
+            "Welcome to MetaBridge, a web tool for network-based integrative ",
+            "analysis of metabolomics data. Here you can upload a set of metabolites ",
+            "and identify the directly interacting enzymes for network integration. "
+          ),
+          tags$p(
+            "To start, you'll want a set of metabolites as",
+            "HMDB, KEGG, PubChem, or CAS IDs. We recommend ",
+            tags$a("MetaboAnalyst", href = "http://www.metaboanalyst.ca"),
+            " for metabolomics data processing and ID conversion. "
+          ),
+          tags$p(
+            "With the output of MetaBridge, you can create a ",
+            "protein-protein interaction network representative ",
+            "of your metabolomics data. We recommend ",
+            tags$a("NetworkAnalyst", href = "http://www.networkanalyst.ca"), 
+            "for generation of these networks and for network-based integration ",
+            "with protein-protein interaction networks created from other ", 
+            "omics types."
+          ),
+          br(),
+          actionButton(
+            inputId = "getStarted", 
+            label = "Initializing App...",
+            class = "btn-primary btn-lg disabled", # btn-tooltip
+            `data-position` = "right",
+            # title = "Let's Go!",
+            icon("circle-o-notch", class = "fa fa-spin", lib = "font-awesome")
+          ),
+          HTML("&nbsp;"), HTML("&nbsp;"), HTML("&nbsp;"),
+          actionButton(
+            inputId = "tutorial", 
+            label = "Tutorial",
+            class = "btn-success btn-lg btn-tooltip", # btn-tooltip
+            `data-position` = "right",
+            title = "Learn how to use MetaBridge for integrative analysis.",
+          )
         )
       )
     ),
@@ -199,36 +211,49 @@ shinyUI(fluidPage(
     ),
     # Finally, the 'More' Panel, with about, help, etcetera
     navbarMenu(
-      "More",
-      # "Info",
+      "Help",
+      tabPanel(
+        title = "Tutorial",
+        value = "tutorialPanel",
+        tags$div(
+          class = "jumbotron",
+          tags$div(
+            class = "logoWrapper",
+            tags$h1("Tutorial")
+          )
+        )
+      ),
       tabPanel(
         "About",
         tags$div(
           class = "jumbotron",
-          tags$h1("About"),
-          "MetaBridge was designed by Samuel Hinshaw at the Centre for Microbial Diseases and Immunity Research at The University of British Columbia",
-          tags$h2("Sources"),
-          tags$ul(
-            tags$li(
-              "Luo, W. and Brouwer C., Pathview: an R/Bioconductor package for pathway-based data integration and visualization. Bioinformatics, 2013, 29(14): 1830-1831, doi: 10.1093/bioinformatics/btt285"
-            ),
-            tags$li(
-              "Hadley Wickham (NA). tidyverse: Easily Install and Load the 'Tidyverse'. http://tidyverse.tidyverse.org, https://github.com/tidyverse/tidyverse."
-            ),
-            tags$li(
-              "Winston Chang, Joe Cheng, JJ Allaire, Yihui Xie and Jonathan McPherson (NA). shiny: Web Application Framework for R. R package version 1.0.3.9001. http://shiny.rstudio.com"
-            ),
-            tags$li(
-              "Yihui Xie (2016). DT: A Wrapper of the JavaScript Library 'DataTables'. R package version 0.2.12. http://rstudio.github.io/DT"
-            ),
-            tags$li(
-              "Dean Attali (2017). shinyjs: Easily Improve the User Experience of Your Shiny Apps in Seconds. R package version 0.9.1. https://CRAN.R-project.org/package=shinyjs"
-            ),
-            tags$li(
-              "Stefan Milton Bache and Hadley Wickham (2014). magrittr: A Forward-Pipe Operator for R. R package version 1.5. https://CRAN.R-project.org/package=magrittr"
-            ),
-            tags$li(
-              "Hadley Wickham, Jim Hester and Romain Francois (2017). readr: Read Rectangular Text Data. R package version 1.1.1. https://CRAN.R-project.org/package=readr"
+          tags$div(
+            class = "logoWrapper",
+            tags$h1("About"),
+            "MetaBridge was designed by Samuel Hinshaw at the Centre for Microbial Diseases and Immunity Research at The University of British Columbia",
+            tags$h2("Sources"),
+            tags$ul(
+              tags$li(
+                "Luo, W. and Brouwer C., Pathview: an R/Bioconductor package for pathway-based data integration and visualization. Bioinformatics, 2013, 29(14): 1830-1831, doi: 10.1093/bioinformatics/btt285"
+              ),
+              tags$li(
+                "Hadley Wickham (NA). tidyverse: Easily Install and Load the 'Tidyverse'. http://tidyverse.tidyverse.org, https://github.com/tidyverse/tidyverse."
+              ),
+              tags$li(
+                "Winston Chang, Joe Cheng, JJ Allaire, Yihui Xie and Jonathan McPherson (NA). shiny: Web Application Framework for R. R package version 1.0.3.9001. http://shiny.rstudio.com"
+              ),
+              tags$li(
+                "Yihui Xie (2016). DT: A Wrapper of the JavaScript Library 'DataTables'. R package version 0.2.12. http://rstudio.github.io/DT"
+              ),
+              tags$li(
+                "Dean Attali (2017). shinyjs: Easily Improve the User Experience of Your Shiny Apps in Seconds. R package version 0.9.1. https://CRAN.R-project.org/package=shinyjs"
+              ),
+              tags$li(
+                "Stefan Milton Bache and Hadley Wickham (2014). magrittr: A Forward-Pipe Operator for R. R package version 1.5. https://CRAN.R-project.org/package=magrittr"
+              ),
+              tags$li(
+                "Hadley Wickham, Jim Hester and Romain Francois (2017). readr: Read Rectangular Text Data. R package version 1.1.1. https://CRAN.R-project.org/package=readr"
+              )
             )
           )
         )
@@ -236,13 +261,17 @@ shinyUI(fluidPage(
       # "----",
       # "Section header",
       tabPanel("Help",
-               tags$div(
-                 class = "jumbotron",
-                 h1("Help"),
-                 tags$p("For assistance, you can reach me on twitter, @samhinshaw.")
-                 ))
-                 )
-                 ),
+        tags$div(
+          class = "jumbotron",
+          tags$div(
+            class = "logoWrapper",
+            h1("Help"),
+            tags$p("For assistance, you can reach me on twitter, @samhinshaw.")
+          )
+        )
+      )
+    )
+  ),
   tags$script(src = "js/tippy.min.js"),
   tags$script(src = "js/client.js"),
   HTML(

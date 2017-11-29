@@ -44,6 +44,11 @@ shinyServer(function(input, output, session) {
     updateNavbarPage(session, inputId = "navbarLayout", selected = "uploadPanel")
   }, ignoreInit = TRUE)
   
+  # When clicking "Tutoria", switch to tutorial panel
+  observeEvent(input$tutorial, {
+    updateNavbarPage(session, inputId = "navbarLayout", selected = "tutorialPanel")
+  }, ignoreInit = TRUE)
+
   ################################################
   #                                              #
   #            Upload Tab Handlers               #
