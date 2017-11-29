@@ -49,10 +49,10 @@ shinyUI(fluidPage(
       tags$div(
         id = "welcomeHero",
         class = "jumbotron",
+        h1("Welcome"),
+        # br(),
         tags$div(
           class = "logoWrapper",
-          h1("Welcome"),
-          br(),
           tags$p(
             "Welcome to MetaBridge, a web tool for network-based integrative ",
             "analysis of metabolomics data. Here you can upload a set of metabolites ",
@@ -217,9 +217,9 @@ shinyUI(fluidPage(
         value = "tutorialPanel",
         tags$div(
           class = "jumbotron",
+          tags$h1("Tutorial"),
           tags$div(
-            class = "logoWrapper",
-            tags$h1("Tutorial")
+            class = "logoWrapper"
           )
         )
       ),
@@ -227,9 +227,9 @@ shinyUI(fluidPage(
         "About",
         tags$div(
           class = "jumbotron",
+          tags$h1("About"),
           tags$div(
             class = "logoWrapper",
-            tags$h1("About"),
             "MetaBridge was designed by Samuel Hinshaw at the Centre for Microbial Diseases and Immunity Research at The University of British Columbia",
             tags$h2("Sources"),
             tags$ul(
@@ -263,9 +263,9 @@ shinyUI(fluidPage(
       tabPanel("Help",
         tags$div(
           class = "jumbotron",
+          h1("Help"),
           tags$div(
             class = "logoWrapper",
-            h1("Help"),
             tags$p("For assistance, you can reach me on twitter, @samhinshaw.")
           )
         )
