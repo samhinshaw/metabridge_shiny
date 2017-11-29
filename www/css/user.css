@@ -92,3 +92,8 @@
 .btn .fa {
   margin-right: 5px;
 }
+
+.navbar-brand {
+  padding-top: 15px;
+  padding-bottom: 0;
+}

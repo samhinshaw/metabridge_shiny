@@ -26,7 +26,7 @@ shinyUI(fluidPage(
   # Body
   navbarPage(
     # Navbar Brand
-    title = HTML("<img src ='/header2.svg' alt='MetaBridge' height='28' style='padding-bottom: 4px;'>"), #  MetaBridge <sup class='tiny'>BETA</sup>
+    title = HTML("<img src ='/header2.svg' alt='MetaBridge' height='28'"), #  MetaBridge <sup class='tiny'>BETA</sup>
     id = "navbarLayout",
     # Make sure we use ShinyJS
     header = tagList(useShinyjs()),
@@ -65,8 +65,14 @@ shinyUI(fluidPage(
           " for metabolomics data processing and ID conversion. "
         ),
         tags$p(
-          ""
-        )
+          "With the output of MetaBridge, you can create a ",
+          "protein-protein interaction network representative ",
+          "of your metabolomics data. We recommend ",
+          tags$a("NetworkAnalyst", href = "http://www.networkanalyst.ca"), 
+          "for generation of these networks and for network-based integration ",
+          "with protein-protein interaction networks created from other ", 
+          "omics types."
+        ),
         br(),
         actionButton(
           inputId = "getStarted", 
