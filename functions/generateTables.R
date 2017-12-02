@@ -7,19 +7,32 @@ generateSummaryTable <- function(mappingObject, idType, dbChosen) {
              mappingObject$status == "empty") {
     return(mappingObject$data)
   } else if (dbChosen == 'MetaCyc') {
-    mappingObject$data %>% group_by_(idType, 'Compound') %>% summarize(
+    table <- mappingObject$data %>% group_by_(idType, 'Compound') %>% summarize(
       "# Reactions" = n_distinct(`Reaction`, na.rm = TRUE),
       "# Genes (MetaCyc)" = n_distinct(`MetaCyc Gene`, na.rm = TRUE),
       "# Genes (HGNC)" = n_distinct(`HGNC`, na.rm = TRUE),
       "# Genes (Ensembl)" = n_distinct(`Ensembl`, na.rm = TRUE)
     ) %>% ungroup()
+    return(
+      list(
+        'table' = table,
+        'dbChosen' = 'MetaCyc'
+      )
+    )
+    
   } else if (dbChosen == 'KEGG') {
-    mappingObject$data %>%
+    table <- mappingObject$data %>%
       group_by_('KEGG', idType, 'Compound') %>% summarize(
         "# Enzymes" = n_distinct(`Enzyme`, na.rm = TRUE),
         "# Genes (HGNC)" = n_distinct(`HGNC`, na.rm = TRUE),
         "# Genes (Entrez)" = n_distinct(`Entrez`, na.rm = TRUE)
       ) %>% ungroup()
+    return(
+      list(
+        'table' = table,
+        'dbChosen' = 'KEGG'
+      )
+    )
   }
 }
 
