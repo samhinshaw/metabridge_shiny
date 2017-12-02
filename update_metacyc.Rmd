@@ -68,8 +68,8 @@ compoundIDs <- read_tsv(file.path(updateDir, '1_compounds_and_IDs.tsv'))
 
 compoundIDs %<>% 
   # Create new columns that represent 'web' columns
-  mutate(webHMDB = HMDB) %>% mutate(webCAS = CAS) %>% 
-  mutate(webKEGG = KEGG) %>% mutate(webPubChem = PubChem) %>% 
+  # mutate(webHMDB = HMDB) %>% mutate(webCAS = CAS) %>% 
+  # mutate(webKEGG = KEGG) %>% mutate(webPubChem = PubChem) %>% 
   # Strip out opening anchor tag
   mutate(HMDB = str_replace(HMDB, "^<a href='.*'>", "")) %>% 
   mutate(CAS = str_replace(CAS, "^<a href='.*'>", "")) %>% 

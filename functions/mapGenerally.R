@@ -25,7 +25,9 @@ mapMetaCyc <- function(importDF, col, idType) {
     # for the condition handlers for warnings and error below)
     this <-
       data_frame(
-        UQ(idType) := importDF %>% use_series(UQ(col)) %>% as.character() %>% notNAs() %>% notEmpty() %>% str_trim()
+        UQ(idType) := importDF %>% 
+        use_series(UQ(col)) %>% as.character() %>% 
+        notNAs() %>% notEmpty() %>% str_trim()
       )
     
     # Sanitize our HMDB IDs if we are using HMDB IDs
@@ -80,9 +82,14 @@ mapMetaCyc <- function(importDF, col, idType) {
   
   # Now map these to the MetaCyc Object IDs
   mappedToObjects <- tryCatch({
-    this <-
-      inner_join(mappingDF$data, metaCycDBLinks, by = UQ(idType)) %>%
-      dplyr::select_(idType, "Compound") %>% rename_("compound" = "Compound")
+    # If the user uploaded MetaCyc compound IDs, skip this mapping step
+    if (idType == 'Compound') {
+      this <- mappingDF$data %>% rename_("compound" = "Compound")
+    } else {
+      # Otherwise proceed as normal
+      this <- inner_join(mappingDF$data, metaCycDBLinks, by = UQ(idType)) %>%
+        dplyr::select_(idType, "Compound") %>% rename_("compound" = "Compound")
+    }
     # Check to see if join failed silently
     if (nrow(this) == 0) {
       list(
@@ -171,8 +178,11 @@ mapMetaCyc <- function(importDF, col, idType) {
 
   # Finally, join the reaction-gene table!
   mappedToGenes <- tryCatch({
-    this <-
-      inner_join(mappedToReactions$data, metaCycReactionsGenes, by = "reaction") %>%
+    this <- inner_join(
+      mappedToReactions$data, 
+      metaCycReactionsGenes, 
+      by = "reaction"
+    ) %>%
       rename_(
         "Reaction" = "reaction",
         "Reaction Name" = "reactionName",
@@ -221,9 +231,11 @@ mapMetaCyc <- function(importDF, col, idType) {
   
   ## Finally, finally, map biocyc gene IDs to ensembl gene IDs
   mappedToEnsembl <- tryCatch({
-    this <- left_join(mappedToGenes$data,
-                      metaCycGeneIDs,
-                      by = c("MetaCyc Gene" = "Object ID")) %>%
+    this <- left_join(
+      mappedToGenes$data,
+      metaCycGeneIDs,
+      by = c("MetaCyc Gene" = "Object ID")
+    ) %>%
       dplyr::select_(
         idType,
         "Compound",
