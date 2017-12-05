@@ -59,12 +59,18 @@ shinyServer(function(input, output, session) {
   ################################################
   
   ## Inject example df when "Try Examples" selected
-  observeEvent(input$tryExamples,
-               {
-                 metaboliteObject(examples)
-               },
-               ignoreInit = TRUE,
-               ignoreNULL = TRUE)
+  observeEvent(input$tryExamples, {
+      # input examples
+      metaboliteObject(examples)
+      # and wipe mapping objects
+      mappingObject(NULL)
+      mappedMetabolites(NULL)
+      mappingObject(NULL)
+      mappingSummary$table <- NULL
+      mappingSummary$dbChosen <- NULL
+      mappedMetaboliteTable(NULL)
+      databaseChosen(NULL)
+    }, ignoreInit = TRUE, ignoreNULL = TRUE)
   
   ## Read CSV when any of (fileInput, checkboxInput, radioButtons) states change
   observeEvent({
@@ -77,9 +83,15 @@ shinyServer(function(input, output, session) {
         file = input$metaboliteUpload$datapath,
         col_names = input$header,
         delim = input$sep
-      ) %>%
-        # and save to the reactiveVal
-        metaboliteObject()
+      ) %>% metaboliteObject() # and save to the reactiveVal
+        # Also wipe mapping objects
+        mappingObject(NULL)
+        mappedMetabolites(NULL)
+        mappingObject(NULL)
+        mappingSummary$table <- NULL
+        mappingSummary$dbChosen <- NULL
+        mappedMetaboliteTable(NULL)
+        databaseChosen(NULL)
     }
   }, ignoreNULL = TRUE, ignoreInit = TRUE)
 
@@ -621,13 +633,11 @@ shinyServer(function(input, output, session) {
   
   # Now, when the selected row changes...
   observeEvent(input$mappingSummaryTable_rows_selected, {
-    summaryTable <- mappingSummary$table
-    fullTable <- mappedMetaboliteTable()
     
     # Map!
     pathwayMappingAttrs <- generalPathwayMapping(
-      summaryTable = summaryTable,
-      fullTable = fullTable,
+      summaryTable = mappingSummary$table,
+      fullTable = mappedMetaboliteTable(),
       idType = idTypeChosen(),
       db = databaseChosen(),
       selectedRow = selectedMetab()
