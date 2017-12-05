@@ -221,8 +221,25 @@ shinyUI(fluidPage(
           class = "jumbotron",
           tags$h1("Tutorial"),
           tags$div(
-            class = "logoWrapper"
+            class = "logoWrapper",
+            tags$h2("Network-Based Integrative Analysis with MetaBridge"),
+            tags$p("Below you will find a sample workflow for integrating your metabolomics data with transcriptomics or proteomics data via network methodologies."),
+            tags$ol(
+              tags$li(
+                tags$a('Metabolite Preprocessing', href='#metabolite-preprocessing')
+              ),
+              tags$li(
+                tags$a('MetaBridge Mapping', href='#metabridge-mapping')
+              ),
+              tags$li(
+                tags$a('NetworkAnalyst', href='#networkanalyst')
+              )
+            )
           )
+        ),
+        div(
+          class = 'col-lg-8 tutorial',
+          includeMarkdown('tutorial/tutorial.md')
         )
       ),
       tabPanel(
