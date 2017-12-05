@@ -162,6 +162,14 @@ shinyServer(function(input, output, session) {
       dataTableOutput('uploadedDataTable')# %>% withSpinner(type = 8, color = '#303E4E')
     )
   })
+
+  observeEvent({
+    input$uploadedDataTable_columns_selected
+    metaboliteObject()
+  }, {
+    # wait 500ms after panel render and re-activate tooltips
+    runjs("setTimeout(() => { handlers.activateTooltips(['.panel-tooltip', '.btn-tooltip']); }, 100)")
+  })
   
   # This has to be rendered separately from the column picker panel. Otherwise,
   # the entire column picker panel has to be re-rendered when the preselected ID
@@ -182,10 +190,8 @@ shinyServer(function(input, output, session) {
         inputId = "continueToMap",
         label = "Proceed",
         class = "btn-med btn-tooltip",
-        title = "Proceed to mapping your metabolites"
-        # `data-toggle` = "btn-tooltip",
-        # `data-placement` = "right",
-        # `data-original-title` = "Proceed to the next tab"
+        title = "Proceed to mapping your metabolites",
+        `data-position` = "right"
       )
     )
   })
