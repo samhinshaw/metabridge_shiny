@@ -74,21 +74,23 @@ shinyUI(fluidPage(
             "omics types."
           ),
           br(),
-          actionButton(
-            inputId = "getStarted", 
-            label = "Initializing App...",
-            class = "btn-primary btn-lg disabled", # btn-tooltip
-            `data-position` = "right",
-            # title = "Let's Go!",
-            icon("circle-o-notch", class = "fa fa-spin", lib = "font-awesome")
-          ),
-          HTML("&nbsp;"), HTML("&nbsp;"), HTML("&nbsp;"),
-          actionButton(
-            inputId = "tutorial", 
-            label = "Tutorial",
-            class = "btn-success btn-lg btn-tooltip", # btn-tooltip
-            `data-position` = "right",
-            title = "Learn how to use MetaBridge for integrative analysis.",
+          div(
+            actionButton(
+              inputId = "tutorial", 
+              label = "Tutorial",
+              class = "btn-success btn-lg btn-tooltip", # btn-tooltip
+              `data-position` = "right",
+              title = "Learn how to use MetaBridge for integrative analysis.",
+            ),
+            HTML("&nbsp;&nbsp;&nbsp;"),
+            actionButton(
+              inputId = "getStarted", 
+              label = "Initializing App...",
+              class = "btn-primary btn-lg disabled", # btn-tooltip
+              `data-position` = "right",
+              # title = "Let's Go!",
+              icon("circle-o-notch", class = "fa fa-spin", lib = "font-awesome")
+            )
           )
         )
       )
