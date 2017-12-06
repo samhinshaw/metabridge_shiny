@@ -141,8 +141,12 @@ $(document).on('shiny:sessioninitialized', () => {
   handlers.passWindowInformation();
 });
 
-window.onbeforeunload = function() {
-  return 'Note: If you navigate away, you will lose all of your intermediate results! Are you sure?';
+window.onbeforeunload = () => {
+  // First check to see whether Shiny has disconnected
+  if (document.getElementById('shiny-disconnected-overlay') == null) {
+    // If Shiny is NOT disconnected, confirm exit
+    return 'If you navigate away, you will lose all of your intermediate results! Are you sure?';
+  }
 };
 
 // Also pass window information to shiny upon window resize
