@@ -188,7 +188,7 @@ mapMetaCyc <- function(importDF, col, idType) {
         "Reaction Name" = "reactionName",
         "Compound" = "compound",
         "MetaCyc Gene" = "geneID",
-        "HGNC" = "geneName"
+        "Gene Name" = "geneName"
       )
     # Check to see if join failed silently
     if (nrow(this) == 0) {
@@ -234,7 +234,7 @@ mapMetaCyc <- function(importDF, col, idType) {
     this <- left_join(
       mappedToGenes$data,
       metaCycGeneIDs,
-      by = c("MetaCyc Gene" = "Object ID")
+      by = c("MetaCyc Gene" = "geneID")
     ) %>%
       dplyr::select_(
         idType,
@@ -242,13 +242,13 @@ mapMetaCyc <- function(importDF, col, idType) {
         "Reaction",
         "`Reaction Name`",
         "`MetaCyc Gene`",
-        "`HGNC`",
+        "`Gene Name`",
         "Ensembl"
       ) %>%
       # filter out rows where no gene IDs are present
       dplyr::filter(!(
         is.na(`MetaCyc Gene`) &
-          is.na(`HGNC`) & is.na(`Ensembl`)
+          is.na(`Gene Name`) & is.na(`Ensembl`)
       ))
     # Check to see if join failed silently
     if (nrow(this) == 0) {
@@ -471,7 +471,7 @@ mapKEGG <- function(importDF, col, idType) {
         'KEGG' = 'KEGG',
         'Enzyme' = 'enzymes',
         'Enzyme Name' = 'enzymeName', 
-        'HGNC' = 'symbol',
+        'Gene Name' = 'symbol',
         'Entrez' = 'entrez'
       ) %>%
       # Use select to reorder
@@ -481,7 +481,7 @@ mapKEGG <- function(importDF, col, idType) {
         'Compound',
         'Enzyme',
         '`Enzyme Name`',
-        '`HGNC`',
+        '`Gene Name`',
         '`Entrez`'
       )
     # Check to see if join failed silently
