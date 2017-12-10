@@ -52,6 +52,7 @@ output: github_document
 ## Step 1: Cross-referencing Databases
 
 Unfortunately, all of these tables require munging! The have been formatted for display with HTML entities and anchor tags. 
+
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 library(stringr)
@@ -63,6 +64,7 @@ rootDir <- rprojroot::find_rstudio_root_file()
 updateDir <- file.path(rootDir, 'database_updates')
 exampleDir <- file.path(rootDir, 'example_data')
 dataDir <- file.path(rootDir, 'data')
+cleanDir <- file.path(updateDir, 'cleaned_files')
 
 compoundIDs <- read_tsv(file.path(updateDir, '1_compounds_and_IDs.tsv'))
 
@@ -88,6 +90,7 @@ compoundIDs %<>%
 ```
 
 Looks good for the first dataset. Let's give it a test!
+
 ```{r message=FALSE, warning=FALSE}
 # lactate <- read_csv(file.path(exampleDir, 'lactate.csv'))
 exampleCompound <- read_csv(file.path(exampleDir, 'urea.csv'))
@@ -148,12 +151,14 @@ linkedExampleCompound <- compoundIDs %>%
 ### Step 2: Map to Reactions
 
 Now we can check our second table.
+
 ```{r message=FALSE, warning=FALSE}
 compoundsReactions <- read_tsv(file.path(updateDir, '2_reactions_and_compounds.tsv'))
 glimpse(compoundsReactions)
 ```
 
 We can see there are some HTML markup and entities in there, but they are restricted to the "Name" column, which we are not mapping against. However, we should rename the columns and drop the extraneous 4th column.
+
 ```{r}
 compoundsReactions %<>% dplyr::select(-X4)
 compoundsReactions %<>% dplyr::rename('reaction' = 'ID', 'reactionName' = 'Name', 'compound' = 'Matches')
@@ -161,6 +166,7 @@ glimpse(compoundsReactions)
 ```
 
 Almost, but we need to meld the data.frame to have one compound per row. I really like the 'splitstackshape' library for this.
+
 ```{r message=FALSE}
 compoundsReactions %<>% cSplit(splitCols = c('compound'), 
                               sep = ', ', direction = 'long', 
@@ -169,6 +175,7 @@ glimpse(compoundsReactions)
 ```
 
 Save our results
+
 ```{r}
 metaCycCompoundsReactions <- compoundsReactions
 save(metaCycCompoundsReactions, file = file.path(dataDir, 'm02_metaCycCompoundsReactions.RData'))
@@ -176,6 +183,7 @@ save(metaCycCompoundsReactions, file = file.path(dataDir, 'm02_metaCycCompoundsR
 
 
 Now let's give it a test
+
 ```{r}
 exampleReactions <- compoundsReactions %>% 
   dplyr::filter(compoundID %in% extract2(linkedExampleCompound, 'Compound'))
@@ -186,6 +194,7 @@ glimpse(exampleReactions)
 Good to go!
 
 ## Step 3: Map reactions to genes
+
 ```{r message=FALSE, warning=FALSE}
 reactionsGenes <- read_tsv(file.path(updateDir, '3_reactions_and_genes.tsv'))
 reactionsGenes %<>% dplyr::select(-X4)
@@ -194,10 +203,11 @@ head(reactionsGenes)
 ```
 
 Again, we see there are some HTML markup and entities in there, but they are restricted to the "geneName" column, which we are not mapping against. We also need to split our reactions column.
+
 ```{r}
 reactionsGenes %<>% cSplit(splitCols = c('reaction'), 
-                           sep = ', ', direction = 'long', 
-                           type.convert = FALSE, stripWhite = FALSE)
+  sep = ', ', direction = 'long', 
+  type.convert = FALSE, stripWhite = FALSE)
 glimpse(reactionsGenes)
 ```
 
@@ -207,36 +217,43 @@ save(metaCycReactionsGenes, file = file.path(dataDir, 'm03_metaCycReactionsGenes
 ```
 
 
-Now we can test out step 3. Let's do a join here rather than a filter so we retain our relational information. That is to say, how we go to this step. 
+Now we can test out step 3. Let's do a join here rather than a filter so we retain our relational information. That is to say, how we go to this step.
+
 ```{r}
 exampleGenes <- left_join(exampleReactions, reactionsGenes, by = 'reaction')
 glimpse(exampleGenes)
 ```
 
 ### Step 4: Map to gene IDs
+
 ```{r message=FALSE, warning=FALSE}
-genesIDs <- read_tsv(file.path(updateDir, '4_genes_and_IDs.tsv'))
-glimpse(genesIDs)
-genesIDs %<>% 
-  mutate(webEnsembl = Ensembl) %>% mutate(webGeneCards = GeneCards) %>% 
+geneIDs <- read_tsv(file.path(updateDir, '4_genes_and_IDs.tsv'))
+glimpse(geneIDs)
+geneIDs %<>% 
   mutate(Ensembl = str_replace(Ensembl, "^<a href='.*'>", "")) %>% 
   mutate(Ensembl = str_replace(Ensembl, "<\\/a>$", "")) %>% 
   mutate(GeneCards = str_replace(GeneCards, "^<a href='.*'>", "")) %>% 
   mutate(GeneCards = str_replace(GeneCards, "<\\/a>$", "")) %>% 
   rename('geneID' = 'Gene Name', 'Symbol' = 'GeneCards') %>% 
   select(-`Accession-1`, -ends_with('End-Position'))
-glimpse(genesIDs)
+glimpse(geneIDs)
+
+metaCycGeneIDs <- geneIDs
+
+save(metaCycGeneIDs, file = file.path(cleanDir, 'm04_metaCycGeneIDs.RData'))
 ```
 
 And join to the table
+
 ```{r}
-exampleGenesIDs <- left_join(exampleGenes, genesIDs, by = 'geneID')
-glimpse(exampleGenesIDs)
+examplegeneIDs <- left_join(exampleGenes, geneIDs, by = 'geneID')
+glimpse(examplegeneIDs)
 ```
 
 
 
 ### Step 5: Map to pathways
+
 ```{r}
 pathwaysReactions <- read_tsv(file.path(updateDir, '5_pathways_and_reactions.tsv'))
 ```

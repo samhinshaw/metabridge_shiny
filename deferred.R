@@ -33,7 +33,9 @@ load('data/k05_keggHumanPathways.RData')
 load('data/m01_metaCycDBLinks.RData')
 load('data/m02_metaCycCompoundsReactions.RData')
 load('data/m03_metaCycReactionsGenes.RData')
-load('data/m04_metaCycGeneIDs.RData')
+# load('data/m04_metaCycGeneIDs.RData')
+# temporarily import new cleaned files
+load('database_updates/cleaned_files/m04_metaCycGeneIDs.RData')
 load('data/m05_metaCycPathways.RData')
 
 # Load HumanCyc Cross-References
