@@ -675,12 +675,17 @@ shinyServer(function(input, output, session) {
   output$pathwayPanel <- renderUI({
     ## Check for results before rendering!
     if (nrow(selectedRowAttrs$pathwaysOfSelectedCompound) == 0) {
-      tags$div(tags$h4(paste0(
-        'Pathways for ', tools::toTitleCase(tolower(
-          selectedRowAttrs$selectedCompoundName
-        ))
-      )),
-      tags$p("No pathways found for this compound."))
+      tags$div(
+        tags$h4(
+          paste0(
+            'Pathways for ', 
+            tools::toTitleCase(
+              tolower(selectedRowAttrs$selectedCompoundName)
+            )
+          )
+        ),
+        tags$p("No pathways found for this compound.")
+      )
     } else if (databaseChosen() == 'KEGG') {
       tags$div(
         tags$h4(paste0(
@@ -694,7 +699,11 @@ shinyServer(function(input, output, session) {
           choices = selectedRowAttrs$pathwaysOfSelectedCompound$namedPway,
           selectize = FALSE
         ),
-        tags$p("Note: each pathway may take some time to process.")
+        tags$p("Each pathway may take some time to process."),
+        tags$p(
+          "For each pathway, only the compound selected ", 
+          "is shown, but ALL mapped genes are shown."
+        )
       )
     } else if (databaseChosen() == 'MetaCyc') {
       tags$div(
