@@ -679,9 +679,7 @@ shinyServer(function(input, output, session) {
         tags$h4(
           paste0(
             'Pathways for ', 
-            tools::toTitleCase(
-              tolower(selectedRowAttrs$selectedCompoundName)
-            )
+            selectedRowAttrs$selectedCompoundName
           )
         ),
         tags$p("No pathways found for this compound.")
@@ -689,9 +687,8 @@ shinyServer(function(input, output, session) {
     } else if (databaseChosen() == 'KEGG') {
       tags$div(
         tags$h4(paste0(
-          'Pathways for ', tools::toTitleCase(tolower(
-            selectedRowAttrs$selectedCompoundName
-          ))
+          'Pathways for ',
+          selectedRowAttrs$selectedCompoundName
         )),
         selectInput(
           inputId = 'pathwaysPicked',
@@ -708,9 +705,8 @@ shinyServer(function(input, output, session) {
     } else if (databaseChosen() == 'MetaCyc') {
       tags$div(
         tags$h4(paste0(
-          'Pathways for ', tools::toTitleCase(tolower(
-            selectedRowAttrs$selectedCompoundName
-          ))
+          'Pathways for ', 
+          selectedRowAttrs$selectedCompoundName
         )),
         selectInput(
           inputId = 'pathwaysPicked',

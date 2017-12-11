@@ -1,4 +1,4 @@
-<h2 id='metabolite-preprocessing'>Metabolite Preprocessing</h2>
+<h2 id='metabolite-preprocessing'>I. Metabolite Preprocessing</h2>
 
 Preprocess your metabolites in your method of choice to obtain IDs for your compounds of interest.
 We recommend [MetaboAnalyst](http://www.metaboanalyst.ca) for metabolite preprocessing.
@@ -7,21 +7,21 @@ We recommend [MetaboAnalyst](http://www.metaboanalyst.ca) for metabolite preproc
 
 ---
 
-<h2 id='metabridge-mapping'>MetaBridge Mapping</h2>
+<h2 id='metabridge-mapping'>II. MetaBridge Mapping</h2>
 
-### Upload Metabolites
+### 1. Upload Metabolites
 
 Upload your metabolites to MetaBridge and select your metabolites for mapping.
 
 ![Upload Metabolites](serve/01_upload_metabolites.png)
 
-### Map Metabolites
+### 2. Map Metabolites
 
 Choose a database to map against and view your mapping results.
 
 ![Map Via MetaCyc](serve/02_map_metacyc.png)
 
-### Download
+### 3. Download Results
 
 Download your full mapping results (example picture below).
 
@@ -74,9 +74,9 @@ Download your full mapping results (example picture below).
 
 ---
 
-<h2 id='networkanalyst'>NetworkAnalyst</h2>
+<h2 id='networkanalyst'>III. NetworkAnalyst</h2>
 
-### Upload Mapped Genes
+### 1. Upload Mapped Genes
 
 Visit NetworkAnalyst and start with [A list of genes or proteins] input. Upload the genes that you
 mapped via MetaBridge, as well as any gene or protein sets you wish to integrate. Label them
@@ -89,7 +89,7 @@ IMEX Interactome as your protein-protein interaction database.
 
 ![Choose Protein-Protein Interactions and IMEX Interactome](serve/04_interaction_db.png)
 
-### Create Networks
+### 2. Create Networks
 
 For each gene or protein list you uploaded, create a minimum-connected PPI network. If your data are
 particularly dense, you may be able to use zero-order interaction networks. If your data are
