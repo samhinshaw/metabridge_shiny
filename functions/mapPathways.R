@@ -34,7 +34,7 @@ mapKEGGPathways <-
     ## table)
     genesOfInterest <- fullTable %>%
       dplyr::filter(rlang::UQ(KEGGname) == rlang::UQ(quotedMetab)) %>%
-      magrittr::extract2("Gene")
+      magrittr::extract2("Gene Name")
     
     return(
       list(

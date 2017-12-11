@@ -643,7 +643,16 @@ shinyServer(function(input, output, session) {
     # Map!
     pathwayMappingAttrs <- generalPathwayMapping(
       summaryTable = mappingSummary$table,
-      fullTable = mappedMetaboliteTable(),
+      # The full table provided used to be the table that was rendered just for
+      # the selected metabolites. This means that the only genes were those
+      # identified for the selected metabolites. For now, I have fixed this by
+      # including all genes in the mapping. HOWEVER, in the future it could be
+      # interesting to create a toggle that would let the user specify which
+      # they would prefer. In that case, we would have to make sure that
+      # mappedMetaboliteTable() was updated before the pathway mapping function
+      # was called 
+      # fullTable = mappedMetaboliteTable(),
+      fullTable = mappingObject()$data,
       idType = idTypeChosen(),
       db = databaseChosen(),
       selectedRow = selectedMetab()
@@ -667,7 +676,7 @@ shinyServer(function(input, output, session) {
     ## Check for results before rendering!
     if (nrow(selectedRowAttrs$pathwaysOfSelectedCompound) == 0) {
       tags$div(tags$h4(paste0(
-        'Pathways for Compound ', tools::toTitleCase(tolower(
+        'Pathways for ', tools::toTitleCase(tolower(
           selectedRowAttrs$selectedCompoundName
         ))
       )),
@@ -675,7 +684,7 @@ shinyServer(function(input, output, session) {
     } else if (databaseChosen() == 'KEGG') {
       tags$div(
         tags$h4(paste0(
-          'Pathways for Compound ', tools::toTitleCase(tolower(
+          'Pathways for ', tools::toTitleCase(tolower(
             selectedRowAttrs$selectedCompoundName
           ))
         )),
@@ -690,7 +699,7 @@ shinyServer(function(input, output, session) {
     } else if (databaseChosen() == 'MetaCyc') {
       tags$div(
         tags$h4(paste0(
-          'Pathways for Compound ', tools::toTitleCase(tolower(
+          'Pathways for ', tools::toTitleCase(tolower(
             selectedRowAttrs$selectedCompoundName
           ))
         )),
