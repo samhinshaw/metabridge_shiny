@@ -722,28 +722,15 @@ shinyServer(function(input, output, session) {
     }
   })
 
-  ## Set up reactive values for image width based on window resize  
-  imageWidth = reactiveVal()
-  imageHeight = reactiveVal()
-  ## have conditional renderUI here instead, so we can add our loading image with JS
-  ## Different div ID depending on the image
-  ## Perhaps can style this div to be full screen size
-
-  # Don't redraw image every time the window is resized, but every time the pathway is changed.
-  observeEvent(input$pathwaysPicked, {
-    imageWidth(input$vizPanelWidth)
-    imageHeight(input$vizPanelHeight)
-  })
-
   output$pathwayView <- renderImage({
     if (is.null(input$pathwaysPicked)) {
       return({
         list(
-          src = './material_loading.gif',
-          contentType = 'image/gif',
-          width = 297,
-          height = 297,
-          alt = "loading..."
+          src = './logo_background.svg',
+          contentType = 'image/svg',
+          width = 512,
+          height = 512,
+          alt = "pathway placeholder"
         )
       })
     }
@@ -763,34 +750,14 @@ shinyServer(function(input, output, session) {
     genes = selectedRowAttrs$genesOfSelectedCompound, 
     cpd = selectedRowAttrs$selectedCompound
   )
-
-  ## Width
-  # We're using a 3/9 split in bootstrap on desktop (>=768px), so we need to use
-  # 2/3 width in that case. However, on mobile, we want full width
-  # if (input$windowWidth < 768) {
-  #   imageWidth(input$windowWidth)
-  # } else {
-    # imageWidth(input$vizPanelWidth)
-  # }
-
-  ## Height
-  # On mobile, our users will have to scroll down to get past the controls
-  # Therefore, they will have already scrolled past the navbar, meaning we do
-  # not need to worry about its height. However, on desktop, we want our users
-  # to have to scroll as little as possible, so we'll get the height minus the
-  # navbar heights
-  # if (input$windowHeight < 768) {
-  #   imageHeight(input$windowHeight)
-  # } else {
-    # imageHeight((input$windowHeight - input$navbarHeight))
-  # }
     
     # Return a list containing the filename
+    # Render Image at 1000px and then constrain image to div in CSS
     return(list(
       src = filename,
       contentType = 'image/png',
-      width = imageWidth(),
-      height = imageHeight(),
+      width = 1000,
+      # height = imageHeight(),
       alt = paste0("Pathway map of KEGG Pathway ", input$pathwaysPicked)
     ))
   }, deleteFile = TRUE)
@@ -846,11 +813,15 @@ shinyServer(function(input, output, session) {
     } else {
       tags$div(
         # Manual Sidebar
-        tags$div(class = "col-sm-3 manual-sidebar",
-                # Allow user to pick which pathway that the selected 
-                # metabolite participates in to view
-                 tags$form(class = "well",
-                           uiOutput('pathwayPanel'))),
+        tags$div(
+          class = "col-sm-3 manual-sidebar",
+          # Allow user to pick which pathway that the selected 
+          # metabolite participates in to view
+           tags$form(
+             class = "well",
+             uiOutput('pathwayPanel')
+           )
+        ),
         # Pathway visualization
         tags$div(
           class = "col-sm-9",

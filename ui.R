@@ -209,6 +209,7 @@ shinyUI(fluidPage(
       title = "Pathview",
       value = "vizPanel",
       id = "visualizationPanel",
+      class = "viz-panel",
       uiOutput('vizPanelUI')
     ),
     # Finally, the 'More' Panel, with about, help, etcetera

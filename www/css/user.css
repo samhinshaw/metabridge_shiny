@@ -116,12 +116,12 @@ within the background fill of the hero element */
 }
 
 /* Make Tutorial Images Responsive */
-
 .tutorial img {
   max-width: 100%;
   max-height: 100%;
 }
 
+/* Center tutorial div/column */
 .tutorial {
   float: none;
   margin: 0 auto;
@@ -138,8 +138,21 @@ within the background fill of the hero element */
   display: none;
 }
 
-/* Add margin to buttons */
+/* Add margin to large buttons */
 .btn-lg {
   /* margin-top: 5px; */
   margin-bottom: 10px;
+}
+
+/* Make Pathway Images Responsive */
+.viz-panel img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Make sure pathway panel is rendered at 100% */
+/* Shiny's renderImage tries to override this */
+#pathwayView {
+  width: 100% !important;
+  height: 100% !important;
 }
