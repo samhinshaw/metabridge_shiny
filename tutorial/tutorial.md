@@ -1,7 +1,7 @@
 <h2 id='metabolite-preprocessing'>Metabolite Preprocessing</h2>
 
-Preprocess your metabolites in your method of choice. We recommend
-[MetaboAnalyst](http://www.metaboanalyst.ca) for metabolite preprocessing.
+Preprocess your metabolites in your method of choice to obtain IDs for your compounds of interest.
+We recommend [MetaboAnalyst](http://www.metaboanalyst.ca) for metabolite preprocessing.
 
 ![MetaboAnalyst](serve/00_metaboanalyst.png)
 
@@ -11,13 +11,19 @@ Preprocess your metabolites in your method of choice. We recommend
 
 ### Upload Metabolites
 
+Upload your metabolites to MetaBridge and select your metabolites for mapping.
+
 ![Upload Metabolites](serve/01_upload_metabolites.png)
 
 ### Map Metabolites
 
+Choose a database to map against and view your mapping results.
+
 ![Map Via MetaCyc](serve/02_map_metacyc.png)
 
-### Result
+### Download
+
+Download your full mapping results (example picture below).
 
 <table class="table table-dark table-hover table-bordered">
   <thead class="thead-dark">
@@ -70,11 +76,24 @@ Preprocess your metabolites in your method of choice. We recommend
 
 <h2 id='networkanalyst'>NetworkAnalyst</h2>
 
-![Choose Protein-Protein Interactions and IMEX Interactome](serve/04_interaction_db.png)
+### Upload Mapped Genes
+
+Visit NetworkAnalyst and start with [A list of genes or proteins] input. Upload the genes that you
+mapped via MetaBridge, as well as any gene or protein sets you wish to integrate. Label them
+accordingly. **Development Note: Update this screenshot showing multiple gene lists uploaded.**
 
 ![Upload Genes to NetworkAnalyst](serve/05_na_gene_symbol.png)
 
+Next, choose [Network Analysis -> Protein-protein interactions] and choose the literature-curated
+IMEX Interactome as your protein-protein interaction database.
+
+![Choose Protein-Protein Interactions and IMEX Interactome](serve/04_interaction_db.png)
+
 ### Create Networks
+
+For each gene or protein list you uploaded, create a minimum-connected PPI network. If your data are
+particularly dense, you may be able to use zero-order interaction networks. If your data are
+particularly sparse, you may need to use first-order interaction networks.
 
 ![Create Minimum-Connected Network](serve/06_minimum_network_gen.png)
 

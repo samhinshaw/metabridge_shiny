@@ -223,7 +223,12 @@ shinyUI(fluidPage(
           tags$div(
             class = "logoWrapper",
             tags$h2("Network-Based Integrative Analysis with MetaBridge"),
-            tags$p("Below you will find a sample workflow for integrating your metabolomics data with transcriptomics or proteomics data via network methodologies."),
+            tags$p(
+              "Below you will find a sample workflow for integrating your ",
+              "metabolomics data with transcriptomics or proteomics data via ",
+              "network methodologies. You can also view this tutorial on ",
+              tags$a('GitHub', href = "https://github.com/samhinshaw/metabridge_shiny/blob/master/tutorial/tutorial.md")
+            ),
             tags$ol(
               tags$li(
                 tags$a('Metabolite Preprocessing', href='#metabolite-preprocessing')
