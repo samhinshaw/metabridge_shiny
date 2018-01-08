@@ -6,23 +6,23 @@ preprocess your metabolites with your method of choice to obtain compounds of
 interest and their corresponding metabolite IDs. We recommend
 [MetaboAnalyst](http://www.metaboanalyst.ca) for metabolite preprocessing.
 
-![MetaboAnalyst](serve/metaboanalyst.png)
+[![MetaboAnalyst](serve/metaboanalyst.png)](http://www.metaboanalyst.ca)
 
 ---
 
-<h2 id='metabridge-mapping'>II. MetaBridge Mapping</h2>
+<h2 id='metabridge-mapping'>II. <a href="https://www.metabridge.org">MetaBridge</a> Mapping</h2>
 
 ### 1. Upload Metabolites
 
-Upload your metabolites to MetaBridge and select your metabolites for mapping.
+Upload your metabolites to [MetaBridge](https://www.metabridge.org) and select your metabolites for mapping.
 
-![Upload Metabolites](serve/upload.png)
+[![Upload Metabolites](serve/upload.png)](https://www.metabridge.org)
 
 ### 2. Map Metabolites
 
 Choose a database to map against and view your mapping results.
 
-![Map Via MetaCyc](serve/mapping.png)
+[![Map Via MetaCyc](serve/mapping.png)](https://www.metabridge.org)
 
 ### 3. Download Results
 
@@ -85,20 +85,20 @@ Download your full mapping results (example table below).
 
 ---
 
-<h2 id='networkanalyst'>III. NetworkAnalyst</h2>
+<h2 id='networkanalyst'>III. <a href="http://www.networkanalyst.ca">NetworkAnalyst</a></h2>
 
 ### 1. Upload Mapped Genes
 
-Visit NetworkAnalyst and start with [A list of genes or proteins] input.
+Visit [NetworkAnalyst](http://www.networkanalyst.ca) and start with [A list of genes or proteins](http://www.networkanalyst.ca/faces/Secure/network/SignatureView.xhtml) input.
 
-![Select A list of genes or proteins](serve/select_list.png)
+[![Select A list of genes or proteins](serve/select_list.png)](http://www.networkanalyst.ca)
 
 * Upload the genes that you mapped via MetaBridge, providing an appropriate data label.
 * Repeat this for each gene or protein list you wish to integrate.
 * Then, paste into the box BOTH lists you wish to combine to create one COMBINED
   list. NetworkAnalyst will filter out duplicates for you.
 
-![Upload Genes to NetworkAnalyst](serve/copy_paste.png)
+[![Upload Genes to NetworkAnalyst](serve/copy_paste.png)](http://www.networkanalyst.ca/faces/Secure/network/SignatureView.xhtml)
 
 <br>
 
