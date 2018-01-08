@@ -16,13 +16,13 @@ interest and their corresponding metabolite IDs. We recommend
 
 Upload your metabolites to MetaBridge and select your metabolites for mapping.
 
-![Upload Metabolites](screenshots/upload.png)
+![Upload Metabolites](serve/upload.png)
 
 ### 2. Map Metabolites
 
 Choose a database to map against and view your mapping results.
 
-![Map Via MetaCyc](screenshots/mapping.png)
+![Map Via MetaCyc](serve/mapping.png)
 
 ### 3. Download Results
 
@@ -91,7 +91,7 @@ Download your full mapping results (example table below).
 
 Visit NetworkAnalyst and start with [A list of genes or proteins] input.
 
-![Select A list of genes or proteins](screenshots/select_list.png)
+![Select A list of genes or proteins](serve/select_list.png)
 
 * Upload the genes that you mapped via MetaBridge, providing an appropriate data label.
 * Repeat this for each gene or protein list you wish to integrate.
@@ -116,7 +116,7 @@ with.
 Next, choose [Network Analysis -> Protein-protein interactions] and choose the literature-curated
 IMEX Interactome as your protein-protein interaction database.
 
-![Choose Protein-Protein Interactions and IMEX Interactome](screenshots/select_ppis.png)
+![Choose Protein-Protein Interactions and IMEX Interactome](serve/select_ppis.png)
 
 ### 2. Create Networks
 
@@ -134,23 +134,23 @@ helpful in filtering out proteins that you know to be highly connected in the
 cell, but not if interest to the condition you are studying. One of the most
 common proteins we filter out is UBC (uniprot ID P0CG48).
 
-![Create Minimum-Connected Network](screenshots/minimum_connected.png)
+![Create Minimum-Connected Network](serve/minimum_connected.png)
 
 Below, you will find an example of each minimum-connected network generated
 
-![Metabolomic Minimum-Connected Network](screenshots/metab_network.png)
+![Metabolomic Minimum-Connected Network](serve/metab_network.png)
 
 1. Minimum-connected protein-protein interaction network from MetaBridge-mapped metabolites.
 
 <hr>
 
-![Transcriptomic Minimum-Connected Network](screenshots/trans_network.png)
+![Transcriptomic Minimum-Connected Network](serve/trans_network.png)
 
 2. Minimum-connected protein-protein interaction network from gene expression data.
 
 <hr>
 
-![Integrated Minimum-Connected Network](screenshots/combined_network.png)
+![Integrated Minimum-Connected Network](serve/combined_network.png)
 
 3. Minimum-connected protein-protein interaction network from combined gene list.
 
@@ -169,7 +169,7 @@ can paste in your original lists to the [Batch Selection] panel and color-code
 each node of the network corresponding to its original data source. Then, you
 can download image files of the networks you have created.
 
-![Batch Selection of Nodes](screenshots/batch_select.png)
+![Batch Selection of Nodes](serve/batch_select.png)
 
 ### 4. Further NetworkAnalyst Tools
 
@@ -182,4 +182,4 @@ To examine overlap of your protein-protein interaction networks, you can upload
 the genes contained in your networks (from the downloaded node tables) and use
 the Venn Diagram function to explore network overlap.
 
-![Venn Diagram Tool](screenshots/venn_diagram.png)
+![Venn Diagram Tool](serve/venn_diagram.png)
