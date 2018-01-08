@@ -228,7 +228,7 @@ shinyUI(fluidPage(
               "Below you will find a sample workflow for integrating your ",
               "metabolomics data with transcriptomics or proteomics data via ",
               "network methodologies. You can also view this tutorial on ",
-              tags$a('GitHub', href = "https://github.com/samhinshaw/metabridge_shiny/blob/master/tutorial/tutorial.md")
+              HTML("<a href='https://github.com/samhinshaw/metabridge_shiny/blob/master/tutorial/tutorial.md' target='_blank'>GitHub</a>.")
             ),
             tags$ol(
               tags$li(
@@ -244,7 +244,8 @@ shinyUI(fluidPage(
           )
         ),
         div(
-          class = 'col-lg-8 tutorial',
+          class = 'col-lg-10 tutorial',
+          # class = 'tutorial',
           includeMarkdown('tutorial/tutorial.md')
         )
       ),
@@ -255,43 +256,13 @@ shinyUI(fluidPage(
           tags$h1("About"),
           tags$div(
             class = "logoWrapper",
-            "MetaBridge was designed by Samuel Hinshaw at the Centre for Microbial Diseases and Immunity Research at The University of British Columbia",
-            tags$h2("Sources"),
-            tags$ul(
-              tags$li(
-                "Luo, W. and Brouwer C., Pathview: an R/Bioconductor package for pathway-based data integration and visualization. Bioinformatics, 2013, 29(14): 1830-1831, doi: 10.1093/bioinformatics/btt285"
-              ),
-              tags$li(
-                "Hadley Wickham (NA). tidyverse: Easily Install and Load the 'Tidyverse'. http://tidyverse.tidyverse.org, https://github.com/tidyverse/tidyverse."
-              ),
-              tags$li(
-                "Winston Chang, Joe Cheng, JJ Allaire, Yihui Xie and Jonathan McPherson (NA). shiny: Web Application Framework for R. R package version 1.0.3.9001. http://shiny.rstudio.com"
-              ),
-              tags$li(
-                "Yihui Xie (2016). DT: A Wrapper of the JavaScript Library 'DataTables'. R package version 0.2.12. http://rstudio.github.io/DT"
-              ),
-              tags$li(
-                "Dean Attali (2017). shinyjs: Easily Improve the User Experience of Your Shiny Apps in Seconds. R package version 0.9.1. https://CRAN.R-project.org/package=shinyjs"
-              ),
-              tags$li(
-                "Stefan Milton Bache and Hadley Wickham (2014). magrittr: A Forward-Pipe Operator for R. R package version 1.5. https://CRAN.R-project.org/package=magrittr"
-              ),
-              tags$li(
-                "Hadley Wickham, Jim Hester and Romain Francois (2017). readr: Read Rectangular Text Data. R package version 1.1.1. https://CRAN.R-project.org/package=readr"
-              )
-            )
-          )
-        )
-      ),
-      # "----",
-      # "Section header",
-      tabPanel("Help",
-        tags$div(
-          class = "jumbotron",
-          h1("Help"),
-          tags$div(
-            class = "logoWrapper",
-            tags$p("For assistance, you can reach me on twitter, @samhinshaw.")
+            p(
+              "MetaBridge was designed by Samuel Hinshaw at the ", 
+              a(href = "http://cmdr.ubc.ca/bobh/", "Centre for Microbial Diseases and Immunity Research", target = "_blank"), 
+              " at The University of British Columbia. ",
+              "MetaBridge was published in XXXXXX on XXXXXX. Please cite this paper when using MetaBridge in your analyses."
+            ),
+            p(HTML("For help, you can reach me on twitter <a href='https://www.twitter.com/samhinshaw' target = '_blank'>@samhinshaw</a>."))
           )
         )
       )
