@@ -8,10 +8,10 @@ visualizePathview <- function(pathway, genes, cpd) {
       pathway.id = pathway,
       gene.idtype = "SYMBOL",
       species = "hsa",
-      kegg.dir = 'pathways'
+      kegg.dir = "pathways"
     )
   })
 
-  filename <- paste0('hsa', pathway, ".pathview.png")
+  filename <- paste0("hsa", pathway, ".pathview.png")
   return(filename)
 }

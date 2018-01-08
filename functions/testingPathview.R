@@ -3,8 +3,8 @@ library(pathview)
 # TEST
 theNameOfKEGG <- quo(KEGG)
 
-testResults <- mapMetaCyc(importDF = name_map, col = 'KEGG', idType = 'KEGG')$data
-miniTestResults <- testResults %>% 
+testResults <- mapMetaCyc(importDF = name_map, col = "KEGG", idType = "KEGG")$data
+miniTestResults <- testResults %>%
   dplyr::filter(UQ(theNameOfKEGG) == "C00300")
 
 pathview(
@@ -13,6 +13,5 @@ pathview(
   pathway.id = c("00260", "00330"),
   gene.idtype = "SYMBOL",
   species = "hsa",
-  kegg.dir = file.path('pathways')
+  kegg.dir = file.path("pathways")
 )
-

@@ -4,7 +4,7 @@ notNAs <- function(vector) {
 }
 
 notEmpty <- function(vector) {
-  vector <- vector[!grepl(x = vector, pattern = '^$')]
+  vector <- vector[!grepl(x = vector, pattern = "^$")]
   return(vector)
 }
 
@@ -14,13 +14,13 @@ notEmpty <- function(vector) {
 matchHMDB <- function(hmdbID) {
   # Make sure the ID is a character amd starts with 'HMDB' or 'hmdb'
   # Look at the syntax very carefully here, the parens are IMPORTANT
-  if (!is.character(hmdbID) | !(str_detect(hmdbID, '^HMDB') | str_detect(hmdbID, '^hmdb'))) {
+  if (!is.character(hmdbID) | !(str_detect(hmdbID, "^HMDB") | str_detect(hmdbID, "^hmdb"))) {
     return(NA)
     # If the ID is in the new, 7 digit format, check the leading digits
   } else if (nchar(hmdbID) == 11) {
     # If the leading characters are 00, simply trim the string
-    if (str_sub(hmdbID, start = 5, end = 6) == '00') {
-      newID <- paste0('HMDB', str_sub(hmdbID, start = -5, end = -1))
+    if (str_sub(hmdbID, start = 5, end = 6) == "00") {
+      newID <- paste0("HMDB", str_sub(hmdbID, start = -5, end = -1))
       return(newID)
       # Otherwise, return an error
     } else {
@@ -29,7 +29,7 @@ matchHMDB <- function(hmdbID) {
     # Otherwise, if the ID is in the older, 5-digit format, simply return the ID as-is.
   } else if (nchar(hmdbID) == 9) {
     # Do this **anyways** because it'll ensure we have capital letters at the start of the ID
-    newID <- paste0('HMDB', str_sub(hmdbID, start = -5, end = -1))
+    newID <- paste0("HMDB", str_sub(hmdbID, start = -5, end = -1))
     return(newID)
     # If there is an edge case where the ID is not 9 or 11 charactesr in length(), also return NA
   } else {

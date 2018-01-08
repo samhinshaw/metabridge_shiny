@@ -13,12 +13,12 @@ shinyUI(fluidPage(
     tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css"),
     tags$link(rel = "stylesheet", type = "text/css", href = "css/tippy.css"),
     # Favicon options
-    tags$link(rel="apple-touch-icon", sizes="180x180", href="/apple-touch-icon.png"),
-    tags$link(rel="icon", type="image/png", sizes="32x32", href="/favicon-32x32.png"),
-    tags$link(rel="icon", type="image/png", sizes="16x16", href="/favicon-16x16.png"),
-    tags$link(rel="manifest", href="/manifest.json"),
-    tags$link(rel="mask-icon", href="/safari-pinned-tab.svg", color="#303e4e"),
-    tags$meta(name="theme-color", content="#303e4e")
+    tags$link(rel = "apple-touch-icon", sizes = "180x180", href = "/apple-touch-icon.png"),
+    tags$link(rel = "icon", type = "image/png", sizes = "32x32", href = "/favicon-32x32.png"),
+    tags$link(rel = "icon", type = "image/png", sizes = "16x16", href = "/favicon-16x16.png"),
+    tags$link(rel = "manifest", href = "/manifest.json"),
+    tags$link(rel = "mask-icon", href = "/safari-pinned-tab.svg", color = "#303e4e"),
+    tags$meta(name = "theme-color", content = "#303e4e")
   ),
   # Body
   navbarPage(
@@ -32,7 +32,7 @@ shinyUI(fluidPage(
     # begin the tabPanel Layout!
     tabPanel(
       # Our welcome tab
-      title = HTML("MetaBridge <sup class='tiny'>BETA</sup>"),#"Welcome",
+      title = HTML("MetaBridge <sup class='tiny'>BETA</sup>"), # "Welcome",
       value = "welcomePanel",
       # Dev mode alert
       # tags$div(
@@ -68,15 +68,15 @@ shinyUI(fluidPage(
             "With the output of MetaBridge, you can create a ",
             "protein-protein interaction network representative ",
             "of your metabolomics data. We recommend ",
-            tags$a("NetworkAnalyst", href = "http://www.networkanalyst.ca"), 
+            tags$a("NetworkAnalyst", href = "http://www.networkanalyst.ca"),
             "for generation of these networks and for network-based integration ",
-            "with protein-protein interaction networks created from other ", 
+            "with protein-protein interaction networks created from other ",
             "omics types."
           ),
           br(),
           div(
             actionButton(
-              inputId = "getStarted", 
+              inputId = "getStarted",
               label = "Initializing App...",
               class = "btn-primary btn-lg disabled", # btn-tooltip
               `data-position` = "right",
@@ -85,7 +85,7 @@ shinyUI(fluidPage(
             ),
             HTML("&nbsp;&nbsp;&nbsp;"),
             actionButton(
-              inputId = "tutorial", 
+              inputId = "tutorial",
               label = "Tutorial",
               class = "btn-success btn-lg btn-tooltip btn-hidden", # btn-tooltip
               `data-position` = "right",
@@ -112,32 +112,32 @@ shinyUI(fluidPage(
           ),
           # Upload handling
           fileInput(
-            inputId = 'metaboliteUpload',
-            label = 'Upload Metabolites',
+            inputId = "metaboliteUpload",
+            label = "Upload Metabolites",
             # width = '50%',
             accept = c(
-              'text/csv',
-              'text/comma-separated-values,text/plain',
-              '.csv',
-              'text/tab-separated-values'
+              "text/csv",
+              "text/comma-separated-values,text/plain",
+              ".csv",
+              "text/tab-separated-values"
             )
           ),
           # Header in file?
           checkboxInput(
-            inputId = 'header',
-            label = 'Header',
+            inputId = "header",
+            label = "Header",
             value = TRUE
           ),
           # TSV or CSV?
           radioButtons(
-            inputId = 'sep',
-            label = 'Separator',
+            inputId = "sep",
+            label = "Separator",
             choices = c(
-              Comma = ',',
-              Tab = '\t',
-              Semicolon = ';'
+              Comma = ",",
+              Tab = "\t",
+              Semicolon = ";"
             ),
-            selected = ','
+            selected = ","
           ),
           # OR, try our examples!
           actionLink(
@@ -149,10 +149,10 @@ shinyUI(fluidPage(
           )
         ),
         # Show the columns of the uploaded file
-        uiOutput('columnPickerPanel')
+        uiOutput("columnPickerPanel")
       ),
       # Display the file that was uploaded
-      uiOutput('uploadedTablePanel')
+      uiOutput("uploadedTablePanel")
     ),
     ## Mapping Panel
     tabPanel(
@@ -162,7 +162,7 @@ shinyUI(fluidPage(
       # Manual Sidebar
       tags$div(
         class = "col-sm-3 manual-sidebar",
-        id = 'mapPanelSidebar',
+        id = "mapPanelSidebar",
         tags$form(
           class = "well",
           tags$p(
@@ -191,17 +191,17 @@ shinyUI(fluidPage(
           # Maybe show tickbox to allow user to see full results rather than just the summary?
         ),
         # Let user download results
-        uiOutput('saveMappingPanel'),
+        uiOutput("saveMappingPanel"),
         # Show panel for continuing to visualize results
-        uiOutput('continueToViz')
+        uiOutput("continueToViz")
       ),
       ## DISPLAY MAPPING RESULTS
       tags$div(
         class = "col-sm-9",
         # Show summary table (server-rendered)
-        uiOutput('mappingSummaryPanel'),
+        uiOutput("mappingSummaryPanel"),
         # Show FULL results for a selected metabolite (server-rendered)
-        uiOutput('fullMappingResultsPanel')
+        uiOutput("fullMappingResultsPanel")
       )
     ),
     # Visualize the results!
@@ -210,7 +210,7 @@ shinyUI(fluidPage(
       value = "vizPanel",
       id = "visualizationPanel",
       class = "viz-panel",
-      uiOutput('vizPanelUI')
+      uiOutput("vizPanelUI")
     ),
     # Finally, the 'More' Panel, with about, help, etcetera
     navbarMenu(
@@ -232,21 +232,21 @@ shinyUI(fluidPage(
             ),
             tags$ol(
               tags$li(
-                tags$a('Metabolite Preprocessing', href='#metabolite-preprocessing')
+                tags$a("Metabolite Preprocessing", href = "#metabolite-preprocessing")
               ),
               tags$li(
-                tags$a('MetaBridge Mapping', href='#metabridge-mapping')
+                tags$a("MetaBridge Mapping", href = "#metabridge-mapping")
               ),
               tags$li(
-                tags$a('NetworkAnalyst', href='#networkanalyst')
+                tags$a("NetworkAnalyst", href = "#networkanalyst")
               )
             )
           )
         ),
         div(
-          class = 'col-lg-10 tutorial',
+          class = "col-lg-10 tutorial",
           # class = 'tutorial',
-          includeMarkdown('tutorial/tutorial.md')
+          includeMarkdown("tutorial/tutorial.md")
         )
       ),
       tabPanel(
@@ -257,8 +257,8 @@ shinyUI(fluidPage(
           tags$div(
             class = "logoWrapper",
             p(
-              "MetaBridge was designed by Samuel Hinshaw at the ", 
-              a(href = "http://cmdr.ubc.ca/bobh/", "Centre for Microbial Diseases and Immunity Research", target = "_blank"), 
+              "MetaBridge was designed by Samuel Hinshaw at the ",
+              a(href = "http://cmdr.ubc.ca/bobh/", "Centre for Microbial Diseases and Immunity Research", target = "_blank"),
               " at The University of British Columbia. ",
               "MetaBridge was published in XXXXXX on XXXXXX. Please cite this paper when using MetaBridge in your analyses."
             ),
@@ -281,4 +281,4 @@ shinyUI(fluidPage(
     gtag('config', 'UA-106038065-1');
     </script>"
   )
-  ))
+))
