@@ -1,9 +1,12 @@
-<h2 id='metabolite-preprocessing'>I. Metabolite Preprocessing</h2>
+<h2 id='metabolite-preprocessing'>I. Metabolite Preprocessing (Optional)</h2>
 
-Preprocess your metabolites in your method of choice to obtain IDs for your compounds of interest.
-We recommend [MetaboAnalyst](http://www.metaboanalyst.ca) for metabolite preprocessing.
+To start using MetaBridge, you need to upload a list of compounds of interest as
+metabolite IDs. If you are starting with raw metabolomics data, you will need to
+preprocess your metabolites with your method of choice to obtain compounds of
+interest and their corresponding metabolite IDs. We recommend
+[MetaboAnalyst](http://www.metaboanalyst.ca) for metabolite preprocessing.
 
-![MetaboAnalyst](serve/00_metaboanalyst.png)
+![MetaboAnalyst](serve/metaboanalyst.png)
 
 ---
 
