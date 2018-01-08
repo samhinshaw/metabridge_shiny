@@ -1,0 +1,61 @@
+KEGG,Compound,Enzyme,Enzyme Name,Gene Name,Entrez
+C00086,Urea,3.5.3.1,arginase,ARG1,383
+C00086,Urea,3.5.3.1,arginase,ARG2,384
+C00086,Urea,3.5.3.4,allantoicase,ALLC,55821
+C00086,Urea,3.5.3.11,agmatinase,AGMAT,79814
+C00022,Pyruvate,1.1.1.27,L-lactate dehydrogenase,LDHAL6A,160287
+C00022,Pyruvate,1.1.1.27,L-lactate dehydrogenase,LDHA,3939
+C00022,Pyruvate,1.1.1.27,L-lactate dehydrogenase,LDHB,3945
+C00022,Pyruvate,1.1.1.27,L-lactate dehydrogenase,LDHC,3948
+C00022,Pyruvate,1.1.1.27,L-lactate dehydrogenase,LDHAL6B,92483
+C00022,Pyruvate,1.1.1.38,malate dehydrogenase (oxaloacetate-decarboxylating),ME2,4200
+C00022,Pyruvate,1.1.1.40,malate dehydrogenase (oxaloacetate-decarboxylating) (NADP+),ME3,10873
+C00022,Pyruvate,1.1.1.40,malate dehydrogenase (oxaloacetate-decarboxylating) (NADP+),ME1,4199
+C00022,Pyruvate,1.1.2.4,D-lactate dehydrogenase (cytochrome),LDHD,197257
+C00022,Pyruvate,1.2.4.1,pyruvate dehydrogenase (acetyl-transferring),PDHA1,5160
+C00022,Pyruvate,1.2.4.1,pyruvate dehydrogenase (acetyl-transferring),PDHA2,5161
+C00022,Pyruvate,1.2.4.1,pyruvate dehydrogenase (acetyl-transferring),PDHB,5162
+C00022,Pyruvate,1.4.3.3,D-amino-acid oxidase,DAO,1610
+C00022,Pyruvate,1.8.1.4,dihydrolipoyl dehydrogenase,DLD,1738
+C00022,Pyruvate,2.3.1.12,dihydrolipoyllysine-residue acetyltransferase,DLAT,1737
+C00022,Pyruvate,2.6.1.2,alanine transaminase,GPT,2875
+C00022,Pyruvate,2.6.1.2,alanine transaminase,GPT2,84706
+C00022,Pyruvate,2.6.1.40,(R)-3-amino-2-methylpropionate---pyruvate transaminase,AGXT2,64902
+C00022,Pyruvate,2.6.1.44,alanine---glyoxylate transaminase,AGXT,189
+C00022,Pyruvate,2.6.1.44,alanine---glyoxylate transaminase,AGXT2,64902
+C00022,Pyruvate,2.6.1.51,serine---pyruvate transaminase,AGXT,189
+C00022,Pyruvate,2.7.1.40,pyruvate kinase,PKLR,5313
+C00022,Pyruvate,2.7.1.40,pyruvate kinase,PKM,5315
+C00022,Pyruvate,2.8.1.2,3-mercaptopyruvate sulfurtransferase,MPST,4357
+C00022,Pyruvate,2.8.1.2,3-mercaptopyruvate sulfurtransferase,TST,7263
+C00022,Pyruvate,3.7.1.5,acylpyruvate hydrolase,FAHD1,81889
+C00022,Pyruvate,4.1.3.3,N-acetylneuraminate lyase,NPL,80896
+C00022,Pyruvate,4.1.3.16,4-hydroxy-2-oxoglutarate aldolase,HOGA1,112817
+C00022,Pyruvate,4.1.3.44,tRNA 4-demethylwyosine synthase (AdoMet-dependent),TYW1B,441250
+C00022,Pyruvate,4.1.3.44,tRNA 4-demethylwyosine synthase (AdoMet-dependent),TYW1,55253
+C00022,Pyruvate,4.3.1.17,L-serine ammonia-lyase,SDS,10993
+C00022,Pyruvate,4.3.1.17,L-serine ammonia-lyase,SDSL,113675
+C00022,Pyruvate,4.3.1.19,threonine ammonia-lyase,SDS,10993
+C00022,Pyruvate,4.3.1.19,threonine ammonia-lyase,SDSL,113675
+C00022,Pyruvate,4.4.1.1,cystathionine gamma-lyase,CTH,1491
+C00022,Pyruvate,4.4.1.13,cysteine-S-conjugate beta-lyase,KYAT3,56267
+C00022,Pyruvate,4.4.1.13,cysteine-S-conjugate beta-lyase,KYAT1,883
+C00022,Pyruvate,6.4.1.1,pyruvate carboxylase,PC,5091
+C00079,L-Phenylalanine,1.4.3.2,L-amino-acid oxidase,IL4I1,259307
+C00079,L-Phenylalanine,1.14.16.1,phenylalanine 4-monooxygenase,PAH,5053
+C00079,L-Phenylalanine,2.6.1.1,aspartate transaminase,GOT1,2805
+C00079,L-Phenylalanine,2.6.1.1,aspartate transaminase,GOT2,2806
+C00079,L-Phenylalanine,2.6.1.5,tyrosine transaminase,TAT,6898
+C00079,L-Phenylalanine,2.6.1.64,glutamine---phenylpyruvate transaminase,KYAT3,56267
+C00079,L-Phenylalanine,2.6.1.64,glutamine---phenylpyruvate transaminase,KYAT1,883
+C00079,L-Phenylalanine,3.4.17.23,angiotensin-converting enzyme 2,ACE2,59272
+C00079,L-Phenylalanine,4.1.1.28,aromatic-L-amino-acid decarboxylase,DDC,1644
+C00079,L-Phenylalanine,6.1.1.20,phenylalanine---tRNA ligase,FARSB,10056
+C00079,L-Phenylalanine,6.1.1.20,phenylalanine---tRNA ligase,FARS2,10667
+C00079,L-Phenylalanine,6.1.1.20,phenylalanine---tRNA ligase,FARSA,2193
+C00132,Methanol,1.11.1.6,catalase,CAT,847
+C00132,Methanol,1.11.1.7,peroxidase,LPO,4025
+C00132,Methanol,1.11.1.7,peroxidase,PXDN,7837
+C00132,Methanol,1.11.1.7,peroxidase,EPX,8288
+C00132,Methanol,1.11.1.7,peroxidase,PRDX6,9588
+C00132,Methanol,3.1.1.97,methylated diphthine methylhydrolase,DPH7,92715
