@@ -2,12 +2,15 @@ library(tools)
 library(dplyr)
 library(purrr)
 library(readr)
-library(stringr) # moved to observeEvent in server.R
-library(magrittr) # moved to first invocation in mapGenerally.R
-library(rlang) # moved to first invocation in mapGenerally.R
-library(DT) # moved to generateTables.R
-library(pathview) # moved to visualizePathways.R
+library(stringr)
+library(magrittr)
+library(rlang)
+library(DT)
+library(pathview)
 library(shinycssloaders)
+library(promises)
+library(future)
+plan(multiprocess)
 
 # EXAMINE THIS ###############
 # load KEGGDB??

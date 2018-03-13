@@ -37,10 +37,12 @@ generateSummaryTable <- function(mappingObject, idType, dbChosen) {
   }
 }
 
-generateMetaCycMetabTable <- function(mappingObject,
-                                      summaryTable,
-                                      selectedRows,
-                                      idType) {
+generateMetaCycMetabTable <- function(
+  mappingObject,
+  summaryTable,
+  selectedRows,
+  idType
+  ) {
   # Should never be null since we're not responding until map button is
   # clicked, but good to have just in case
   if (is.null(mappingObject$data) |
@@ -68,10 +70,12 @@ generateMetaCycMetabTable <- function(mappingObject,
   }
 }
 
-generateKEGGMetabTable <- function(mappingObject,
-                                   summaryTable,
-                                   selectedRows,
-                                   idType) {
+generateKEGGMetabTable <- function(
+  mappingObject,
+  summaryTable,
+  selectedRows,
+  idType
+  ) {
   # Should never be null since we're not responding until map button is
   # clicked, but good to have just in case
   if (is.null(mappingObject$data) |
