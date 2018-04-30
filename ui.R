@@ -32,7 +32,7 @@ shinyUI(fluidPage(
     # begin the tabPanel Layout!
     tabPanel(
       # Our welcome tab
-      title = HTML("MetaBridge <sup class='tiny'>BETA</sup>"), # "Welcome",
+      title = "MetaBridge", # "Welcome",
       value = "welcomePanel",
       # Dev mode alert
       # tags$div(
