@@ -1,57 +1,91 @@
 ---
-title: "Generating MetaCyc SmartTable"
+title: "Generating MetaCyc SmartTables"
 output: github_document
 ---
 
-## Create Table 1: Compounds and IDs
+This R Markdown document provides all of the steps necessary to update MetaBridge with the most recent build of MetaCyc. As of this writing (June 14th, 2018), we are on MetaCyc 22.0. I highly recommend working through this document step by step and inspecting the output, rather than running the whole thing in one shot.
+
+## Online SmartTables
+
+### Create Table 1: Compounds and IDs
 1. Go to www.metacyc.org and log in.
 2. Navigate to [SmartTables] -> [Special SmartTables].
 3. Choose [All compounds of MetaCyc].
-4. If you see a warning message, make sure you create a writeable copy of the SmartTable. You should then see three options: [Add Transform Column], [Add Property Column], and [Enrichments]. 
-5. [Add Property Column] -> [Database Links]. Choose: 
+4. If you see a warning message, make sure you create a writeable copy of the SmartTable. 
+5. Delete all columns except for the [Compound] column by clicking on the column header (in navy blue), and then in the control panel on the right hand side, clicking [Column >] -> [> Delete Column] 
+6. Then click the [Compound] column header, and you should then see three dropdown menus above the table: [Add Transform Column], [Add Property Column], and [Enrichments]. 
+7. [Add Property Column] -> [Database Links]. Choose: 
     + [CAS]
     + [HMDB]
     + [KEGG LIGAND]
     + [PubChem-compound]
-6. On the right-hand pane, under [Operations], choose [Export >] -> [> to Spreadsheet File], choose [frame IDs] as the "format type for values in spreadsheet", and export the SmartTable. 
+8. On the right-hand pane, under [Operations], choose [Export >] -> [> to Spreadsheet File], choose [frame IDs] as the "format type for values in spreadsheet", and export the SmartTable. 
 
-## Start MetaCyc pathway-tools
+```
+/database_updates/1-compounds-ids.tsv
+```
+
+### Create Table 4: Genes and IDs
+1. Go to www.metacyc.org and log in.
+2. Navigate to [SmartTables] -> [Special SmartTables].
+3. Choose [All genes of MetaCyc].
+4. If you see a warning message, make sure you create a writeable copy of the SmartTable. 
+5. Delete all columns except for the [Gene Name] column by clicking on the column header (in navy blue), and then in the control panel on the right hand side, clicking [Column >] -> [> Delete Column] 
+6. Then click the [Gene Name] column header, and you should then see three dropdown menus above the table: [Add Transform Column], [Add Property Column], and [Enrichments]. 
+7. [Add Property Column] -> [Database Links]. Choose: 
+    + [Ensembl Human]
+    + [GeneCards] - Official Gene Symbol
+8. On the right-hand pane, under [Operations], choose [Export >] -> [> to Spreadsheet File], choose [frame IDs] as the "format type for values in spreadsheet", and export the SmartTable. 
+
+```
+/database_updates/4-genes-ids.tsv
+```
+
+## SmartTables in pathway-tools
+
+pathway-tools offers more consistent results, better user interface, and is generally less buggy than the online SmartTables. However, they should theoretically provide the same results, and you can test this. To download and install pathway-tools, you will need to contact MetaCyc support for an educational license. They will verify your request and then email you a link with a username and password to log in and download the software.
+
 1. Download and install pathway-tools (currently version 21.0)
 2. Run pathway-tools, and in the visual interface click 'MetaCyc'
 
-## Create Table 2: Reactions of Compounds
+### Create Table 2: Reactions of Compounds
 1. From the [SmartTables] menu dropdown choose [Create New SmartTable] -> [Containing All] -> [Compounds]
 2. Once list of all compounds appears (currently 15950 Total), choose [SmartTables] -> [Transform SmartTable] -> [Reactions of Compounds]
 3. Save the SmartTable: [SmartTables] -> [Export SmartTable] -> [Tab-delimited table], and select save directory & filename. 
 4. When prompted, specify [Identifiers] as the export choice. 
 
-## Create Table 3: Genes of Reactions
+```
+/database_updates/2-compounds-reactions.tsv
+```
+
+### Create Table 3: Genes of Reactions
 1. From the [SmartTables] menu dropdown choose [Create New SmartTable] -> [Containing All] -> [Reactions]
 2. Once the list fo all reactions appears (currently 15311 Reactions), choose [SmartTables] -> [Transform SmartTable] -> [Genes of a Reaction]
 3. Save the SmartTable: [SmartTables] -> [Export SmartTable] -> [Tab-delimited table], and select save directory & filename. 
-4. When prompted, specify [Identifiers] as the export choice. 
+4. When prompted, specify [Identifiers] as the export choice.
 
-## Create Table 4: Compounds and IDs
-1. Go to www.metacyc.org and log in.
-2. Navigate to [SmartTables] -> [Special SmartTables].
-3. Choose [All genes of MetaCyc].
-4. If you see a warning message, make sure you create a writeable copy of the SmartTable. You should then see three options: [Add Transform Column], [Add Property Column], and [Enrichments]. 
-5. [Add Property Column] -> [Database Links]. Choose: 
-    + [Ensembl Human]
-    + [GeneCards] - Official Gene Symbol
-6. On the right-hand pane, under [Operations], choose [Export >] -> [> to Spreadsheet File], choose [frame IDs] as the "format type for values in spreadsheet", and export the SmartTable. 
+```
+/database_updates/3-reactions-genes.tsv
+```
 
-## Create Table 5: Pathways and Reactions
+### Create Table 5: Pathways and Reactions
 1. From the [SmartTables] menu dropdown choose [Create New SmartTable] -> [Containing All] -> [Pathways]
 2. Once list of all compounds appears (currently 2903 Total), choose [SmartTables] -> [Transform SmartTable] -> [Reactions of pathway]
 3. Save the SmartTable: [SmartTables] -> [Export SmartTable] -> [Tab-delimited table], and select save directory & filename. 
 4. When prompted, specify [Identifiers] as the export choice. 
 
+```
+/database_updates/5-pathways-reactions.tsv
+```
+
 ## Munge Tables
 
-## Step 1: Cross-referencing Databases
+### Step 1: Cross-referencing Databases
 
 Unfortunately, all of these tables require munging! The have been formatted for display with HTML entities and anchor tags. 
+
+> **IMPORTANT NOTE BEFORE WE GET STARTED:**
+> **This script will OVERWRITE your current database files located in /data/. Make sure you check that everything is working properly before you commit these changes to version control and deploy the update.**
 
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -66,7 +100,7 @@ exampleDir <- file.path(rootDir, 'example_data')
 dataDir <- file.path(rootDir, 'data')
 cleanDir <- file.path(updateDir, 'cleaned_files')
 
-compoundIDs <- read_tsv(file.path(updateDir, '1_compounds_and_IDs.tsv'))
+compoundIDs <- read_tsv(file.path(updateDir, '1-compounds-ids.tsv'))
 
 compoundIDs %<>% 
   # Create new columns that represent 'web' columns
@@ -148,12 +182,19 @@ linkedExampleCompound <- compoundIDs %>%
   dplyr::filter(HMDB == exampleCompound %>% extract2('HMDB') %>% matchHMDB())
 ```
 
+Looks like we're good to go, let's save it!
+
+```{r}
+metaCycDBLinks <- compoundIDs
+save(metaCycDBLinks, file = file.path(dataDir, 'm01_metaCycDBLinks.RData'))
+```
+
 ### Step 2: Map to Reactions
 
 Now we can check our second table.
 
 ```{r message=FALSE, warning=FALSE}
-compoundsReactions <- read_tsv(file.path(updateDir, '2_reactions_and_compounds.tsv'))
+compoundsReactions <- read_tsv(file.path(updateDir, '2-compounds-reactions.tsv'))
 glimpse(compoundsReactions)
 ```
 
@@ -186,7 +227,7 @@ Now let's give it a test
 
 ```{r}
 exampleReactions <- compoundsReactions %>% 
-  dplyr::filter(compoundID %in% extract2(linkedExampleCompound, 'Compound'))
+  dplyr::filter(compound %in% extract2(linkedExampleCompound, 'Compound'))
 glimpse(exampleReactions)
 ```
 
@@ -196,7 +237,7 @@ Good to go!
 ## Step 3: Map reactions to genes
 
 ```{r message=FALSE, warning=FALSE}
-reactionsGenes <- read_tsv(file.path(updateDir, '3_reactions_and_genes.tsv'))
+reactionsGenes <- read_tsv(file.path(updateDir, '3-reactions-genes.tsv'))
 reactionsGenes %<>% dplyr::select(-X4)
 reactionsGenes %<>% dplyr::rename('geneID' = 'ID', 'geneName' = 'Name', 'reaction' = 'Matches')
 head(reactionsGenes)
@@ -205,9 +246,11 @@ head(reactionsGenes)
 Again, we see there are some HTML markup and entities in there, but they are restricted to the "geneName" column, which we are not mapping against. We also need to split our reactions column.
 
 ```{r}
-reactionsGenes %<>% cSplit(splitCols = c('reaction'), 
+reactionsGenes %<>% cSplit(
+  splitCols = c('reaction'), 
   sep = ', ', direction = 'long', 
-  type.convert = FALSE, stripWhite = FALSE)
+  type.convert = FALSE, stripWhite = FALSE
+)
 glimpse(reactionsGenes)
 ```
 
@@ -227,20 +270,19 @@ glimpse(exampleGenes)
 ### Step 4: Map to gene IDs
 
 ```{r message=FALSE, warning=FALSE}
-geneIDs <- read_tsv(file.path(updateDir, '4_genes_and_IDs.tsv'))
+geneIDs <- read_tsv(file.path(updateDir, '4-genes-ids.tsv'))
 glimpse(geneIDs)
 geneIDs %<>% 
   mutate(Ensembl = str_replace(Ensembl, "^<a href='.*'>", "")) %>% 
   mutate(Ensembl = str_replace(Ensembl, "<\\/a>$", "")) %>% 
   mutate(GeneCards = str_replace(GeneCards, "^<a href='.*'>", "")) %>% 
   mutate(GeneCards = str_replace(GeneCards, "<\\/a>$", "")) %>% 
-  rename('geneID' = 'Gene Name', 'Symbol' = 'GeneCards') %>% 
-  select(-`Accession-1`, -ends_with('End-Position'))
+  rename('geneID' = 'Gene Name', 'Symbol' = 'GeneCards')
 glimpse(geneIDs)
 
 metaCycGeneIDs <- geneIDs
 
-save(metaCycGeneIDs, file = file.path(cleanDir, 'm04_metaCycGeneIDs.RData'))
+save(metaCycGeneIDs, file = file.path(dataDir, 'm04_metaCycGeneIDs.RData'))
 ```
 
 And join to the table
@@ -255,6 +297,32 @@ glimpse(examplegeneIDs)
 ### Step 5: Map to pathways
 
 ```{r}
-pathwaysReactions <- read_tsv(file.path(updateDir, '5_pathways_and_reactions.tsv'))
+pathwaysReactions <- read_tsv(file.path(updateDir, '5-pathways-reactions.tsv'))
+```
+
+First things first, let's take a look at what we have:
+
+```{r}
+glimpse(pathwaysReactions)
+pathwaysReactions %<>% dplyr::select(-X4)
+pathwaysReactions %<>% dplyr::rename('pathwayID' = 'ID', 'pathwayName' = 'Name', 'reaction' = 'Matches')
+```
+
+Again, we see there are some HTML markup and entities in the table, but they are restricted to the "Name" column, which we are not mapping against. However, we will need to split the reactions column. 
+
+```{r}
+pathwaysReactions %<>% cSplit(
+  splitCols = c('reaction'), 
+  sep = ', ', direction = 'long', 
+  type.convert = FALSE, stripWhite = FALSE
+)
+glimpse(pathwaysReactions)
+```
+
+Looks good, let's save it!
+
+```{r}
+metaCycPathways <- pathwaysReactions
+save(metaCycPathways, file = file.path(dataDir, 'm05_metaCycPathways.RData'))
 ```
 

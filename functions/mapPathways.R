@@ -1,8 +1,8 @@
 mapKEGGPathways <-
   function(idType,
-           selectedRow,
-           summaryTable,
-           fullTable) {
+             selectedRow,
+             summaryTable,
+             fullTable) {
     ### Quote necessary variables for dplyr
 
     # To be treated like a variable
@@ -48,10 +48,12 @@ mapKEGGPathways <-
   }
 
 mapMetaCycPathways <-
-  function(idType,
-           selectedRow,
-           summaryTable,
-           fullTable) {
+  function(
+    idType,
+    selectedRow,
+    summaryTable,
+    fullTable
+  ) {
     ###############################################
     #   Get Name out of Summary (clicked) Table   #
     ###############################################
@@ -103,10 +105,10 @@ mapMetaCycPathways <-
 
 generalPathwayMapping <-
   function(db,
-           idType,
-           selectedRow,
-           summaryTable,
-           fullTable) {
+             idType,
+             selectedRow,
+             summaryTable,
+             fullTable) {
     if (db == "KEGG") {
       ## If KEGG was chosen, just use the KEGG Compound IDs
       mapKEGGPathways(
