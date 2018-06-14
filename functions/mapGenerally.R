@@ -90,7 +90,7 @@ mapMetaCyc <- function(importDF, col, idType) {
       this <- mappingDF$data %>% rename_("compound" = "Compound")
     } else {
       # Otherwise proceed as normal
-      this <- inner_join(mappingDF$data, metaCycDBLinks, by = UQ(idType)) %>%
+      this <- inner_join(mappingDF$data, metaCycDBLinks, by = idType) %>%
         dplyr::select_(idType, "Compound") %>%
         rename_("compound" = "Compound")
     }
