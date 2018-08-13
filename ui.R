@@ -18,7 +18,19 @@ shinyUI(fluidPage(
     tags$link(rel = "icon", type = "image/png", sizes = "16x16", href = "/favicon-16x16.png"),
     tags$link(rel = "manifest", href = "/manifest.json"),
     tags$link(rel = "mask-icon", href = "/safari-pinned-tab.svg", color = "#303e4e"),
-    tags$meta(name = "theme-color", content = "#303e4e")
+    tags$meta(name = "theme-color", content = "#303e4e"),
+    HTML(
+      "<!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async src='https://www.googletagmanager.com/gtag/js?id=UA-123892284-1'></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-123892284-1');
+      </script>
+      "
+    )
   ),
   # Body
   navbarPage(
@@ -269,16 +281,5 @@ shinyUI(fluidPage(
     )
   ),
   tags$script(src = "js/tippy.min.js"),
-  tags$script(src = "js/client.js"),
-  HTML(
-    "<!-- Global Site Tag (gtag.js) - Google Analytics -->
-    <script async src='https://www.googletagmanager.com/gtag/js?id=UA-106038065-1'></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments)};
-    gtag('js', new Date());
-    
-    gtag('config', 'UA-106038065-1');
-    </script>"
-  )
+  tags$script(src = "js/client.js")
 ))
