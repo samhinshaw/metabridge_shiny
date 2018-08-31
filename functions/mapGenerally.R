@@ -187,6 +187,8 @@ mapMetaCyc <- function(importDF, col, idType) {
       metaCycReactionsGenes,
       by = "reaction"
     ) %>%
+      # make sure we only return human genes
+      filter(str_detect(tolower(geneID), "^hs")) %>% 
       rename_(
         "Reaction" = "reaction",
         "Reaction Name" = "reactionName",
