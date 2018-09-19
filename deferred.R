@@ -2,17 +2,12 @@ library(tools)
 library(dplyr)
 library(purrr)
 library(readr)
-library(stringr) # moved to observeEvent in server.R
-library(magrittr) # moved to first invocation in mapGenerally.R
-library(rlang) # moved to first invocation in mapGenerally.R
-library(DT) # moved to generateTables.R
+library(stringr)
+library(magrittr)
+library(rlang)
+library(DT)
 library(pathview) # source("https://bioconductor.org/biocLite.R"); biocLite('pathview')
 library(shinycssloaders)
-
-# EXAMINE THIS ###############
-# load KEGGDB??
-# load('data/sysdata.rda')
-# ^^^^^^^^^^^^^^^^^^^^^^^^
 
 # Load Example Data
 load("data/examples.RData")

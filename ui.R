@@ -268,13 +268,48 @@ shinyUI(fluidPage(
           tags$h1("About"),
           tags$div(
             class = "logoWrapper",
-            p(
+            tags$p(
               "MetaBridge was designed by Samuel Hinshaw at the ",
-              a(href = "http://cmdr.ubc.ca/bobh/", "Centre for Microbial Diseases and Immunity Research", target = "_blank"),
+              tags$a(href = "http://cmdr.ubc.ca/bobh/", "Centre for Microbial Diseases and Immunity Research"),
               " at The University of British Columbia. ",
-              "MetaBridge was published in XXXXXX on XXXXXX. Please cite this paper when using MetaBridge in your analyses."
+              "MetaBridge was published in",
+              tags$em("Bioinformatics"),
+              " (doi: ",
+              tags$a(href = "https://doi.org/10.1093/bioinformatics/bty331", "10.1093/bioinformatics/bty331"),
+              "). Please cite this paper when using MetaBridge in your analyses."
             ),
-            p(HTML("For help, you can reach me on twitter <a href='https://www.twitter.com/samhinshaw' target = '_blank'>@samhinshaw</a>."))
+            tags$p(
+              "For help, you can reach me on twitter",
+              tags$a(href = 'https://www.twitter.com/samhinshaw', '@samhinshaw'),
+              "."
+            ),
+            tags$p(
+              "MetaBridge uses the following R packages:"
+            ),
+            tags$p(
+              tags$dl(
+                tags$dt(
+                  tags$a(href = "https://doi.org/10.1093/bioinformatics/btt285", "Pathview")
+                ),
+                tags$dd("Pathway-based data integration and visualization"),
+                tags$dt(
+                  tags$a(href = "https://shiny.rstudio.com/", "Shiny")
+                  ),
+                tags$dd("Web Application Framework for R"),
+                tags$dt(
+                  tags$a(href = "https://github.com/andrewsali/shinycssloaders", "shinycssloaders")
+                ),
+                tags$dd("Animated loaders for shiny outputs"),
+                tags$dt(
+                  tags$a(href = "https://deanattali.com/shinyjs/", "shinyjs")
+                ),
+                tags$dd("Easily Improve the User Experience of Your Shiny Apps in Seconds"),
+                tags$dt(
+                  tags$a(href = "https://www.tidyverse.org/", "The Tidyverse"),
+                  tags$dd("An opinionated collection of R packages designed for data science. ")
+                )
+              )
+            )
           )
         )
       )

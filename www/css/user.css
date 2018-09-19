@@ -156,3 +156,8 @@ within the background fill of the hero element */
   width: 100% !important;
   height: 100% !important;
 }
+
+/* Indent defined list terms */
+dl dd {
+  margin-left: 1em;
+}
