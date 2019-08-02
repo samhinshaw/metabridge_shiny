@@ -47,7 +47,7 @@ shinyServer(function(input, output, session) {
     updateNavbarPage(session, inputId = "navbarLayout", selected = "uploadPanel")
   }, ignoreInit = TRUE)
 
-  # When clicking "Tutoria", switch to tutorial panel
+  # When clicking "Tutorial", switch to tutorial panel
   observeEvent(input$tutorial, {
     updateNavbarPage(session, inputId = "navbarLayout", selected = "tutorialPanel")
   }, ignoreInit = TRUE)
@@ -58,7 +58,7 @@ shinyServer(function(input, output, session) {
   #                                              #
   ################################################
 
-  ## Inject example df when "Try Examples" selected
+  ## Inject example data frame when "Try Examples" selected
   observeEvent(input$tryExamples, {
     # input examples
     metaboliteObject(examples)
@@ -257,7 +257,8 @@ shinyServer(function(input, output, session) {
   #                                              #
   ################################################
 
-  # Store ID type chosen as reactive variable which only changes when the map button is clicked
+  # Store ID type chosen as reactive variable which only changes when the map
+  # button is clicked
   observeEvent(input$mapButton, {
     idTypeChosen(input$idType)
   })
@@ -316,14 +317,14 @@ shinyServer(function(input, output, session) {
   # THREE STEP RENDER PROCESS
   # 1. Generate Table from `generateTables.R::generateSummaryTable()`, depending
   #    only on the mapButton click.
-  # 2. Render the generated table with DR::renderDataTable(). This is separate
+  # 2. Render the generated table with DT::renderDataTable(). This is separate
   #    from #1 because we need to assign the reactive table object to its own
-  #    output Object.
+  #    output object.
   # 3. Render the entire UI surrounding the table and insert the rendered DT.
 
   ## STEP ONE
   # ~~~~~~~~~~
-  # Show a summary table of the mapped metabolites (just # of genes)
+  # Show a summary table of the mapped metabolites (just number of genes)
   # This calls generateSummaryTable() from generateTables.R
   # We should make this optional!
   # Only render when 'map' clicked
@@ -350,10 +351,10 @@ shinyServer(function(input, output, session) {
   ## STEP THREE
   # ~~~~~~~~~~
   # Render the panel separately so we have reactive control over all the UI
-  # elements surrounding the DataTable, not just the dataTable
+  # elements surrounding the DataTable, not just the dataTable itself
   output$mappingSummaryPanel <- renderUI({
-    # make sure this depends on the summary table
-    # (and thus updates every time the summary table does)
+    # make sure this depends on the summary table (and thus updates every time
+    # the summary table does)
     mappingSummary$table
     # Now proceed...
     if (is.null(mappingObject())) {
@@ -418,6 +419,7 @@ shinyServer(function(input, output, session) {
       # `generateSummaryTable()`, these functions come from `generateTables.R`
     } else if (databaseChosen() == "KEGG") {
       if (mappingSummary$dbChosen != "KEGG") {
+        cat("DATABASE WAS KEGG, NULL RETURNING...")
         # if our summary table was somehow not updated yet, exit
         return(NULL)
       } else {
@@ -471,7 +473,8 @@ shinyServer(function(input, output, session) {
     tags$div(
       if (is.null(mappingObject())) {
         return(NULL)
-        # If we had an error, change the header to reflect that these are intermediate results
+        # If we had an error, change the header to reflect that these are
+        # intermediate results
       } else if (
         mappingObject()$status == "error" | mappingObject()$status == "empty"
       ) {
@@ -485,7 +488,8 @@ shinyServer(function(input, output, session) {
     )
   })
 
-  ## Watch for the "try again" button that will be rendered if an error occurs in mapping
+  ## Watch for the "try again" button that will be rendered if an error occurs
+  ## in mapping
   observeEvent(input$remap, {
     updateNavbarPage(session, inputId = "navbarLayout", selected = "uploadPanel")
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
@@ -545,7 +549,7 @@ shinyServer(function(input, output, session) {
           "to visualize your results with pathview."
         ),
         br(),
-        # If we mapped against KEGG, show visualize button
+        # if we mapped against KEGG, show visualize button
         if (databaseChosen() == "KEGG" &
           !is.null(selectedMetab())) {
           actionButton(
@@ -570,7 +574,7 @@ shinyServer(function(input, output, session) {
 
   # Client-side JS to enable/disable viz tab!
   # Also disable viz tab in navbar when viz mapping is not possible
-  # Make sure that we have a tooltip explaining why the viz tab is disabled as well
+  # Make sure that we have a tooltip explaining why the viz tab is disabled
   observeEvent(input$mapButton, {
     if (databaseChosen() == "KEGG" & !is.null(selectedMetab())) {
       runjs("$(\"a[data-value='vizPanel']\").parent().removeClass('disabled');")
@@ -648,7 +652,7 @@ shinyServer(function(input, output, session) {
     # Map!
     pathwayMappingAttrs <- generalPathwayMapping(
       summaryTable = mappingSummary$table,
-      # The full table provided used to be the table that was rendered just for
+      # The fullTable provided used to be the table that was rendered just for
       # the selected metabolites. This means that the only genes were those
       # identified for the selected metabolites. For now, I have fixed this by
       # including all genes in the mapping. HOWEVER, in the future it could be

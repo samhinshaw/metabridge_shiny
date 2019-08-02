@@ -1,0 +1,6 @@
+# Using example data, mapping to KEGG, app crashes and return this errror
+Warning: Error in : Column `Compound` is unknown
+  88: <Anonymous>
+Warning: Error in if: argument is of length zero
+  72: observeEventHandler [/home/travisblimkie/Documents/Github_Repositories/metabridge_shiny/server.R#421]
+   1: shiny::runApp

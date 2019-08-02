@@ -91,6 +91,8 @@ mapAll <- function(compoundList, db = "both", mapKEGGIDs = TRUE) {
   # compound IDs via the MetaCyc database. Otherwise, we'll just use the KEGG
   # IDs that were provided
   if (mapKEGGIDs == TRUE) {
+    cat("MAPPING WITH KEGG IDS, mapAll line 94")
+    
     keggIDs_fromCAS <- metaCycDBLinks %>%
       dplyr::filter_("CAS %in% CAS_IDs") %>%
       magrittr::extract2("KEGG") %>%
