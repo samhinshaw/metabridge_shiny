@@ -6,6 +6,7 @@ generateSummaryTable <- function(mappingObject, idType, dbChosen) {
   } else if (mappingObject$status == "error" |
     mappingObject$status == "empty") {
     return(mappingObject$data)
+    
   } else if (dbChosen == "MetaCyc") {
     table <- mappingObject$data %>% group_by_(idType, "Compound") %>% summarize(
       "# Reactions" = n_distinct(`Reaction`, na.rm = TRUE),
@@ -37,6 +38,7 @@ generateSummaryTable <- function(mappingObject, idType, dbChosen) {
   }
 }
 
+
 generateMetaCycMetabTable <- function(mappingObject,
                                       summaryTable,
                                       selectedRows,
@@ -62,7 +64,7 @@ generateMetaCycMetabTable <- function(mappingObject,
     quotedSelectedMetab <- rlang::enquo(selectedMetab)
 
     filteredMappedMetaboliteTable <- mappingObject$data %>%
-      dplyr::filter(rlang::UQ(namedIDType) == rlang::UQ(quotedSelectedMetab))
+      dplyr::filter(!!(namedIDType) == !!(quotedSelectedMetab))
 
     return(filteredMappedMetaboliteTable)
   }
@@ -101,7 +103,7 @@ generateKEGGMetabTable <- function(mappingObject,
     namedIDType <- as.name("KEGG")
 
     filteredMappedMetaboliteTable <- mappingObject$data %>%
-      dplyr::filter(rlang::UQ(namedIDType) == rlang::UQ(quotedSelectedMetab))
+      dplyr::filter(!!(namedIDType) == !!(quotedSelectedMetab))
 
 
     return(filteredMappedMetaboliteTable)

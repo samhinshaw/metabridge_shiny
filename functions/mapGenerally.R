@@ -12,7 +12,7 @@ mapMetaCyc <- function(importDF, col, idType) {
   ## Let's attempt using tryCatch to handle errors for each joining step.
 
   # Extract the column of interest (col) and construct a new tibble with which
-  # we will mape our metabolites to enzymes and then genes. As character just in
+  # we will map our metabolites to enzymes and then genes. As character just in
   # case IDs such as PubChem IDs are interpreted as integers
 
   # Note: in tryCatch, finally is always evaluated!
@@ -32,7 +32,8 @@ mapMetaCyc <- function(importDF, col, idType) {
           notEmpty() %>%
           str_trim()
       )
-
+    
+    
     # Sanitize our HMDB IDs if we are using HMDB IDs
     if (idType == "HMDB") {
       # We can specify exact column names here, since we know that idType will

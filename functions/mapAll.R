@@ -7,14 +7,17 @@ mapAll <- function(compoundList, db = "both", mapKEGGIDs = TRUE) {
     stringr::str_extract("^[0-9]*-[0-9]{2}-[0-9]{1,2}$") %>%
     unique() %>%
     notNAs()
+
   HMDB_IDs <- compoundList %>%
     stringr::str_extract("^HMDB[0-9]{5}$") %>%
     unique() %>%
     notNAs()
+
   KEGG_IDs <- compoundList %>%
     stringr::str_extract("^[CDcG][0-9]{5}$") %>%
     unique() %>%
     notNAs()
+
   PubChem_IDs <- compoundList %>%
     stringr::str_extract("^[0-9]{1,9}$") %>%
     unique() %>%
@@ -76,7 +79,7 @@ mapAll <- function(compoundList, db = "both", mapKEGGIDs = TRUE) {
   ## Finally, finally, map biocyc gene IDs to ensembl gene IDs
 
   metaCycEnsemblGenesOfInterest <- metaCycGeneIDs %>%
-    dplyr::filter_("`Object ID` %in% metaCycGenesOfInterest") %>%
+    dplyr::filter_("geneID %in% metaCycGenesOfInterest") %>%
     magrittr::extract2("Ensembl") %>%
     unique() %>%
     notNAs()
@@ -91,8 +94,8 @@ mapAll <- function(compoundList, db = "both", mapKEGGIDs = TRUE) {
   # compound IDs via the MetaCyc database. Otherwise, we'll just use the KEGG
   # IDs that were provided
   if (mapKEGGIDs == TRUE) {
-    cat("MAPPING WITH KEGG IDS, mapAll line 94")
-    
+    #cat("MAPPING WITH KEGG IDS (mapAll line 94)...\n")
+
     keggIDs_fromCAS <- metaCycDBLinks %>%
       dplyr::filter_("CAS %in% CAS_IDs") %>%
       magrittr::extract2("KEGG") %>%
@@ -115,11 +118,16 @@ mapAll <- function(compoundList, db = "both", mapKEGGIDs = TRUE) {
       KEGG_IDs, keggIDs_fromCAS,
       keggIDs_fromHMDB, keggIDs_fromPubChem
     ) %>% unique() %>% notNAs()
+
+
+
   }
 
-  keggGenesOfInterest <- keggDB %>%
+  # Switched keggDB to keggPathways, first line
+  # Switched genes to id, extract2() line
+  keggGenesOfInterest <- keggPathways %>%
     dplyr::filter_("KEGG %in% KEGG_IDs") %>%
-    magrittr::extract2("genes") %>%
+    magrittr::extract2("id") %>%
     unique() %>%
     notNAs()
 
