@@ -1,8 +1,8 @@
 #' mappingAlert
 #'
-#' @param message
-#' @param suggest
-#' @param status
+#' @param message Message to return to the user
+#' @param suggest Suggestion if something goes wrong in some step
+#' @param status Status of data import/mapping
 #'
 #' @return
 #' @export

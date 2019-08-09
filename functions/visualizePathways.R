@@ -1,8 +1,8 @@
 #' visualizePathview
 #'
-#' @param pathway
-#' @param genes
-#' @param cpd
+#' @param pathway Patwhay to make the diagram of
+#' @param genes Genes to be included in the pathway map
+#' @param cpd Data being used to generate the pathway map
 #'
 #' @return filename
 #' @export

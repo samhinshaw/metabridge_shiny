@@ -1,6 +1,7 @@
+
 #' notNAs
 #'
-#' @param vector
+#' @param vector Input vector to be cleaned
 #'
 #' @return vector
 #' @export
@@ -19,7 +20,7 @@ notNAs <- function(vector) {
 
 #' notEmpty
 #'
-#' @param vector
+#' @param vector Input vector to be cleaned
 #'
 #' @return vector
 #' @export
@@ -38,7 +39,7 @@ notEmpty <- function(vector) {
 
 #' matchHMDB
 #'
-#' @param hmdbID
+#' @param hmdbID HMDB ID to be cleaned and returned
 #'
 #' @return
 #' @export
@@ -47,7 +48,7 @@ notEmpty <- function(vector) {
 #'
 #' MetaCyc only supports the older format, five digit HMDB IDs. If we detect
 #' your HMDB IDs are in the newer seven digit format, we will trim the leading
-#' characters if they are zeros. If they are not zeros, we will return an error.
+#' characters if they are zeros. If they are not zeros, we will return an error
 #'
 matchHMDB <- function(hmdbID) {
 

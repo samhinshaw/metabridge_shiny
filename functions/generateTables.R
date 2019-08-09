@@ -4,9 +4,9 @@ generateSummaryTable <- function(mappingObject, idType, dbChosen) {
   if (is.null(mappingObject$data)) {
     return(NULL)
   } else if (mappingObject$status == "error" |
-    mappingObject$status == "empty") {
+             mappingObject$status == "empty") {
     return(mappingObject$data)
-    
+
   } else if (dbChosen == "MetaCyc") {
     table <- mappingObject$data %>% group_by_(idType, "Compound") %>% summarize(
       "# Reactions" = n_distinct(`Reaction`, na.rm = TRUE),
@@ -46,7 +46,7 @@ generateMetaCycMetabTable <- function(mappingObject,
   # Should never be null since we're not responding until map button is
   # clicked, but good to have just in case
   if (is.null(mappingObject$data) |
-    is.null(selectedRows) | is.null(summaryTable)) {
+      is.null(selectedRows) | is.null(summaryTable)) {
     return(data.frame())
   } else {
     ### Quote necessary variables for dplyr
@@ -77,7 +77,7 @@ generateKEGGMetabTable <- function(mappingObject,
   # Should never be null since we're not responding until map button is
   # clicked, but good to have just in case
   if (is.null(mappingObject$data) |
-    is.null(selectedRows) | is.null(summaryTable)) {
+      is.null(selectedRows) | is.null(summaryTable)) {
     return(data.frame())
   } else {
     ### Quote necessary variables for dplyr
@@ -88,7 +88,7 @@ generateKEGGMetabTable <- function(mappingObject,
     ### Pull the selected row and extract its compound ID
     selectedMetab <-
       summaryTable[as.numeric(rownames(summaryTable)) ==
-        selectedRows, ]
+                     selectedRows, ]
 
     # If mapped against the KEGG database, pull out the KEGG cpd ID (even if
     # not what was supplied), and extract the ID from the HTML contents of the
