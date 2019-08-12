@@ -36,8 +36,8 @@ mapMetaCyc <- function(importDF, col, idType) {
     # warnings and error below)
 
     this <- data_frame(
-      UQ(idType) := importDF %>%
-        use_series(UQ(col)) %>%
+      !!(idType) := importDF %>%
+        use_series(!!(col)) %>%
         as.character() %>%
         notNAs() %>%
         notEmpty() %>%
@@ -56,7 +56,7 @@ mapMetaCyc <- function(importDF, col, idType) {
 
     # names(this)[1] <- UQ(quotedID)
 
-    # Check to see if join failed silently
+    # Check to see if column selection and cleaning failed silently
     if (nrow(this) == 0) {
       list(status = "empty",
            data = importDF,
@@ -68,10 +68,10 @@ mapMetaCyc <- function(importDF, col, idType) {
            data = this,
            message = "Your metabolites have been successfully mapped!",
            suggest = NULL)
-    }
+    } # End of first part of tryCatch()
 
 
-  # Next part of tryCatch(), i.e. finally (?)
+  # Next part of tryCatch()
   }, warning = function(warningMessage) {
     list(
       status = "warn",
@@ -95,8 +95,8 @@ mapMetaCyc <- function(importDF, col, idType) {
   # end, regardless of success or error.
 
 
-  # Return the input data frame if there was an error or the mapping returned no
-  # results
+  # Return the user's input data frame if there was an error or the mapping
+  # returned no results
   if (mappingDF$status == "error" | mappingDF$status == "empty") {
     return(mappingDF)
   }
@@ -116,24 +116,23 @@ mapMetaCyc <- function(importDF, col, idType) {
         rename_("compound" = "Compound")
     }
 
+
     # Check to see if join failed silently
     if (nrow(this) == 0) {
       list(status = "empty",
            data = mappingDF$data,
-           message = paste0(
-             "We were unable to find any matches in the MetaCyc ",
-             "database for the compound IDs you provided."
-           ),
+           message = paste0("We were unable to find any matches in the MetaCyc",
+                            " database for the compound IDs you provided."),
            suggest = "Try using a different compound ID or mapping via KEGG.")
 
+    # Else if the join was successful tell the user
     } else {
       list(status = "success",
            data = this,
            message = "Your metabolites have been successfully mapped!",
            suggest = NULL)
-    }
+    } # End of first part of tryCatch()
 
-  # End of first part of tryCatch()
 
   }, warning = function(warningMessage) {
     list(status = "warn",
@@ -141,12 +140,14 @@ mapMetaCyc <- function(importDF, col, idType) {
          internalMessage = warningMessage,
          message = "There was an unspecified error in mapping your compounds.",
          suggest = NULL)
+
   }, error = function(errorMessage) {
     list(status = "error",
          data = mappingDF$data,
          internalMessage = errorMessage,
          message = "We were unable to map your metabolites to MetaCyc Compound IDs.",
          suggest = "Try changing your mapping parameters.")
+
   }) # End of tryCatch()
 
 
@@ -189,7 +190,7 @@ mapMetaCyc <- function(importDF, col, idType) {
          internalMessage = errorMessage,
          message = "We were unable to map your compounds to any reactions.",
          suggest = "Try changing your mapping parameters.")
-  }) # End of final part of tryCatch()
+  }) # End of tryCatch()
 
 
   # Return to the user of there was an error or if the join failed silently
@@ -207,7 +208,7 @@ mapMetaCyc <- function(importDF, col, idType) {
       metaCycReactionsGenes,
       by = "reaction"
     ) %>%
-      # make sure we only return human genes
+      # Make sure we only return human genes
       filter(str_detect(tolower(geneID), "^hs")) %>%
       rename_(
         "Reaction" = "reaction",
@@ -269,7 +270,7 @@ mapMetaCyc <- function(importDF, col, idType) {
         "`Gene Name`",
         "Ensembl"
       ) %>%
-      # filter out rows where no gene IDs are present
+      # Filter out rows where no gene IDs are present
       dplyr::filter(!(
         is.na(`MetaCyc Gene`) &
           is.na(`Gene Name`) & is.na(`Ensembl`)
@@ -327,7 +328,7 @@ mapMetaCyc <- function(importDF, col, idType) {
 #'
 #' @examples
 #'
-#' Performs the mapping for KEGG data
+#' Performs the mapping when the KEGG database is selected
 #'
 mapKEGG <- function(importDF, col, idType) {
 
@@ -365,7 +366,7 @@ mapKEGG <- function(importDF, col, idType) {
         ungroup()
     }
 
-    # Check to see if join failed silently
+    # Check to see if data frame construction failed silently
     if (nrow(this) == 0) {
       list(status = "empty",
            data = importDF,
@@ -394,15 +395,15 @@ mapKEGG <- function(importDF, col, idType) {
          suggest = "Try changing your mapping parameters.")
   }) # End of tryCatch()
 
-  # Mapping of not using KEGG IDs
+
+  # Mapping if NOT using KEGG IDs
   if (idType != "KEGG") {
 
     keggIDs <- tryCatch({
-
       this <- metaCycDBLinks %>%
         dplyr::filter(!!(namedIDtype) %in% extract2(mappingDF$data, !!(quotedIDtype)))
 
-      # Check to see if join failed silently
+      # Check to see if filter failed silently
       if (nrow(this) == 0) {
         list(status = "empty",
              data = importDF,
@@ -435,10 +436,12 @@ mapKEGG <- function(importDF, col, idType) {
            suggest = "Try using a different compound ID or mapping via MetaCyc")
     }) # End of tryCatch()
 
+
   # Mapping if using KEGG IDs
   } else if (idType == "KEGG") {
 
-    # Join compound name (to be scraped) to compound IDs here. Name the column 'Compound'
+    # Join compound name (to be scraped) to compound IDs here. Name the column
+    # 'Compound'
     this <- left_join(mappingDF$data, keggCompounds, by = "KEGG")
 
     keggIDs <- list(status = "success",
@@ -453,7 +456,7 @@ mapKEGG <- function(importDF, col, idType) {
 
     this <- left_join(keggIDs$data, keggEnzymeNames, by = "KEGG")
 
-    # Check to see if join failed silently
+    # Check to see if this join failed silently
     if (nrow(this) == 0) {
 
       list(status = "empty",
@@ -565,7 +568,7 @@ mapKEGG <- function(importDF, col, idType) {
 #'
 #' @examples
 #'
-#' mapGenerally simply calls one of above function, mapMetaCyc or mapKEGG
+#' mapGenerally simply calls one of above functions, mapMetaCyc() or mapKEGG()
 #' depending on the database chosen
 #'
 mapGenerally <- function(importDF, col, db, idType) {

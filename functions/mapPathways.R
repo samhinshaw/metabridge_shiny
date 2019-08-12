@@ -1,4 +1,3 @@
-
 #' mapKEGGPathways
 #'
 #' @param idType ID type/format being used in the mapping
@@ -11,7 +10,7 @@
 #'
 #' @examples
 #'
-#' Map pathways when the selected database is KEGG
+#' Map to pathways when the selected database is KEGG for later visualization
 #'
 mapKEGGPathways <- function(idType,
                             selectedRow,
@@ -41,8 +40,8 @@ mapKEGGPathways <- function(idType,
   # Pull out the pathways that our compound is present in from the metabPathways
   # object stored in `data/`
 
-  # TODO Should be able to change filter_() call to look like filter() call in
-  # line above
+  #' TODO Should be able to change filter_() call to look like filter() call in
+  #' line above
 
   pathwaysOfInterest <- keggPathways %>%
     dplyr::filter(!!(namedIDType) == !!(quotedMetab)) %>%
@@ -132,7 +131,7 @@ mapMetaCycPathways <- function(idType,
 #' @param db Selected databse, one of KEGG or MetaCyc
 #' @param idType Selected ID type used for mapping
 #' @param selectedRow Highlighted row from the user with the metabolite to get
-#'   mapping info for
+#'                    mapping info for
 #' @param summaryTable Summary table; the output of the earlier mnapping step
 #' @param fullTable
 #'
@@ -148,8 +147,9 @@ generalPathwayMapping <- function(db,
                                   selectedRow,
                                   summaryTable,
                                   fullTable) {
+
+  # If KEGG was chosen, just use the KEGG Compound IDs
   if (db == "KEGG") {
-    # If KEGG was chosen, just use the KEGG Compound IDs
     mapKEGGPathways(
       idType = "KEGG",
       selectedRow = selectedRow,
@@ -157,8 +157,8 @@ generalPathwayMapping <- function(db,
       fullTable = fullTable
     )
 
+  # If MetaCyc was chosen, use the selected ID Type
   } else if (db == "MetaCyc") {
-    # If MetaCyc was chosen, use the selected ID Type
     mapMetaCycPathways(
       idType = idType,
       selectedRow = selectedRow,

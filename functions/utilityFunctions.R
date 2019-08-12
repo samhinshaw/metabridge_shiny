@@ -1,4 +1,3 @@
-
 #' notNAs
 #'
 #' @param vector Input vector to be cleaned
