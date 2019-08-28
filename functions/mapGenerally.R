@@ -45,7 +45,6 @@ mapMetaCyc <- function(importDF, col, idType) {
         str_trim()
     )
 
-    message("First mapping step...")
 
     # Sanitize our HMDB IDs if we are using HMDB IDs
     if (idType == "HMDB") {
@@ -104,8 +103,6 @@ mapMetaCyc <- function(importDF, col, idType) {
     return(mappingDF)
   }
 
-  message("Mapping objects...")
-
 
   # Next step: Map these to the MetaCyc Object IDs
   mappedToObjects <- tryCatch({
@@ -162,8 +159,6 @@ mapMetaCyc <- function(importDF, col, idType) {
     return(mappedToObjects)
   }
 
-  message("Moving to reactions...")
-
 
   # Finally, join the reaction-gene table!
   mappedToReactions <- tryCatch({
@@ -207,7 +202,6 @@ mapMetaCyc <- function(importDF, col, idType) {
     return(mappedToReactions)
   }
 
-  message("Mapping to genes...")
 
   # Finally, join the reaction-gene table!
   mappedToGenes <- tryCatch({
@@ -261,8 +255,6 @@ mapMetaCyc <- function(importDF, col, idType) {
   if (mappedToGenes$status == "error" | mappedToGenes$status == "empty") {
     return(mappedToGenes)
   }
-
-  message("Map to ensembl...")
 
 
   # Finally, finally, map biocyc gene IDs to ensembl gene IDs
@@ -361,7 +353,7 @@ mapKEGG <- function(importDF, col, idType) {
     # wrapped insided a function (unlike that for the condition handlers for
     # warnings and error below)
 
-    this <- data_frame(
+    this <- tibble(
       !!(namedIDtype) := extract2(importDF, col) %>%
         notNAs() %>%
         notEmpty() %>%
@@ -509,22 +501,22 @@ mapKEGG <- function(importDF, col, idType) {
     this <-
       inner_join(keggEnzymesOfInterest$data, keggGeneDB, by = "enzymes") %>%
       # Make column names display-friendly
-      dplyr::rename_(
-        "KEGG" = "KEGG",
-        "Enzyme" = "enzymes",
-        "Enzyme Name" = "enzymeName",
-        "Gene Name" = "symbol",
-        "Entrez" = "entrez"
+      dplyr::rename(
+        "KEGG" = KEGG,
+        "Enzyme" = enzymes,
+        "Enzyme Name" = enzymeName,
+        "Gene Name" = symbol,
+        "Entrez" = entrez
       ) %>%
       # Use select to reorder
-      select_(
-        "KEGG",
+      dplyr::select(
+        KEGG,
         idType,
-        "Compound",
-        "Enzyme",
-        "`Enzyme Name`",
-        "`Gene Name`",
-        "`Entrez`"
+        Compound,
+        Enzyme,
+        `Enzyme Name`,
+        `Gene Name`,
+        `Entrez`
       )
 
     # Check to see if inner_join() failed silently
@@ -595,7 +587,7 @@ mapGenerally <- function(importDF, col, db, idType) {
     )
 
 
-    # Mapping if MetaCyc is selected
+  # Mapping if MetaCyc is selected
   } else if (db == "MetaCyc") {
     mappedMetabolites <- mapMetaCyc(
       importDF = importDF,
@@ -604,7 +596,7 @@ mapGenerally <- function(importDF, col, db, idType) {
     )
 
 
-    # Return a basic error when something goes wrong
+  # Return a basic error when something goes wrong
   } else {
     mappingAlert(status = "error",
                  message = paste0("Something went wrong when mapping your metabolites, ",
