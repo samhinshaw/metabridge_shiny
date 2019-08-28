@@ -2,34 +2,38 @@
 # Load packages -----------------------------------------------------------
 
 library(tools)
-library(tidyverse)
 library(magrittr)
 library(rlang)
 library(DT)
-library(pathview) # install.packages("BiocManager"); BiocManager::install("pathview")
+# install.packages("BiocManager")
+# BiocManager::install("pathview")
+library(pathview)
 library(shinycssloaders)
+library(tidyverse)
 
 
-# Load Example Data -------------------------------------------------------
+# Load example data -------------------------------------------------------
 
 load("data/examples.RData")
 
 
-# Load KEGG Database Files ------------------------------------------------
+# Load KEGG database files ------------------------------------------------
 
 # Import Enzymes & Enzyme Names here once scraping has been completed.
 load("data/k00_keggCompounds.RData")
 # load('data/k01_keggEnzymes.RData')
 load("data/k02b_keggEnzymeShortNames.RData") # Use the shorter names for now
 load("data/k03_keggGenes.RData")
-# For the moment, only keep enzyme - gene relationships
+
+# For the moment, only keep enzyme -> gene relationships
 keggGenes <- keggGenes %>%
-  dplyr::select(-KEGG) %>% unique()
+  dplyr::select(-KEGG) %>%
+  unique()
 load("data/k04_keggPathways.RData")
 load("data/k05_keggHumanPathways.RData")
 
 
-# Load MetaCyc Database Files ---------------------------------------------
+# Load MetaCyc database files ---------------------------------------------
 
 load("data/m01_metaCycDBLinks.RData")
 load("data/m02_metaCycCompoundsReactions.RData")
@@ -43,7 +47,7 @@ load("data/m04_metaCycGeneIDs.RData")
 load("data/m05_metaCycPathways.RData")
 
 
-# Load HumanCyc Cross-References ------------------------------------------
+# Load HumanCyc cross-references ------------------------------------------
 
 load("data/humanRefs.RData")
 
@@ -53,14 +57,14 @@ load("data/humanRefs.RData")
 source(file.path("functions", "utilityFunctions.R"), local = TRUE)$value
 
 
-# Source Mapping Functions ------------------------------------------------
+# Source mapping functions ------------------------------------------------
 
 source(file.path("functions", "mapGenerally.R"), local = TRUE)$value
 source(file.path("functions", "mapPathways.R"), local = TRUE)$value
 source(file.path("functions", "visualizePathways.R"), local = TRUE)$value
 
 
-# Source App Functions ----------------------------------------------------
+# Source app/UI functions -------------------------------------------------
 
 source(file.path("functions", "alertFunctions.R"), local = TRUE)$value
 source(file.path("functions", "generateTables.R"), local = TRUE)$value

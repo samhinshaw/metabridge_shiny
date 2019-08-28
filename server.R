@@ -1,15 +1,10 @@
 
-
-# This is the server logic for a Shiny web application.
-# You can find out more about building applications with Shiny here:
-#
-# http://shiny.rstudio.com
-#
+# Welcome to the MetaBridge Shiny app!
 
 shinyServer(function(input, output, session) {
 
-  # Wait for sessionInitialized to load packages. This does not have to be defined
-  # in your UI, as the input will be passed via Shiny.onInputChange()
+  # Wait for sessionInitialized to load packages. This does not have to be
+  # defined in your UI, as the input will be passed via Shiny.onInputChange()
   observeEvent(input$sessionInitialized, {
     source("deferred.R")
     # After packages loaded, run button transform to signal ready states
@@ -143,8 +138,8 @@ shinyServer(function(input, output, session) {
     lengthMenu = c(5, 10, 15, 20),
     # autoWidth = TRUE,
     scrollX = "100%",
-    # AMAZING! Crucial argument to make sure DT doesn't overflow
-    # vertical scrolling options
+    # AMAZING! Crucial argument to make sure DT doesn't overflow vertical
+    # scrolling options
     scrollY = "450px",
     scrollCollapse = TRUE,
     paging = FALSE
@@ -162,7 +157,7 @@ shinyServer(function(input, output, session) {
     tags$div(
       class = "col-sm-9",
       uiOutput("uploadSuccess"),
-      dataTableOutput("uploadedDataTable") # %>% withSpinner(type = 8, color = '#303E4E')
+      dataTableOutput("uploadedDataTable")
     )
   })
 
@@ -246,7 +241,7 @@ shinyServer(function(input, output, session) {
   ignoreInit = TRUE
   )
 
-  ## Switch to Map panel when "Proceed" is clicked on Upload tab
+  # Switch to Map panel when "Proceed" is clicked on Upload tab
   observeEvent(input$continueToMap, {
     updateNavbarPage(session, inputId = "navbarLayout", selected = "mapPanel")
   }, ignoreInit = TRUE)
@@ -263,11 +258,10 @@ shinyServer(function(input, output, session) {
     idTypeChosen(input$idType)
   })
 
-  ## Here's where the heavy lifting takes place!!
-  ## We now take the columns the user specified and map them to genes!
-  ## Even better, now that we have a UI, we can choose
+  # Here's where the heavy lifting takes place!!
+  # We now take the columns the user specified and map them to genes!
 
-  # when the map button is clicked, update the dbChosen.
+  # When the map button is clicked, update the dbChosen.
   observeEvent(input$mapButton, {
     # Run JS to clear table content
     # runjs('handlers.clearMappingTables();') # do not clear by setting innerHTML!

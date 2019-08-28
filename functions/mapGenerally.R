@@ -15,6 +15,7 @@
 #'
 mapMetaCyc <- function(importDF, col, idType) {
 
+
   # Deal with NSE
   enquotedCol <- enquo(col)
   quotedCol <- quo(col)
@@ -35,7 +36,7 @@ mapMetaCyc <- function(importDF, col, idType) {
     # wrapped insided a function (unlike that for the condition handlers for
     # warnings and error below)
 
-    this <- data_frame(
+    this <- tibble(
       !!(idType) := importDF %>%
         use_series(!!(col)) %>%
         as.character() %>%
@@ -43,6 +44,8 @@ mapMetaCyc <- function(importDF, col, idType) {
         notEmpty() %>%
         str_trim()
     )
+
+    message("First mapping step...")
 
     # Sanitize our HMDB IDs if we are using HMDB IDs
     if (idType == "HMDB") {
@@ -71,7 +74,7 @@ mapMetaCyc <- function(importDF, col, idType) {
     } # End of first part of tryCatch()
 
 
-  # Next part of tryCatch()
+    # Next part of tryCatch()
   }, warning = function(warningMessage) {
     list(
       status = "warn",
@@ -101,19 +104,22 @@ mapMetaCyc <- function(importDF, col, idType) {
     return(mappingDF)
   }
 
+  message("Mapping objects...")
+
 
   # Next step: Map these to the MetaCyc Object IDs
   mappedToObjects <- tryCatch({
 
     # If the user uploaded MetaCyc compound IDs, skip this mapping step
     if (idType == "Compound") {
-      this <- mappingDF$data %>% rename_("compound" = "Compound")
+      this <- mappingDF$data %>%
+        dplyr::rename_("compound" = "Compound")
 
     } else {
       # Otherwise proceed as normal
       this <- inner_join(mappingDF$data, metaCycDBLinks, by = idType) %>%
         dplyr::select_(idType, "Compound") %>%
-        rename_("compound" = "Compound")
+        dplyr::rename_("compound" = "Compound")
     }
 
 
@@ -125,7 +131,7 @@ mapMetaCyc <- function(importDF, col, idType) {
                             " database for the compound IDs you provided."),
            suggest = "Try using a different compound ID or mapping via KEGG.")
 
-    # Else if the join was successful tell the user
+      # Else if the join was successful tell the user
     } else {
       list(status = "success",
            data = this,
@@ -156,9 +162,12 @@ mapMetaCyc <- function(importDF, col, idType) {
     return(mappedToObjects)
   }
 
+  message("Moving to reactions...")
+
 
   # Finally, join the reaction-gene table!
   mappedToReactions <- tryCatch({
+
     this <- inner_join(mappedToObjects$data,
                        metaCycCompoundsReactions,
                        by = "compound")
@@ -198,6 +207,7 @@ mapMetaCyc <- function(importDF, col, idType) {
     return(mappedToReactions)
   }
 
+  message("Mapping to genes...")
 
   # Finally, join the reaction-gene table!
   mappedToGenes <- tryCatch({
@@ -210,7 +220,7 @@ mapMetaCyc <- function(importDF, col, idType) {
     ) %>%
       # Make sure we only return human genes
       filter(str_detect(tolower(geneID), "^hs")) %>%
-      rename_(
+      dplyr::rename_(
         "Reaction" = "reaction",
         "Reaction Name" = "reactionName",
         "Compound" = "compound",
@@ -251,6 +261,8 @@ mapMetaCyc <- function(importDF, col, idType) {
   if (mappedToGenes$status == "error" | mappedToGenes$status == "empty") {
     return(mappedToGenes)
   }
+
+  message("Map to ensembl...")
 
 
   # Finally, finally, map biocyc gene IDs to ensembl gene IDs
@@ -304,7 +316,7 @@ mapMetaCyc <- function(importDF, col, idType) {
          internalMessage = errorMessage,
          message = "There was an error mapping your compounds to human gene IDs.",
          suggest = "Try changing your mapping parameters.")
-    }
+  }
 
   ) # End of tryCatch()
 
@@ -350,10 +362,10 @@ mapKEGG <- function(importDF, col, idType) {
     # warnings and error below)
 
     this <- data_frame(
-        !!(namedIDtype) := extract2(importDF, col) %>%
-          notNAs() %>%
-          notEmpty() %>%
-          str_trim()
+      !!(namedIDtype) := extract2(importDF, col) %>%
+        notNAs() %>%
+        notEmpty() %>%
+        str_trim()
     )
 
     # Use our matchHMDB function if using the HMDB ID for sanitization
@@ -375,9 +387,9 @@ mapKEGG <- function(importDF, col, idType) {
 
     } else {
       list(status = "success",
-          data = this,
-          message = "Your metabolites have been successfully mapped!",
-          suggest = NULL)
+           data = this,
+           message = "Your metabolites have been successfully mapped!",
+           suggest = NULL)
     } # End of first part of tryCatch()
 
   }, warning = function(warningMessage) {
@@ -437,7 +449,7 @@ mapKEGG <- function(importDF, col, idType) {
     }) # End of tryCatch()
 
 
-  # Mapping if using KEGG IDs
+    # Mapping if using KEGG IDs
   } else if (idType == "KEGG") {
 
     # Join compound name (to be scraped) to compound IDs here. Name the column
@@ -497,7 +509,7 @@ mapKEGG <- function(importDF, col, idType) {
     this <-
       inner_join(keggEnzymesOfInterest$data, keggGeneDB, by = "enzymes") %>%
       # Make column names display-friendly
-      rename_(
+      dplyr::rename_(
         "KEGG" = "KEGG",
         "Enzyme" = "enzymes",
         "Enzyme Name" = "enzymeName",
@@ -583,7 +595,7 @@ mapGenerally <- function(importDF, col, db, idType) {
     )
 
 
-  # Mapping if MetaCyc is selected
+    # Mapping if MetaCyc is selected
   } else if (db == "MetaCyc") {
     mappedMetabolites <- mapMetaCyc(
       importDF = importDF,
@@ -592,7 +604,7 @@ mapGenerally <- function(importDF, col, db, idType) {
     )
 
 
-  # Return a basic error when something goes wrong
+    # Return a basic error when something goes wrong
   } else {
     mappingAlert(status = "error",
                  message = paste0("Something went wrong when mapping your metabolites, ",
