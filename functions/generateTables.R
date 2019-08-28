@@ -44,7 +44,7 @@ generateSummaryTable <- function(mappingObject,
     )
 
 
-  # Summart table if KEGG was the chosen database
+  # Summary table if KEGG was the chosen database
   } else if (dbChosen == "KEGG") {
 
     table <- mappingObject$data %>%
