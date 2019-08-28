@@ -113,13 +113,13 @@ mapMetaCyc <- function(importDF, col, idType) {
     # If the user uploaded MetaCyc compound IDs, skip this mapping step
     if (idType == "Compound") {
       this <- mappingDF$data %>%
-        dplyr::rename_("compound" = "Compound")
+        dplyr::rename("compound" = Compound)
 
     } else {
       # Otherwise proceed as normal
       this <- inner_join(mappingDF$data, metaCycDBLinks, by = idType) %>%
-        dplyr::select_(idType, "Compound") %>%
-        dplyr::rename_("compound" = "Compound")
+        dplyr::select(idType, Compound) %>%
+        dplyr::rename("compound" = Compound)
     }
 
 
@@ -220,12 +220,12 @@ mapMetaCyc <- function(importDF, col, idType) {
     ) %>%
       # Make sure we only return human genes
       filter(str_detect(tolower(geneID), "^hs")) %>%
-      dplyr::rename_(
-        "Reaction" = "reaction",
-        "Reaction Name" = "reactionName",
-        "Compound" = "compound",
-        "MetaCyc Gene" = "geneID",
-        "Gene Name" = "geneName"
+      dplyr::rename(
+        "Reaction" = reaction,
+        "Reaction Name" = reactionName,
+        "Compound" = compound,
+        "MetaCyc Gene" = geneID,
+        "Gene Name" = geneName
       )
 
     # Check to see if join failed silently
@@ -273,14 +273,14 @@ mapMetaCyc <- function(importDF, col, idType) {
       metaCycGeneIDs,
       by = c("MetaCyc Gene" = "geneID")
     ) %>%
-      dplyr::select_(
+      dplyr::select(
         idType,
-        "Compound",
-        "Reaction",
-        "`Reaction Name`",
-        "`MetaCyc Gene`",
-        "`Gene Name`",
-        "Ensembl"
+        Compound,
+        Reaction,
+        `Reaction Name`,
+        `MetaCyc Gene`,
+        `Gene Name`,
+        Ensembl
       ) %>%
       # Filter out rows where no gene IDs are present
       dplyr::filter(!(
