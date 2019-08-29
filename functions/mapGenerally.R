@@ -56,7 +56,6 @@ mapMetaCyc <- function(importDF, col, idType) {
         ungroup()
     }
 
-    # names(this)[1] <- UQ(quotedID)
 
     # Check to see if column selection and cleaning failed silently
     if (nrow(this) == 0) {
