@@ -1,6 +1,13 @@
 
 # Welcome to the MetaBridge Shiny app!
 
+# Travis' notes and to-do for MetaBridge
+# TODO filter_() is still being used somewhere (?), needs to be replaced with
+#   filter()
+# TODO Check for other instances of suffixed dplyr verbs throughout functions
+# TODO Support for mouse IDs? i.e. convert from mouse -> human prior to mapping
+
+
 shinyServer(function(input, output, session) {
 
   # Wait for sessionInitialized to load packages. This does not have to be

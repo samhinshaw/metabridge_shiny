@@ -497,27 +497,22 @@ mapKEGG <- function(importDF, col, idType) {
   # Mapping to genes
   keggGenesOfInterest <- tryCatch({
 
-    keggGeneDB <- keggGenes %>% select_("enzymes", "entrez", "symbol")
+    keggGeneDB <- keggGenes %>% dplyr::select(enzymes, entrez, symbol)
+
     this <-
       inner_join(keggEnzymesOfInterest$data, keggGeneDB, by = "enzymes") %>%
-      # Make column names display-friendly
-      dplyr::rename(
-        "KEGG" = KEGG,
-        "Enzyme" = enzymes,
-        "Enzyme Name" = enzymeName,
-        "Gene Name" = symbol,
-        "Entrez" = entrez
-      ) %>%
-      # Use select to reorder
-      dplyr::select(
-        KEGG,
-        idType,
-        Compound,
-        Enzyme,
-        `Enzyme Name`,
-        `Gene Name`,
-        `Entrez`
-      )
+      dplyr::rename("KEGG" = KEGG,  # Make column names display-friendly
+                    "Enzyme" = enzymes,
+                    "Enzyme Name" = enzymeName,
+                    "Gene Name" = symbol,
+                    "Entrez" = entrez) %>%
+      dplyr::select(KEGG,  # Use select to reorder
+                    idType,
+                    Compound,
+                    Enzyme,
+                    `Enzyme Name`,
+                    `Gene Name`,
+                    `Entrez`)
 
     # Check to see if inner_join() failed silently
     if (nrow(this) == 0) {

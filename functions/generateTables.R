@@ -39,9 +39,7 @@ generateSummaryTable <- function(mappingObject,
       ) %>% ungroup()
 
     # Return the results for the user, and provide database info
-    return(
-      list("table" = table, "dbChosen" = "MetaCyc")
-    )
+    return(list("table" = table, "dbChosen" = "MetaCyc"))
 
 
   # Summary table if KEGG was the chosen database
@@ -50,18 +48,15 @@ generateSummaryTable <- function(mappingObject,
     table <- mappingObject$data %>%
       group_by(KEGG, !!sym(idType), Compound) %>%
       summarize(
-        "# Enzymes" = n_distinct(Enzyme, na.rm = TRUE),
+        "# Enzymes" = n_distinct(`Enzyme`, na.rm = TRUE),
         "# Gene Names" = n_distinct(`Gene Name`, na.rm = TRUE),
         "# Genes (Entrez)" = n_distinct(`Entrez`, na.rm = TRUE)
-      ) %>%
-      ungroup()
+      ) %>% ungroup()
 
     # Return the results for the user, and provide database info
-    return(
-      list("table" = table, "dbChosen" = "KEGG")
-    )
-
+    return(list("table" = table, "dbChosen" = "KEGG"))
   }
+
 }
 
 
