@@ -110,13 +110,13 @@ mapMetaCyc <- function(importDF, col, idType) {
     # If the user uploaded MetaCyc compound IDs, skip this mapping step
     if (idType == "Compound") {
       this <- mappingDF$data %>%
-        dplyr::rename("compound" = Compound)
+        rename("compound" = Compound)
 
     } else {
       # Otherwise proceed as normal
       this <- inner_join(mappingDF$data, metaCycDBLinks, by = idType) %>%
-        dplyr::select(idType, Compound) %>%
-        dplyr::rename("compound" = Compound)
+        select(idType, Compound) %>%
+        rename("compound" = Compound)
     }
 
 
@@ -214,7 +214,7 @@ mapMetaCyc <- function(importDF, col, idType) {
     ) %>%
       # Make sure we only return human genes
       filter(str_detect(tolower(geneID), "^hs")) %>%
-      dplyr::rename(
+      rename(
         "Reaction" = reaction,
         "Reaction Name" = reactionName,
         "Compound" = compound,
@@ -265,7 +265,7 @@ mapMetaCyc <- function(importDF, col, idType) {
       metaCycGeneIDs,
       by = c("MetaCyc Gene" = "geneID")
     ) %>%
-      dplyr::select(
+      select(
         idType,
         Compound,
         Reaction,
@@ -275,7 +275,7 @@ mapMetaCyc <- function(importDF, col, idType) {
         Ensembl
       ) %>%
       # Filter out rows where no gene IDs are present
-      dplyr::filter(!(
+      filter(!(
         is.na(`MetaCyc Gene`) &
           is.na(`Gene Name`) & is.na(`Ensembl`)
       ))
@@ -337,10 +337,10 @@ mapMetaCyc <- function(importDF, col, idType) {
 mapKEGG <- function(importDF, col, idType) {
 
   # Deal with NSE
-  quotedIDtype <- rlang::enquo(idType)
+  quotedIDtype <- enquo(idType)
   namedIDtype <- as.name(idType)
   keggName <- as.name("KEGG")
-  keggQuote <- rlang::quo("KEGG")
+  keggQuote <- quo("KEGG")
 
   # If KEGG compound IDs were not supplied, we'll use the MetaCyc database to
   # map the given IDs to their KEGG compound IDs
@@ -405,7 +405,7 @@ mapKEGG <- function(importDF, col, idType) {
 
     keggIDs <- tryCatch({
       this <- metaCycDBLinks %>%
-        dplyr::filter(!!(namedIDtype) %in% extract2(mappingDF$data, !!(quotedIDtype)))
+        filter(!!(namedIDtype) %in% extract2(mappingDF$data, !!(quotedIDtype)))
 
       # Check to see if filter failed silently
       if (nrow(this) == 0) {
@@ -497,22 +497,22 @@ mapKEGG <- function(importDF, col, idType) {
   # Mapping to genes
   keggGenesOfInterest <- tryCatch({
 
-    keggGeneDB <- keggGenes %>% dplyr::select(enzymes, entrez, symbol)
+    keggGeneDB <- keggGenes %>% select(enzymes, entrez, symbol)
 
     this <-
       inner_join(keggEnzymesOfInterest$data, keggGeneDB, by = "enzymes") %>%
-      dplyr::rename("KEGG" = KEGG,  # Make column names display-friendly
-                    "Enzyme" = enzymes,
-                    "Enzyme Name" = enzymeName,
-                    "Gene Name" = symbol,
-                    "Entrez" = entrez) %>%
-      dplyr::select(KEGG,  # Use select to reorder
-                    idType,
-                    Compound,
-                    Enzyme,
-                    `Enzyme Name`,
-                    `Gene Name`,
-                    `Entrez`)
+      rename("KEGG" = KEGG,  # Make column names display-friendly
+             "Enzyme" = enzymes,
+             "Enzyme Name" = enzymeName,
+             "Gene Name" = symbol,
+             "Entrez" = entrez) %>%
+      select(KEGG,  # Use select to reorder
+             idType,
+             Compound,
+             Enzyme,
+             `Enzyme Name`,
+             `Gene Name`,
+             `Entrez`)
 
     # Check to see if inner_join() failed silently
     if (nrow(this) == 0) {

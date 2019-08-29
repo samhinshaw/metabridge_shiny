@@ -95,7 +95,7 @@ generateMetaCycMetabTable <- function(mappingObject,
 
     # Quote necessary variables for dplyr
     namedIDType <- as.name(idType)
-    quotedIDType <- rlang::quo(idType)
+    quotedIDType <- quo(idType)
     pastedIDType <- paste0(idType)
 
     # Pull the selected row and extract its compound ID
@@ -107,11 +107,11 @@ generateMetaCycMetabTable <- function(mappingObject,
       extract2(pastedIDType)
 
     # Quote for NSE
-    quotedSelectedMetab <- rlang::enquo(selectedMetab)
+    quotedSelectedMetab <- enquo(selectedMetab)
 
     # Filter the mapping object for the selected metabolite
     filteredMappedMetaboliteTable <- mappingObject$data %>%
-      dplyr::filter(!!(namedIDType) == !!(quotedSelectedMetab))
+      filter(!!(namedIDType) == !!(quotedSelectedMetab))
 
     # Return the filtered table to the user (i.e. the details behind the summary
     # for that paritular metabolite)
@@ -152,7 +152,7 @@ generateKEGGMetabTable <- function(mappingObject,
 
     # Quote necessary variables for dplyr
     namedIDType <- as.name(idType)
-    quotedIDType <- rlang::quo(idType)
+    quotedIDType <- quo(idType)
     pastedIDType <- paste0(idType)
 
     # Pull the selected row and extract its compound ID
@@ -168,14 +168,14 @@ generateKEGGMetabTable <- function(mappingObject,
       str_extract("C[0-9]{5}")
 
     # Quote for NSE
-    quotedSelectedMetab <- rlang::enquo(selectedMetab)
+    quotedSelectedMetab <- enquo(selectedMetab)
 
     # Establish column name for filtering step
     namedIDType <- as.name("KEGG")
 
     # Filter the full mapping table based on chosen compund
     filteredMappedMetaboliteTable <- mappingObject$data %>%
-      dplyr::filter(!!(namedIDType) == !!(quotedSelectedMetab))
+      filter(!!(namedIDType) == !!(quotedSelectedMetab))
 
 
     return(filteredMappedMetaboliteTable)
