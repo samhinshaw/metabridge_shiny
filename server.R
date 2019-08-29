@@ -741,12 +741,12 @@ shinyServer(function(input, output, session) {
 
     # Setup named variables for standard eval
     pathwayNameIDcol <- as.name("namedPway")
-    selectedPathway <- rlang::quo(input$pathwaysPicked)
+    selectedPathway <- quo(input$pathwaysPicked)
 
     # Pull the pathway ID from the pathway name selected by the user
     selectedPathwayID <-
       selectedRowAttrs$pathwaysOfSelectedCompound %>%
-      dplyr::filter(rlang::UQ(pathwayNameIDcol) == input$pathwaysPicked) %>%
+      dplyr::filter(!!(pathwayNameIDcol) == input$pathwaysPicked) %>%
       extract2("id")
 
     filename <- visualizePathview(

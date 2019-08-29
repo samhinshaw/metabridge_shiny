@@ -30,7 +30,7 @@ mapKEGGPathways <- function(idType,
     str_extract("C[0-9]{5}")
 
   # To be treated like a character string
-  quotedMetab <- rlang::enquo(selectedMetab)
+  quotedMetab <- enquo(selectedMetab)
 
   # Pull the selected row and extract its compound Name
   selectedMetabName <-
@@ -40,12 +40,9 @@ mapKEGGPathways <- function(idType,
   # Pull out the pathways that our compound is present in from the metabPathways
   # object stored in `data/`
 
-  #' TODO Should be able to change filter_() call to look like filter() call in
-  #' line above
-
   pathwaysOfInterest <- keggPathways %>%
     dplyr::filter(!!(namedIDType) == !!(quotedMetab)) %>%
-    filter_("id %in% keggHumanPathways")
+    filter(id %in% keggHumanPathways)
 
   # Find all the genes that compound interacts with (from our initial mapping
   # table)
@@ -94,7 +91,7 @@ mapMetaCycPathways <- function(idType,
     extract2(idType)
 
   # To be treated like a character string
-  quotedMetab <- rlang::enquo(selectedMetab)
+  quotedMetab <- enquo(selectedMetab)
 
   # Pull the selected row and extract its compound Name
   selectedMetabName <-
@@ -110,7 +107,7 @@ mapMetaCycPathways <- function(idType,
     dplyr::filter(!!(namedIDType) == !!(quotedMetab)) %>%
     extract2("Reaction")
 
-  quotedSelectedReaction <- rlang::enquo(selectedReaction)
+  quotedSelectedReaction <- enquo(selectedReaction)
 
   pathwaysOfInterest <- metaCycPathways %>%
     dplyr::filter(reaction %in% !!(selectedReaction))
