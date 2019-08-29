@@ -3,7 +3,7 @@
 
 # Travis' notes and to-do for MetaBridge
 # TODO filter_() is still being used somewhere (?), needs to be replaced with
-#   filter()
+#   filter() (mapPathways.R)
 # TODO Check for other instances of suffixed dplyr verbs throughout functions
 # TODO Support for mouse IDs? i.e. convert from mouse -> human prior to mapping
 
