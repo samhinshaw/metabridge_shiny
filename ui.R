@@ -1,13 +1,9 @@
 
-
-# This is the user-interface definition of a Shiny web application.
-# You can find out more about building applications with Shiny here:
-#
-# http://shiny.rstudio.com
-#
+# Welcome to the MetaBridge Shiny app! This is the UI code defining how
+# everything looks.
 
 shinyUI(fluidPage(
-  # Head linking to Flatly bootstrap theme & my personal tweaks
+  # Head linking to Flatly bootstrap theme and my personal tweaks
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "css/bootstrap.min.css"),
     tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css"),
@@ -44,7 +40,7 @@ shinyUI(fluidPage(
     # begin the tabPanel Layout!
     tabPanel(
       # Our welcome tab
-      title = "MetaBridge", # "Welcome",
+      title = "MetaBridge",
       value = "welcomePanel",
       # Dev mode alert
       # tags$div(
@@ -92,7 +88,6 @@ shinyUI(fluidPage(
               label = "Initializing App...",
               class = "btn-primary btn-lg disabled", # btn-tooltip
               `data-position` = "right",
-              # title = "Let's Go!",
               icon("circle-o-notch", class = "fa fa-spin", lib = "font-awesome")
             ),
             HTML("&nbsp;&nbsp;&nbsp;"),
@@ -166,11 +161,11 @@ shinyUI(fluidPage(
       # Display the file that was uploaded
       uiOutput("uploadedTablePanel")
     ),
-    ## Mapping Panel
+
+    # Mapping Panel
     tabPanel(
       title = "Map",
       value = "mapPanel",
-      # h2("Map Metabolites to Interacting Enzymes"),
       # Manual Sidebar
       tags$div(
         class = "col-sm-3 manual-sidebar",
@@ -182,7 +177,8 @@ shinyUI(fluidPage(
             "but KEGG may yield more hits. If you map via KEGG, you also have the ",
             "option to visualize your results."
           ),
-          ## For now just allow one database. Later we can allow multiple mappings in one go
+          # For now just allow one database. Later we can allow multiple
+          # mappings in one go
           radioButtons(
             "dbChosen",
             "Choose Database",
@@ -196,18 +192,16 @@ shinyUI(fluidPage(
             class = "btn-med btn-tooltip",
             `data-position` = "right",
             title = "Map your metabolites to the selected database"
-            # `data-toggle` = "btn-tooltip",
-            # `data-placement` = "right",
-            # `data-original-title` = "Map your metabolites against the selected database"
           )
-          # Maybe show tickbox to allow user to see full results rather than just the summary?
+        # Maybe show tickbox to allow user to see full results rather than just the summary?
         ),
         # Let user download results
         uiOutput("saveMappingPanel"),
         # Show panel for continuing to visualize results
         uiOutput("continueToViz")
       ),
-      ## DISPLAY MAPPING RESULTS
+
+      # DISPLAY MAPPING RESULTS
       tags$div(
         class = "col-sm-9",
         # Show summary table (server-rendered)

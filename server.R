@@ -1,8 +1,9 @@
 
 # Welcome to the MetaBridge Shiny app!
 
-# Travis' notes and to-do for MetaBridge
+# Travis' notes and to-do for MetaBridge:
 # TODO Support for mouse IDs? i.e. convert from mouse -> human prior to mapping
+# TODO Allow multiple mappings in one go (i.e. MetaCyc and KEGG simultaneously?)
 
 
 shinyServer(function(input, output, session) {
