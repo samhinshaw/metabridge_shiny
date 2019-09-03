@@ -15,11 +15,13 @@ shinyServer(function(input, output, session) {
     runjs("handlers.initGetStarted();")
   }, ignoreNULL = TRUE, ignoreInit = TRUE, once = TRUE)
 
+
   ################################################
   #                                              #
   #          Define reactive variables           #
   #                                              #
   ################################################
+
 
   # Reactive Values for Metabolite Data. These are isolated into individual
   # reactive values so we can depend on them for reactive changes
@@ -71,7 +73,7 @@ shinyServer(function(input, output, session) {
     databaseChosen(NULL)
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
-  ## Read CSV when any of (fileInput, checkboxInput, radioButtons) states change
+  # Read file when any of (fileInput, checkboxInput, radioButtons) states change
   observeEvent({
     input$metaboliteUpload
     input$sep
@@ -94,22 +96,8 @@ shinyServer(function(input, output, session) {
     }
   }, ignoreNULL = TRUE, ignoreInit = TRUE)
 
-  # Unfortunately, this does not work :(
-  # Once we have the table, check the header to see if there's an HMDB column
-  # observeEvent({
-  #   metaboliteObject()
-  # }, {
-  #   # get the index of a column which is labeled 'hmdb'
-  #   indexOfHMDB <- which(tolower(colnames(metaboliteObject())) == 'hmdb')
-  #   # If we got an answer back, lower the index by one (as DT indexes by zero),
-  #   # and assign to a reactive variable
-  #   if (!identical(indexOfHMDB, integer(0))) {
-  #     indexOfHMDB <- indexOfHMDB - 1
-  #     hmdbCol(indexOfHMDB)
-  #   }
-  # })
 
-  ## Once data is populated, render help text to user
+  # Once data is populated, render help text to user
   output$uploadSuccess <- renderUI({
     input$tryExamples # make sure the try examples button is a dependency
     if (is.null(metaboliteObject())) {
@@ -122,7 +110,7 @@ shinyServer(function(input, output, session) {
     )
   })
 
-  ## Once data is populated, render preview of data to user
+  # Once data is populated, render preview of data to user
   output$uploadedDataTable <- DT::renderDataTable({
     input$tryExamples
     input$sep
@@ -135,12 +123,11 @@ shinyServer(function(input, output, session) {
       # Render the (reactive value) uploadedDataTable
       metaboliteObject()
     }
-    # DataTables options
+  # DataTables options
   },
   options = list(
     pageLength = 10,
     lengthMenu = c(5, 10, 15, 20),
-    # autoWidth = TRUE,
     scrollX = "100%",
     # AMAZING! Crucial argument to make sure DT doesn't overflow vertical
     # scrolling options
@@ -169,7 +156,7 @@ shinyServer(function(input, output, session) {
     input$uploadedDataTable_columns_selected
     metaboliteObject()
   }, {
-    # wait 500ms after panel render and re-activate tooltips
+    # Wait 500ms after panel render and re-activate tooltips
     runjs("setTimeout(() => { handlers.activateTooltips(['.panel-tooltip', '.btn-tooltip']); }, 100)")
   })
 
@@ -187,7 +174,7 @@ shinyServer(function(input, output, session) {
         selected = preSelectedIDType(),
         selectize = FALSE
       ),
-      # Include button to proceed.
+      # Include button to proceed
       actionButton(
         inputId = "continueToMap",
         label = "Proceed",
@@ -267,12 +254,12 @@ shinyServer(function(input, output, session) {
 
   # When the map button is clicked, update the dbChosen.
   observeEvent(input$mapButton, {
-    # Run JS to clear table content
-    # runjs('handlers.clearMappingTables();') # do not clear by setting innerHTML!
-    # change the dbChosen reactive Value
+    # Change the dbChosen reactive Value
     databaseChosen(input$dbChosen)
+
     # Clear any pre-existing alerts
     removeUI(selector = "#mappingAlert")
+
     # Conduct the mapping from our mapGenerally() function defined in mapGenerally.R
     mappingOutput <- mapGenerally(
       importDF = metaboliteObject(),
@@ -280,12 +267,14 @@ shinyServer(function(input, output, session) {
       db = databaseChosen(),
       idType = idTypeChosen()
     )
+
     # Assign the mapped data to our reactive value
     mappedMetabolites(mappingOutput$data)
+
     # and assign the full object so we can access the status reports later
     mappingObject(mappingOutput)
+
     # Create new alert bubble with status message
-    # Add optional tweet link? Or email link with error message?
     mappingAlert(
       status = mappingOutput$status,
       message = mappingOutput$message,
@@ -293,26 +282,11 @@ shinyServer(function(input, output, session) {
     )
   }, ignoreInit = TRUE)
 
-  ###############################################################
-  #                                                             #
-  # Interlude: Change ID Type to KEGG if KEGG DB is being used. #
-  # Otherwise, continue to use input ID type                    #
-  #                                                             #
-  ###############################################################
-
-  # idTypeOfInterest <- reactiveVal()
-  #
-  # observeEvent(input$mapButton, {
-  #   if (databaseChosen() == 'KEGG') {
-  #     idTypeOfInterest('KEGG')
-  #   } else {
-  #     idTypeOfInterest(input$idType)
-  #   }
-  # })
 
   ############################# End ##############################
 
-  # THREE STEP RENDER PROCESS
+
+  # THREE STEP RENDER PROCESS - PART 1
   # 1. Generate Table from `generateTables.R::generateSummaryTable()`, depending
   #    only on the mapButton click.
   # 2. Render the generated table with DT::renderDataTable(). This is separate
@@ -320,20 +294,18 @@ shinyServer(function(input, output, session) {
   #    output object.
   # 3. Render the entire UI surrounding the table and insert the rendered DT.
 
-  ## STEP ONE
+  # STEP ONE
   # ~~~~~~~~~~
   # Show a summary table of the mapped metabolites (just number of genes)
   # This calls generateSummaryTable() from generateTables.R
-  # We should make this optional!
   # Only render when 'map' clicked
   observeEvent(input$mapButton, {
-    # create the summary tables
     results <- generateSummaryTable(mappingObject(), idTypeChosen(), databaseChosen())
     mappingSummary$table <- results$table
     mappingSummary$dbChosen <- results$dbChosen
   })
 
-  ## STEP TWO
+  # STEP TWO
   # ~~~~~~~~~~
   # Once metabolites have been mapped, render the results!
   output$mappingSummaryTable <- DT::renderDataTable({
@@ -346,12 +318,12 @@ shinyServer(function(input, output, session) {
   selection = "single"
   )
 
-  ## STEP THREE
+  # STEP THREE
   # ~~~~~~~~~~
   # Render the panel separately so we have reactive control over all the UI
   # elements surrounding the DataTable, not just the dataTable itself
   output$mappingSummaryPanel <- renderUI({
-    # make sure this depends on the summary table (and thus updates every time
+    # Make sure this depends on the summary table (and thus updates every time
     # the summary table does)
     mappingSummary$table
     # Now proceed...
@@ -382,8 +354,10 @@ shinyServer(function(input, output, session) {
     selectedMetab(NULL)
   })
 
+  ############################# End ##############################
 
-  # THREE STEP RENDER PROCESS
+
+  # THREE STEP RENDER PROCESS - PART 2
   # 1. Generate Table from `generateTables.R::generateSummaryTable()`, depending
   #    only on the mapButton click.
   # 2. Render the generated table with DT::renderDataTable(). This is separate
@@ -391,9 +365,9 @@ shinyServer(function(input, output, session) {
   #    output Object.
   # 3. Render the entire UI surrounding the table and insert the rendered DT.
 
-  ## STEP ONE
-  ## Generate table
-  ## ~~~~~~~~~~
+  # STEP ONE
+  # Generate table
+  # ~~~~~~~~~~
   # Now, show the filtered (unsummarized) table, based on what metabolite user clicked on.
   observeEvent({
     # When we select a new metabolite in the summary table...
@@ -408,13 +382,8 @@ shinyServer(function(input, output, session) {
       mappingObject()$status == "empty") {
       mappingObject()$data %>% mappedMetaboliteTable()
 
-      # Also make sure our mapping was actually conducted
-      # Sometimes the click doesn't register??
-      # Use DOM API here to read header
-      # } else if () {
-
-      # Otherwise, generate our table depending on the chosen database! As with
-      # `generateSummaryTable()`, these functions come from `generateTables.R`
+    # Otherwise, generate our table depending on the chosen database! As with
+    # `generateSummaryTable()`, these functions come from `generateTables.R`
     } else if (databaseChosen() == "KEGG") {
       if (mappingSummary$dbChosen != "KEGG") {
         cat("DATABASE WAS KEGG, NULL RETURNING...")
@@ -445,9 +414,9 @@ shinyServer(function(input, output, session) {
     }
   })
 
-  ## STEP TWO
-  ## Render generated table
-  ## ~~~~~~~~~~
+  # STEP TWO
+  # Render generated table
+  # ~~~~~~~~~~
   # Once metabolites have been mapped, render the results!
   output$mappedMetaboliteTable <- DT::renderDataTable({
     if (is.null(mappingObject()) | is.null(selectedMetab())) {
@@ -464,8 +433,8 @@ shinyServer(function(input, output, session) {
   selection = "single"
   )
 
-  ## STEP THREE
-  ## Render entire UI output, including the rendered table
+  # STEP THREE
+  # Render entire UI output, including the rendered table
   # ~~~~~~~~~~
   output$fullMappingResultsPanel <- renderUI({
     tags$div(
@@ -486,13 +455,13 @@ shinyServer(function(input, output, session) {
     )
   })
 
-  ## Watch for the "try again" button that will be rendered if an error occurs
-  ## in mapping
+  # Watch for the "try again" button that will be rendered if an error occurs in
+  # mapping
   observeEvent(input$remap, {
     updateNavbarPage(session, inputId = "navbarLayout", selected = "uploadPanel")
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
-  ## Once table exists, render save panel
+  # Once table exists, render save panel
   output$saveMappingPanel <- renderUI({
     if (!is.null(mappedMetabolites())) {
       tags$form(
@@ -513,29 +482,21 @@ shinyServer(function(input, output, session) {
           "Download",
           class = "btn-med btn-tooltip",
           title = "Download your full mapping results"
-          # `data-toggle` = "btn-tooltip",
-          # `data-placement` = "right",
-          # `data-original-title` = "Download your full mapping results."
         )
       )
     }
   })
 
-  # Navigate to Viz page when KEGG was chosen
 
-  ##############################################
-  #                                            #
-  #      UPDATE TO REMOVE DISABLED BUTTON      #
-  #       It's simply bad user experience      #
-  #                                            #
-  ##############################################
+  # Navigate to Viz page when KEGG was chosen
 
   output$continueToViz <- renderUI({
     # Do not render panel if no db has been mapped against yet (because
     # databaseChosen does not get input$dbChosen until "mapButton" is clicked)
     if (is.null(databaseChosen())) {
       return(NULL)
-      # once mapped, render the panel
+
+    # Once mapped, render the panel
     } else if (databaseChosen() == "MetaCyc") {
       return(NULL)
     } else {
@@ -547,7 +508,8 @@ shinyServer(function(input, output, session) {
           "to visualize your results with pathview."
         ),
         br(),
-        # if we mapped against KEGG, show visualize button
+
+        # If we mapped against KEGG, show visualize button
         if (databaseChosen() == "KEGG" &
           !is.null(selectedMetab())) {
           actionButton(
@@ -556,8 +518,8 @@ shinyServer(function(input, output, session) {
             class = "btn btn-med btn-tooltip",
             title = "Visualize your results with pathview"
           )
-          # But if we mapped against MetaCyc, we don't have visualizations for
-          # this yet, so disable the viz button
+        # But if we mapped against MetaCyc, we don't have visualizations for
+        # this yet, so disable the viz button
         } else {
           actionButton(
             inputId = "visualizeButton",
@@ -599,7 +561,7 @@ shinyServer(function(input, output, session) {
     updateNavbarPage(session, inputId = "navbarLayout", selected = "vizPanel")
   }, ignoreInit = TRUE)
 
-  ## Export data
+  # Export data
   output$downloadMappingData <- downloadHandler(
     # Name file: `originalFilename_mapped_dbChosen.savetype`
     filename = function() {
@@ -627,6 +589,8 @@ shinyServer(function(input, output, session) {
       )
     }
   )
+
+
   ################################################
   #                                              #
   #                Viz Tab Handlers              #
@@ -665,7 +629,7 @@ shinyServer(function(input, output, session) {
       selectedRow = selectedMetab()
     )
 
-    ### Assign results to their reactive values
+    # Assign results to their reactive values
     selectedRowAttrs$selectedCompound <-
       pathwayMappingAttrs$selectedCompound
     selectedRowAttrs$selectedCompoundName <-
@@ -678,7 +642,7 @@ shinyServer(function(input, output, session) {
 
   # Render the pathway panel once
   output$pathwayPanel <- renderUI({
-    ## Check for results before rendering!
+    # Check for results before rendering!
     if (nrow(selectedRowAttrs$pathwaysOfSelectedCompound) == 0) {
       tags$div(
         tags$h4(
@@ -763,8 +727,7 @@ shinyServer(function(input, output, session) {
     ))
   }, deleteFile = TRUE)
 
-  ## Render entire UI for vizPanel
-
+  # Render entire UI for vizPanel
   output$vizPanelUI <- renderUI({
     if (is.null(databaseChosen())) {
       tags$div(
@@ -816,8 +779,8 @@ shinyServer(function(input, output, session) {
         # Manual Sidebar
         tags$div(
           class = "col-sm-3 manual-sidebar",
-          # Allow user to pick which pathway that the selected
-          # metabolite participates in to view
+          # Allow user to pick which pathway that the selected metabolite
+          # participates in to view
           tags$form(
             class = "well",
             uiOutput("pathwayPanel")
