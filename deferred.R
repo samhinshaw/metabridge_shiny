@@ -19,16 +19,16 @@ load("data/examples.RData")
 
 # Load KEGG database files ------------------------------------------------
 
-# Import Enzymes & Enzyme Names here once scraping has been completed.
 load("data/k00_keggCompounds.RData")
 # load('data/k01_keggEnzymes.RData')
 load("data/k02b_keggEnzymeShortNames.RData") # Use the shorter names for now
-load("data/k03_keggGenes.RData")
 
+load("data/k03_keggGenes.RData")
 # For the moment, only keep enzyme -> gene relationships
 keggGenes <- keggGenes %>%
   dplyr::select(-KEGG) %>%
   unique()
+
 load("data/k04_keggPathways.RData")
 load("data/k05_keggHumanPathways.RData")
 

@@ -48,6 +48,7 @@ pathway-tools offers more consistent results, better user interface, and is gene
 1. Download and install pathway-tools (currently version 21.0)
 2. Run pathway-tools, and in the visual interface click 'MetaCyc'
 
+
 ### Create Table 2: Reactions of Compounds
 1. From the [SmartTables] menu dropdown choose [Create New SmartTable] -> [Containing All] -> [Compounds]
 2. Once list of all compounds appears (currently 15950 Total), choose [SmartTables] -> [Transform SmartTable] -> [Reactions of Compounds]
