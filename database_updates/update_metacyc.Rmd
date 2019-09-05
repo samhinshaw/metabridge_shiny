@@ -89,11 +89,10 @@ Unfortunately, all of these tables require munging! The have been formatted for 
 > **This script will OVERWRITE your current database files located in /data/. Make sure you check that everything is working properly before you commit these changes to version control and deploy the update.**
 
 ```{r message=FALSE, warning=FALSE}
-library(tidyverse)
-library(stringr)
 library(magrittr)
 library(rprojroot)
 library(splitstackshape)
+library(tidyverse)
 
 rootDir <- rprojroot::find_rstudio_root_file()
 updateDir <- file.path(rootDir, 'database_updates')
