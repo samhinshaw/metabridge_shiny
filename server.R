@@ -2,8 +2,11 @@
 # Welcome to the MetaBridge Shiny app!
 
 # Travis' notes and to-do for MetaBridge:
-# TODO Support for mouse IDs? i.e. convert from mouse -> human prior to mapping
-# TODO Allow multiple mappings in one go (i.e. MetaCyc and KEGG simultaneously?)
+# TODO Support for mouse IDs? i.e. convert from human -> mouse genes in output
+# TODO Allow multiple mappings in one go (i.e. MetaCyc and KEGG
+# simultaneously?). Could make the two summary tables display side-by-side in
+# the top panel of mapping results, with detailed results below when a row is
+# selected
 
 
 shinyServer(function(input, output, session) {
