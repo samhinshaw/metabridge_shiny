@@ -37,7 +37,7 @@ shinyUI(fluidPage(
     header = tagList(useShinyjs()),
     windowTitle = "MetaBridge",
     collapsible = TRUE,
-    # begin the tabPanel Layout!
+    # Begin the tabPanel Layout!
     tabPanel(
       # Our welcome tab
       title = "MetaBridge",
@@ -62,7 +62,7 @@ shinyUI(fluidPage(
         tags$div(
           class = "logoWrapper",
           tags$p(
-            "Welcome to MetaBridge, a web tool for network-based integrative ",
+            "Welcome to MetaBridge v2, a web tool for network-based integrative ",
             "analysis of metabolomics data. Here you can upload a set of metabolites ",
             "and identify the directly interacting enzymes for network integration. "
           ),
@@ -178,7 +178,7 @@ shinyUI(fluidPage(
             "option to visualize your results."
           ),
           # For now just allow one database. Later we can allow multiple
-          # mappings in one go
+          # mappings at once
           radioButtons(
             "dbChosen",
             "Choose Database",
@@ -193,11 +193,12 @@ shinyUI(fluidPage(
             `data-position` = "right",
             title = "Map your metabolites to the selected database"
           )
-        # Maybe show tickbox to allow user to see full results rather than just the summary?
+        # Maybe show tickbox to allow user to see full results rather than just
+        # the summary? Currently not implemented, see `server.R:631`
         ),
-        # Let user download results
+        # Let the user download their results
         uiOutput("saveMappingPanel"),
-        # Show panel for continuing to visualize results
+        # Show panel for continuing to visualization results
         uiOutput("continueToViz")
       ),
 
@@ -218,7 +219,7 @@ shinyUI(fluidPage(
       class = "viz-panel",
       uiOutput("vizPanelUI")
     ),
-    # Finally, the 'More' Panel, with about, help, etcetera
+    # Finally, the 'More' Panel, with about, help, etc.
     navbarMenu(
       "Help",
       tabPanel(
@@ -265,7 +266,7 @@ shinyUI(fluidPage(
             tags$p(
               "MetaBridge was designed by Samuel Hinshaw at the ",
               tags$a(href = "http://cmdr.ubc.ca/bobh/", "Centre for Microbial Diseases and Immunity Research"),
-              " at The University of British Columbia. ",
+              " at The University of British Columbia, and v2 was developed by Travis Blimkie.",
               "MetaBridge was published in",
               tags$em("Bioinformatics"),
               " (doi: ",
@@ -273,31 +274,52 @@ shinyUI(fluidPage(
               "). Please cite this paper when using MetaBridge in your analyses."
             ),
             tags$p(
-              "For help, you can reach me on twitter",
-              tags$a(href = 'https://www.twitter.com/samhinshaw', '@samhinshaw'),
-              "."
+              "For help, you can post an issue at the ",
+              tags$a(href = "https://github.com/travis-m-blimkie/metabridge_shiny", "Github page.")
             ),
             tags$p(
-              "MetaBridge uses the following R packages:"
+              "MetaBridge uses the following databases and R packages:"
             ),
             tags$p(
               tags$dl(
+
+                # MetaCyc
+                tags$dt(
+                  tags$a(href = "https://metacyc.org/", "MetaCyc v22")
+                ),
+                tags$dd("Curated database for human metabolomic data"),
+
+                # KEGG
+                tags$dt(
+                  tags$a(href = "https://www.genome.jp/kegg/", "KEGG v?")
+                ),
+                tags$dd("Large database containing multiple data types"),
+
+                # Pathview
                 tags$dt(
                   tags$a(href = "https://doi.org/10.1093/bioinformatics/btt285", "Pathview")
                 ),
                 tags$dd("Pathway-based data integration and visualization"),
+
+                # Shiny
                 tags$dt(
                   tags$a(href = "https://shiny.rstudio.com/", "Shiny")
                   ),
                 tags$dd("Web Application Framework for R"),
+
+                # ShinyCSSLoaders
                 tags$dt(
                   tags$a(href = "https://github.com/andrewsali/shinycssloaders", "shinycssloaders")
                 ),
                 tags$dd("Animated loaders for shiny outputs"),
+
+                # ShinyJS
                 tags$dt(
                   tags$a(href = "https://deanattali.com/shinyjs/", "shinyjs")
                 ),
                 tags$dd("Easily Improve the User Experience of Your Shiny Apps in Seconds"),
+
+                # Tidyverse
                 tags$dt(
                   tags$a(href = "https://www.tidyverse.org/", "The Tidyverse"),
                   tags$dd("An opinionated collection of R packages designed for data science. ")
