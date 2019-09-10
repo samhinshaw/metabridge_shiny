@@ -1,22 +1,36 @@
-## Some database testing
+# Testing updated database file
+
+
+# Load libraries and source functions -------------------------------------
+
 library(tidyverse)
 source("functions/utilityFunctions.R")
 
-one <- read_tsv("database_updates/1_compounds_and_IDs.tsv")
 
-two <- read_tsv("database_updates/2_reactions_and_compounds.tsv")
-two %<>% select(-X4)
-two %<>% rename("reaction" = "ID", "compoundName" = "Name", "compoundID" = "Matches")
+# Load all the new database files -----------------------------------------
 
-three <- read_tsv("database_updates/3_reactions_and_genes.tsv")
-three %<>% select(-X4)
-three %<>% rename("geneID" = "ID", "geneName" = "Name", "reaction" = "Matches")
+one <- read_tsv("database_updates/1-compounds-ids.tsv")
 
-four <- read_tsv("database_updates/4_genes_and_IDs.tsv")
-five <- read_tsv("database_updates/5_pathways_and_reactions.tsv")
+two <- read_tsv("database_updates/2-compounds-reactions.tsv") %>%
+  select(-X4) %>%
+  rename("reaction" = ID, "compoundName" = Name, "compoundID" = Matches)
+
+three <- read_tsv("database_updates/3-reactions-genes.tsv") %>%
+  select(-X4) %>%
+  rename("geneID" = "ID", "geneName" = "Name", "reaction" = "Matches")
+
+four <- read_tsv("database_updates/4-genes-ids.tsv")
+
+five <- read_tsv("database_updates/5-pathways-reactions.tsv")
+
+
+# Testing joins -----------------------------------------------------------
 
 innerJoin <- inner_join(two, three)
 fullJoin <- full_join(two, three)
+
+
+# Test HMDB ID cleaning function ------------------------------------------
 
 lactate <- read_csv("example_data/lactate.csv")
 
