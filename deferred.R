@@ -24,7 +24,7 @@ load("data/k00_keggCompounds.RData")
 load("data/k02b_keggEnzymeShortNames.RData") # Use the shorter names for now
 
 load("data/k03_keggGenes.RData")
-# For the moment, only keep enzyme -> gene relationships
+# For the moment, only keep enzyme-gene relationships
 keggGenes <- keggGenes %>%
   dplyr::select(-KEGG) %>%
   unique()
@@ -38,11 +38,6 @@ load("data/k05_keggHumanPathways.RData")
 load("data/m01_metaCycDBLinks.RData")
 load("data/m02_metaCycCompoundsReactions.RData")
 load("data/m03_metaCycReactionsGenes.RData")
-# load('data/m04_metaCycGeneIDs.RData')
-
-
-# Temporarily import new cleaned files ------------------------------------
-
 load("data/m04_metaCycGeneIDs.RData")
 load("data/m05_metaCycPathways.RData")
 
@@ -57,7 +52,7 @@ load("data/humanRefs.RData")
 source(file.path("functions", "utilityFunctions.R"), local = TRUE)$value
 
 
-# Source mapping functions ------------------------------------------------
+# Source primary mapping functions -----------------------------------------
 
 source(file.path("functions", "mapGenerally.R"), local = TRUE)$value
 source(file.path("functions", "mapPathways.R"), local = TRUE)$value
