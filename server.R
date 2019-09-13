@@ -2,6 +2,7 @@
 # Welcome to the MetaBridge Shiny app!
 
 # Travis' notes and to-do for MetaBridge:
+# TODO Update rds files used in MetaCyc mapping
 # TODO Support for mouse IDs? i.e. convert from human -> mouse genes in output
 # TODO Allow multiple mappings in one go (i.e. MetaCyc and KEGG
 # simultaneously?). Could make the two summary tables display side-by-side in
