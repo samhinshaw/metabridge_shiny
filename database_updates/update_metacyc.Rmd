@@ -98,7 +98,6 @@ rootDir <- rprojroot::find_rstudio_root_file()
 updateDir <- file.path(rootDir, 'database_updates')
 exampleDir <- file.path(rootDir, 'example_data')
 dataDir <- file.path(rootDir, 'data')
-cleanDir <- file.path(updateDir, 'cleaned_files')
 
 compoundIDs <- read_tsv(file.path(updateDir, '1-compounds-ids.tsv'))
 
