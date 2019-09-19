@@ -186,7 +186,7 @@ Looks like we're good to go, let's save it!
 
 ```{r}
 metaCycDBLinks <- compoundIDs
-save(metaCycDBLinks, file = file.path(dataDir, 'm01_metaCycDBLinks.RData'))
+save(metaCycDBLinks, file = file.path(dataDir, 'm01_metaCycDBLinks_v23.RData'))
 ```
 
 ### Step 2: Map to Reactions
@@ -219,7 +219,7 @@ Save our results
 
 ```{r}
 metaCycCompoundsReactions <- compoundsReactions
-save(metaCycCompoundsReactions, file = file.path(dataDir, 'm02_metaCycCompoundsReactions.RData'))
+save(metaCycCompoundsReactions, file = file.path(dataDir, 'm02_metaCycCompoundsReactions_v23.RData'))
 ```
 
 
@@ -246,17 +246,18 @@ head(reactionsGenes)
 Again, we see there are some HTML markup and entities in there, but they are restricted to the "geneName" column, which we are not mapping against. We also need to split our reactions column.
 
 ```{r}
-reactionsGenes %<>% cSplit(
-  splitCols = c('reaction'), 
-  sep = ', ', direction = 'long', 
-  type.convert = FALSE, stripWhite = FALSE
-)
+reactionsGenes %<>% 
+  cSplit(
+    splitCols = c('reaction'), 
+    sep = ', ', direction = 'long', 
+    type.convert = FALSE, stripWhite = FALSE
+  )
 glimpse(reactionsGenes)
 ```
 
 ```{r}
 metaCycReactionsGenes <- reactionsGenes
-save(metaCycReactionsGenes, file = file.path(dataDir, 'm03_metaCycReactionsGenes.RData'))
+save(metaCycReactionsGenes, file = file.path(dataDir, 'm03_metaCycReactionsGenes_v23.RData'))
 ```
 
 
@@ -282,7 +283,7 @@ glimpse(geneIDs)
 
 metaCycGeneIDs <- geneIDs
 
-save(metaCycGeneIDs, file = file.path(dataDir, 'm04_metaCycGeneIDs.RData'))
+save(metaCycGeneIDs, file = file.path(dataDir, 'm04_metaCycGeneIDs_v23.RData'))
 ```
 
 And join to the table
@@ -311,11 +312,12 @@ pathwaysReactions %<>% dplyr::rename('pathwayID' = 'ID', 'pathwayName' = 'Name',
 Again, we see there are some HTML markup and entities in the table, but they are restricted to the "Name" column, which we are not mapping against. However, we will need to split the reactions column. 
 
 ```{r}
-pathwaysReactions %<>% cSplit(
-  splitCols = c('reaction'), 
-  sep = ', ', direction = 'long', 
-  type.convert = FALSE, stripWhite = FALSE
-)
+pathwaysReactions %<>% 
+  cSplit(
+    splitCols = c('reaction'), 
+    sep = ', ', direction = 'long', 
+    type.convert = FALSE, stripWhite = FALSE
+  )
 glimpse(pathwaysReactions)
 ```
 
@@ -323,6 +325,6 @@ Looks good, let's save it!
 
 ```{r}
 metaCycPathways <- pathwaysReactions
-save(metaCycPathways, file = file.path(dataDir, 'm05_metaCycPathways.RData'))
+save(metaCycPathways, file = file.path(dataDir, 'm05_metaCycPathways_v23.RData'))
 ```
 
