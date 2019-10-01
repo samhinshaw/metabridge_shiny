@@ -386,21 +386,20 @@ shinyServer(function(input, output, session) {
     # Update when we select a new metabolite in the summary table...
     selectedMetab()
     # ...or when we click the map button (this is important because we need to
-    # be able to update in case there are errors we need to display)
+    # be able to update in case there are errors we need to display).
     input$mapButton
   }, {
     # Pull the `$data` object from the `tryCatch()` output if there was an
     # error. This should default to the previous successful step.
     if (mappingObject()$status == "error" |
-      mappingObject()$status == "empty") {
+        mappingObject()$status == "empty") {
       mappingObject()$data %>% mappedMetaboliteTable()
 
     # Otherwise, generate our table depending on the chosen database! As with
-    # `generateSummaryTable()`, these functions come from
-    # "functions/generateTables.R"
+    # `generateSummaryTable()`, these functions come from "generateTables.R"
     } else if (databaseChosen() == "KEGG") {
       if (mappingSummary$dbChosen != "KEGG") {
-        cat("DATABASE WAS KEGG, NULL RETURNING...")
+        cat("DATABASE WAS NOT KEGG, NULL RETURNING...")
         # If our summary table was somehow not updated yet, exit
         return(NULL)
       } else {
@@ -415,6 +414,7 @@ shinyServer(function(input, output, session) {
     } else if (databaseChosen() == "MetaCyc") {
       # If our summary table was somehow not updated yet, exit
       if (mappingSummary$dbChosen != "MetaCyc") {
+        cat("DATABASE WAS NOT METACYC, NULL RETURNING...")
         return(NULL)
         # Otherwise proceed with generated the metabolite table
       } else {

@@ -178,7 +178,7 @@ shinyUI(fluidPage(
             "option to visualize your results."
           ),
           # For now just allow one database. Later we can allow multiple
-          # mappings at once
+          # mappings at once.
           radioButtons(
             "dbChosen",
             "Choose Database",
