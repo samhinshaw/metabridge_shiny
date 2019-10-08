@@ -2,7 +2,6 @@
 # Welcome to the MetaBridge Shiny app!
 
 # Travis' notes and to-do for MetaBridge:
-# TODO Update rds files used in MetaCyc mapping
 # TODO Support for mouse IDs? i.e. convert from human -> mouse genes in output
 # TODO Allow multiple mappings in one go (i.e. MetaCyc and KEGG
 # simultaneously?). Could make the two summary tables display side-by-side in
@@ -154,7 +153,7 @@ shinyServer(function(input, output, session) {
     tags$div(
       class = "col-sm-9",
       uiOutput("uploadSuccess"),
-      dataTableOutput("uploadedDataTable")
+      DT::dataTableOutput("uploadedDataTable")
     )
   })
 
@@ -310,7 +309,11 @@ shinyServer(function(input, output, session) {
   # This calls `generateSummaryTable()` from "functions/generateTables.R" and
   # only renders when the "Map" button is clicked
   observeEvent(input$mapButton, {
-    results <- generateSummaryTable(mappingObject(), idTypeChosen(), databaseChosen())
+    results <- generateSummaryTable(
+      mappingObject(),
+      idTypeChosen(),
+      databaseChosen()
+    )
     mappingSummary$table <- results$table
     mappingSummary$dbChosen <- results$dbChosen
   })
@@ -391,8 +394,7 @@ shinyServer(function(input, output, session) {
   }, {
     # Pull the `$data` object from the `tryCatch()` output if there was an
     # error. This should default to the previous successful step.
-    if (mappingObject()$status == "error" |
-        mappingObject()$status == "empty") {
+    if (mappingObject()$status == "error" | mappingObject()$status == "empty") {
       mappingObject()$data %>% mappedMetaboliteTable()
 
     # Otherwise, generate our table depending on the chosen database! As with
@@ -724,7 +726,7 @@ shinyServer(function(input, output, session) {
     # Pull the pathway ID from the pathway name selected by the user
     selectedPathwayID <-
       selectedRowAttrs$pathwaysOfSelectedCompound %>%
-      dplyr::filter(!!(pathwayNameIDcol) == input$pathwaysPicked) %>%
+      filter(!!(pathwayNameIDcol) == input$pathwaysPicked) %>%
       extract2("id")
 
     filename <- visualizePathview(

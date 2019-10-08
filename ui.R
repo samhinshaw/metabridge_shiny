@@ -1,6 +1,9 @@
 
 # Welcome to the MetaBridge Shiny app! This is the UI code defining how
-# everything looks.
+# everything looks. Note that many elements will be missing UI code here, as
+# they are generated in calls to renderUI() in `server.R` in order to allow for
+# more control over when/how elements are rendered.
+
 
 shinyUI(fluidPage(
   # Head linking to Flatly bootstrap theme and my personal tweaks
