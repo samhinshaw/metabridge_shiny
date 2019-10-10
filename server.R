@@ -57,6 +57,7 @@ shinyServer(function(input, output, session) {
     updateNavbarPage(session, inputId = "navbarLayout", selected = "tutorialPanel")
   }, ignoreInit = TRUE)
 
+  # When clicking "About", switch to the `About` panel
   observeEvent(input$about, {
     updateNavbarPage(session, inputId = "navbarLayout", selected = "aboutPanel")
   }, ignoreInit = TRUE)

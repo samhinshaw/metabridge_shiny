@@ -86,11 +86,13 @@ shinyUI(fluidPage(
           ),
           br(),
           div(
+
+            # To see how these buttons are hidden, refer to `www/js/client.js`
             actionButton(
               inputId = "getStarted",
               label = "Initializing App...",
               class = "btn-primary btn-lg disabled", # btn-tooltip
-              `data-position` = "right",
+              `data-position` = "bottom",
               icon("circle-o-notch", class = "fa fa-spin", lib = "font-awesome")
             ),
 
@@ -100,7 +102,8 @@ shinyUI(fluidPage(
               inputId = "tutorial",
               label = "Tutorial",
               class = "btn-success btn-lg btn-tooltip btn-hidden", # btn-tooltip
-              `data-position` = "right",
+              `data-position` = "bottom",
+              style = "width: 155px",
               title = "Learn how to use MetaBridge for integrative analysis."
             ),
 
@@ -110,8 +113,8 @@ shinyUI(fluidPage(
               inputId = "about",
               label = "About",
               class = "btn-primary btn-lg btn-tooltip btn-hidden", # btn-tooltip
-              style = "color: #2c3e50; background-color: #fff; border-color: #2c3e50;",
-              `data-position` = "right",
+              style = "color: #2c3e50; background-color: #fff; border-color: #2c3e50; width: 155px",
+              `data-position` = "bottom",
               title = "Visit the About page."
             )
           )
@@ -251,7 +254,10 @@ shinyUI(fluidPage(
               "Below you will find a sample workflow for integrating your ",
               "metabolomics data with transcriptomics or proteomics data via ",
               "network methodologies. You can also view this tutorial on ",
-              HTML("<a href='https://github.com/samhinshaw/metabridge_shiny/blob/master/tutorial/tutorial.md' target='_blank'>GitHub</a>.")
+              HTML(paste0(
+                "<a href='https://github.com/samhinshaw/metabridge_shiny/blob/master/tutorial/tutorial.md' ",
+                "target='_blank'>GitHub</a>."
+                ))
             ),
             tags$ol(
               tags$li(
@@ -305,7 +311,7 @@ shinyUI(fluidPage(
 
                 # MetaCyc
                 tags$dt(
-                  tags$a(href = "https://metacyc.org/", "MetaCyc v22")
+                  tags$a(href = "https://metacyc.org/", "MetaCyc v23")
                 ),
                 tags$dd("Curated database for human metabolomic data"),
 
