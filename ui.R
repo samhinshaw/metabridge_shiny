@@ -93,13 +93,26 @@ shinyUI(fluidPage(
               `data-position` = "right",
               icon("circle-o-notch", class = "fa fa-spin", lib = "font-awesome")
             ),
+
             HTML("&nbsp;&nbsp;&nbsp;"),
+
             actionButton(
               inputId = "tutorial",
               label = "Tutorial",
               class = "btn-success btn-lg btn-tooltip btn-hidden", # btn-tooltip
               `data-position` = "right",
-              title = "Learn how to use MetaBridge for integrative analysis.",
+              title = "Learn how to use MetaBridge for integrative analysis."
+            ),
+
+            HTML("&nbsp;&nbsp;&nbsp;"),
+
+            actionButton(
+              inputId = "about",
+              label = "About",
+              class = "btn-primary btn-lg btn-tooltip btn-hidden", # btn-tooltip
+              style = "color: #2c3e50; background-color: #fff; border-color: #2c3e50;",
+              `data-position` = "right",
+              title = "Visit the About page."
             )
           )
         )
@@ -260,7 +273,8 @@ shinyUI(fluidPage(
         )
       ),
       tabPanel(
-        "About",
+        value = "aboutPanel",
+        title = "About",
         tags$div(
           class = "jumbotron",
           tags$h1("About"),
@@ -269,13 +283,16 @@ shinyUI(fluidPage(
             tags$p(
               "MetaBridge was designed by Samuel Hinshaw at the ",
               tags$a(href = "http://cmdr.ubc.ca/bobh/", "Centre for Microbial Diseases and Immunity Research"),
-              " at The University of British Columbia, and v2 was developed by Travis Blimkie.",
+              " at The University of British Columbia, and Version 2 was developed by Travis Blimkie.",
               "MetaBridge was published in",
               tags$em("Bioinformatics"),
               " (doi: ",
               tags$a(href = "https://doi.org/10.1093/bioinformatics/bty331", "10.1093/bioinformatics/bty331"),
-              "). Please cite this paper when using MetaBridge in your analyses."
+              "). Please cite this paper when using MetaBridge in your analyses.",
+              "A protocol was also published in ", tags$em("Current Protocols in Bioinformatics"),
+              " (doi: ", tags$a(href = "", "doi_number"), ")."
             ),
+
             tags$p(
               "For help, you can post an issue at the ",
               tags$a(href = "https://github.com/travis-m-blimkie/metabridge_shiny", "Github page.")

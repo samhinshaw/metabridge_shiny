@@ -57,6 +57,10 @@ shinyServer(function(input, output, session) {
     updateNavbarPage(session, inputId = "navbarLayout", selected = "tutorialPanel")
   }, ignoreInit = TRUE)
 
+  observeEvent(input$about, {
+    updateNavbarPage(session, inputId = "navbarLayout", selected = "aboutPanel")
+  }, ignoreInit = TRUE)
+
   ################################################
   #                                              #
   #            Upload Tab Handlers               #

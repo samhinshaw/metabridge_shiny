@@ -60,12 +60,15 @@ const handlers = {
   initGetStarted: () => {
     const getStartedButton = document.getElementById('getStarted');
     const tutorialButton = document.getElementById('tutorial');
+    const aboutButton = document.getElementById('about');
     // change innerHTML
     getStartedButton.innerHTML = 'Get Started';
     // remove disabled class
     getStartedButton.classList.remove('disabled');
     // Unhide tutorial button
     tutorialButton.classList.remove('btn-hidden');
+    // Unhide about button
+    aboutButton.classList.remove('btn-hidden');
     // add btn-tooltip class
     getStartedButton.classList.add('btn-tooltip');
     // Add title
