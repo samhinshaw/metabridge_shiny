@@ -65,7 +65,7 @@ shinyUI(fluidPage(
         tags$div(
           class = "logoWrapper",
           tags$p(
-            "Welcome to MetaBridge v2, a web tool for network-based integrative ",
+            "Welcome to MetaBridge, a web tool for network-based integrative ",
             "analysis of metabolomics data. Here you can upload a set of metabolites ",
             "and identify the directly interacting enzymes for network integration. "
           ),
@@ -287,14 +287,14 @@ shinyUI(fluidPage(
           tags$div(
             class = "logoWrapper",
             tags$p(
-              "MetaBridge was designed by Samuel Hinshaw at the ",
+              "MetaBridge was designed by Samuel Hinshaw and Travis Blimkie at the ",
               tags$a(href = "http://cmdr.ubc.ca/bobh/", "Centre for Microbial Diseases and Immunity Research"),
-              " at The University of British Columbia, and Version 2 was developed by Travis Blimkie.",
+              " at The University of British Columbia.",
               "MetaBridge was published in",
               tags$em("Bioinformatics"),
               " (doi: ",
               tags$a(href = "https://doi.org/10.1093/bioinformatics/bty331", "10.1093/bioinformatics/bty331"),
-              "). Please cite this paper when using MetaBridge in your analyses.",
+              "). Please cite this paper when using MetaBridge in your analyses. ",
               "A protocol was also published in ", tags$em("Current Protocols in Bioinformatics"),
               " (doi: ", tags$a(href = "", "doi_number"), ")."
             ),
@@ -317,7 +317,7 @@ shinyUI(fluidPage(
 
                 # KEGG
                 tags$dt(
-                  tags$a(href = "https://www.genome.jp/kegg/", "KEGG v?")
+                  tags$a(href = "https://www.genome.jp/kegg/", "KEGG Release 92")
                 ),
                 tags$dd("Large database containing multiple data types"),
 

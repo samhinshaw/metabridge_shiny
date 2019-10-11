@@ -75,7 +75,7 @@ options(
     # autoWidth = TRUE,
     scrollX = "100%",
     # Argument to make sure DT doesn't overflow vertical scrolling options
-    scrollY = "250px",
+    scrollY = "300px",
     scrollCollapse = TRUE,
     paging = FALSE,
     dom = "tir"
