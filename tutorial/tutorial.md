@@ -16,13 +16,13 @@ interest and their corresponding metabolite IDs. We recommend
 
 Upload your metabolites to [MetaBridge](https://www.metabridge.org) and select your metabolites for mapping.
 
-[![Upload Metabolites](serve/upload.png)](https://www.metabridge.org)
+[![Upload Metabolites](serve/Upload2.png)](https://www.metabridge.org)
 
 ### 2. Map Metabolites
 
 Choose a database to map against and view your mapping results.
 
-[![Map Via MetaCyc](serve/mapping.png)](https://www.metabridge.org)
+[![Map Via MetaCyc](serve/mapping2.png)](https://www.metabridge.org)
 
 ### 3. Download Results
 
@@ -89,7 +89,7 @@ Download your full mapping results (example table below).
 
 ### 1. Upload Mapped Genes
 
-Visit [NetworkAnalyst](http://www.networkanalyst.ca) and start with [A list of genes or proteins](http://www.networkanalyst.ca/faces/Secure/network/SignatureView.xhtml) input.
+Visit [NetworkAnalyst](http://www.networkanalyst.ca) and start with [a list of genes or proteins](http://www.networkanalyst.ca/faces/Secure/network/SignatureView.xhtml) input.
 
 [![Select A list of genes or proteins](serve/select_list.png)](http://www.networkanalyst.ca)
 
@@ -142,15 +142,15 @@ Below, you will find an example of each minimum-connected network generated
 
 1. Minimum-connected protein-protein interaction network from MetaBridge-mapped metabolites.
 
-<hr>
+  <hr>
 
-![Transcriptomic Minimum-Connected Network](serve/trans_network.png)
+  ![Transcriptomic Minimum-Connected Network](serve/trans_network.png)
 
 2. Minimum-connected protein-protein interaction network from gene expression data.
 
-<hr>
+  <hr>
 
-![Integrated Minimum-Connected Network](serve/combined_network.png)
+  ![Integrated Minimum-Connected Network](serve/combined_network.png)
 
 3. Minimum-connected protein-protein interaction network from combined gene list.
 

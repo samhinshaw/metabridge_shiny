@@ -48,6 +48,7 @@ pathway-tools offers more consistent results, better user interface, and is gene
 1. Download and install pathway-tools (currently version 21.0)
 2. Run pathway-tools, and in the visual interface click 'MetaCyc'
 
+
 ### Create Table 2: Reactions of Compounds
 1. From the [SmartTables] menu dropdown choose [Create New SmartTable] -> [Containing All] -> [Compounds]
 2. Once list of all compounds appears (currently 15950 Total), choose [SmartTables] -> [Transform SmartTable] -> [Reactions of Compounds]
@@ -88,17 +89,15 @@ Unfortunately, all of these tables require munging! The have been formatted for 
 > **This script will OVERWRITE your current database files located in /data/. Make sure you check that everything is working properly before you commit these changes to version control and deploy the update.**
 
 ```{r message=FALSE, warning=FALSE}
-library(tidyverse)
-library(stringr)
 library(magrittr)
 library(rprojroot)
 library(splitstackshape)
+library(tidyverse)
 
 rootDir <- rprojroot::find_rstudio_root_file()
 updateDir <- file.path(rootDir, 'database_updates')
 exampleDir <- file.path(rootDir, 'example_data')
 dataDir <- file.path(rootDir, 'data')
-cleanDir <- file.path(updateDir, 'cleaned_files')
 
 compoundIDs <- read_tsv(file.path(updateDir, '1-compounds-ids.tsv'))
 
@@ -186,7 +185,7 @@ Looks like we're good to go, let's save it!
 
 ```{r}
 metaCycDBLinks <- compoundIDs
-save(metaCycDBLinks, file = file.path(dataDir, 'm01_metaCycDBLinks.RData'))
+save(metaCycDBLinks, file = file.path(dataDir, 'm01_metaCycDBLinks_v23.RData'))
 ```
 
 ### Step 2: Map to Reactions
@@ -219,7 +218,7 @@ Save our results
 
 ```{r}
 metaCycCompoundsReactions <- compoundsReactions
-save(metaCycCompoundsReactions, file = file.path(dataDir, 'm02_metaCycCompoundsReactions.RData'))
+save(metaCycCompoundsReactions, file = file.path(dataDir, 'm02_metaCycCompoundsReactions_v23.RData'))
 ```
 
 
@@ -246,17 +245,18 @@ head(reactionsGenes)
 Again, we see there are some HTML markup and entities in there, but they are restricted to the "geneName" column, which we are not mapping against. We also need to split our reactions column.
 
 ```{r}
-reactionsGenes %<>% cSplit(
-  splitCols = c('reaction'), 
-  sep = ', ', direction = 'long', 
-  type.convert = FALSE, stripWhite = FALSE
-)
+reactionsGenes %<>% 
+  cSplit(
+    splitCols = c('reaction'), 
+    sep = ', ', direction = 'long', 
+    type.convert = FALSE, stripWhite = FALSE
+  )
 glimpse(reactionsGenes)
 ```
 
 ```{r}
 metaCycReactionsGenes <- reactionsGenes
-save(metaCycReactionsGenes, file = file.path(dataDir, 'm03_metaCycReactionsGenes.RData'))
+save(metaCycReactionsGenes, file = file.path(dataDir, 'm03_metaCycReactionsGenes_v23.RData'))
 ```
 
 
@@ -282,7 +282,7 @@ glimpse(geneIDs)
 
 metaCycGeneIDs <- geneIDs
 
-save(metaCycGeneIDs, file = file.path(dataDir, 'm04_metaCycGeneIDs.RData'))
+save(metaCycGeneIDs, file = file.path(dataDir, 'm04_metaCycGeneIDs_v23.RData'))
 ```
 
 And join to the table
@@ -311,11 +311,12 @@ pathwaysReactions %<>% dplyr::rename('pathwayID' = 'ID', 'pathwayName' = 'Name',
 Again, we see there are some HTML markup and entities in the table, but they are restricted to the "Name" column, which we are not mapping against. However, we will need to split the reactions column. 
 
 ```{r}
-pathwaysReactions %<>% cSplit(
-  splitCols = c('reaction'), 
-  sep = ', ', direction = 'long', 
-  type.convert = FALSE, stripWhite = FALSE
-)
+pathwaysReactions %<>% 
+  cSplit(
+    splitCols = c('reaction'), 
+    sep = ', ', direction = 'long', 
+    type.convert = FALSE, stripWhite = FALSE
+  )
 glimpse(pathwaysReactions)
 ```
 
@@ -323,6 +324,6 @@ Looks good, let's save it!
 
 ```{r}
 metaCycPathways <- pathwaysReactions
-save(metaCycPathways, file = file.path(dataDir, 'm05_metaCycPathways.RData'))
+save(metaCycPathways, file = file.path(dataDir, 'm05_metaCycPathways_v23.RData'))
 ```
 

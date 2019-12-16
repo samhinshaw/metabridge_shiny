@@ -1,34 +1,27 @@
-# MetaBridge
+[<img src="www/logo_light_hex.svg" align="right"  height="120px"/>](https://travis-m-blimkie.shinyapps.io/MetaBridgeShiny)
 
-## Description
+# **MetaBridge**
 
-MetaBridge is a data integration system for integration of metabolomics data with other omics types, chiefly transcriptomics and proteomics.
+<br>
 
-## Contents
+## **Description**
 
-## Usage
+MetaBridge is a [Shiny](https://shiny.rstudio.com/)-based data integration
+system for integration of metabolomics data with other omics types, chiefly
+transcriptomics and proteomics.
 
-MetaBridge is designed to facilitate integrative analysis by identifying the enzymes that directly interact with metabolites of interest. A pipeline may be designed as such:
+## **Usage**
 
-![Pipeline Schema](./figure.png)
+MetaBridge is designed to facilitate integrative analysis by identifying the
+enzymes that directly interact with metabolites of interest, yielding genes
+which may then be integrated with results from other omics methods. A pipeline
+may be designed as such:
 
-### Tutorial
+![](./figure.png)
 
-To learn how to use MetaBridge as part of a network-based integrative analysis workflow, please read our [tutorial](./tutorial/tutorial.md).
+## **Tutorial**
 
-## Installation (@async branch)
+To learn how to use MetaBridge as part of a network-based integrative analysis
+workflow, please read our [tutorial](./tutorial/tutorial.md).
 
-MetaBridge@async uses Promises, a framework for asynchronous programming in R. From the promises readme:
-
-A promise library for R. https://rstudio.github.io/promises
-
-```r
-devtools::install_github("rstudio/promises")
-```
-
-Neither the CRAN nor GitHub master branch versions of Shiny support promises. Until support is merged, you'll have to install from this branch:
-
-```r
-devtools::install_github("rstudio/shiny@async")
-devtools::install_github("rstudio/DT@async")
-```
+<br>

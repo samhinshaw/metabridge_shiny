@@ -1,5 +1,5 @@
 {
-  "name": "metabridge_shiny",
+  "name": "MetaBridgeShiny",
   "version": "1.0.0",
   "description": "Network-based multi-omic integration of metabolomics data.",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/samhinshaw/metabridge_shiny.git"
+    "url": "git+https://github.com/travis-m-blimkie/MetaBridgeShiny.git"
   },
   "keywords": [
     "integrative-analysis",
@@ -17,17 +17,17 @@
     "bioinformatics",
     "metabolomics"
   ],
-  "author": "Sam Hinshaw",
+  "author": "Sam Hinshaw, Travis Blimkie",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/samhinshaw/metabridge_shiny/issues"
+    "url": "https://github.com/travis-m-blimkie/MetaBridgeShiny/issues"
   },
-  "homepage": "https://github.com/samhinshaw/metabridge_shiny#readme",
+  "homepage": "https://github.com/samhinshaw/MetaBridgeShiny#readme",
   "dependencies": {
     "tippy.js": "^1.4.1"
   },
   "devDependencies": {
-    "eslint": "^4.10.0",
+    "eslint": "^4.18.2",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0"
   }

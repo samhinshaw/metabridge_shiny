@@ -4,11 +4,13 @@
   border-radius: 0;
 }
 
+/* Remove some of the padding from containers */
 .container-fluid {
   padding-left: 0;
   padding-right: 0;
 }
 
+/* Adjust padding for elements of the navbar */
 .navbar,
 .tab-content {
   padding-left: 15px;
@@ -50,10 +52,14 @@
   bottom: 10px;
 }*/
 
+
+/* Custom well class for rendering input and output options, with added border */
 .well {
   position: relative;
+  border: 1px solid #98aeb3;
 }
 
+/* Special class for providing help to the user */
 .conditional-help {
   margin-bottom: 10px;
 }
@@ -78,6 +84,7 @@
   text-decoration: underline;
 }
 
+/* Remove margin for the tab header */
 .tab-header {
   margin-top: 0;
 }
@@ -93,24 +100,31 @@
   margin-right: 5px;
 }
 
+/* Adjust padding for the tab header */
 .navbar-brand {
   padding-top: 15px;
   padding-bottom: 0;
 }
+
+/* Change the font colour in the dropdown menu to make it more visible */
+.dropdown-menu > li > a {
+  color: #2c3e50;
+}
+
 
 /* We wrap a div around the content within jumbotron to use a background image
 within the background fill of the hero element */
 
 @media only screen and (max-width: 767px) {
   .logoWrapper {
-    background: url(/logo_background.svg) no-repeat center top;
+    background: url('../logo_background.svg') no-repeat center top;
     background-size: contain;
   }
 }
 
 @media only screen and (min-width: 768px) {
   .logoWrapper {
-    background: url(/logo_background.svg) no-repeat right;
+    background: url('../logo_background.svg') no-repeat right;
     background-size: contain;
   }
 }
@@ -144,6 +158,12 @@ within the background fill of the hero element */
   margin-bottom: 10px;
 }
 
+/* Change the colour of the "Browse..." button so it stands out a bit more */
+.btn-file {
+  background-color: #2c3e50;
+  border-color: #2c3e50;
+}
+
 /* Make Pathway Images Responsive */
 .viz-panel img {
   max-width: 100%;
@@ -157,7 +177,14 @@ within the background fill of the hero element */
   height: 100% !important;
 }
 
-/* Indent defined list terms */
+/* Indent defined list terms, without needing to use bullets */
 dl dd {
   margin-left: 1em;
+}
+
+/* Attempts at getting the download button on the right */
+.btn-right {
+  position: absolute;
+  right: 0;
+  margin-right: 0.70em;
 }

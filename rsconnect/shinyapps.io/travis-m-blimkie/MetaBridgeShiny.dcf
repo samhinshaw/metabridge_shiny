@@ -1,0 +1,12 @@
+name: MetaBridgeShiny
+title: MetaBridgeShiny
+username:
+account: travis-m-blimkie
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1390526
+bundleId: 2624714
+url: https://travis-m-blimkie.shinyapps.io/MetaBridgeShiny/
+when: 1574961705.23447
+asMultiple: FALSE
+asStatic: FALSE
