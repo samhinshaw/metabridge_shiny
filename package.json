@@ -27,7 +27,7 @@
     "tippy.js": "^1.4.1"
   },
   "devDependencies": {
-    "eslint": "^4.10.0",
+    "eslint": "^9.39.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0"
   }
